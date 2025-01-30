@@ -75,6 +75,10 @@ function sortLessons(lessons, method) {
             return [...lessons].sort((a, b) => a.title.localeCompare(b.title));
         case 'za':
             return [...lessons].sort((a, b) => b.title.localeCompare(a.title));
+        case 'newest-changed':
+            return [...lessons].sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+        case 'popular':
+            return [...lessons].sort((a, b) => b.views - a.views);
         default:
             return lessons;
     }

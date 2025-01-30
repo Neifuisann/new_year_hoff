@@ -406,13 +406,16 @@ function applyJsonChanges() {
 
 async function saveLesson() {
     try {
-        // Get the current lesson data
+        // Update lastUpdated timestamp
+        const now = new Date().toISOString();
+        
         const lessonData = {
             ...currentLesson,
             title: document.getElementById('lesson-title').value,
             color: document.getElementById('lesson-color').value,
             tags: Array.from(currentTags),
-            questions: currentLesson.questions
+            questions: currentLesson.questions,
+            lastUpdated: now
         };
         
         const method = editingId ? 'PUT' : 'POST';

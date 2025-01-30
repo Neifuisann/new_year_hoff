@@ -42,10 +42,10 @@ const requireAuth = (req, res, next) => {
 
 // Routes
 app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
-app.get('/login', (req, res) => res.sendFile(__dirname + '/views/login.html'));
 app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
 app.get('/admin/new', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
 app.get('/admin/edit/:id', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
+app.get('/admin/login', (req, res) => res.sendFile(__dirname + '/views/login.html'));
 app.get('/lesson/:id', (req, res) => res.sendFile(__dirname + '/views/lesson.html'));
 app.get('/result', (req, res) => res.sendFile(__dirname + '/views/result.html'));
 app.get('/result/:id', (req, res) => res.sendFile(__dirname + '/views/result.html'));
@@ -70,12 +70,28 @@ app.get('/api/lessons', (req, res) => {
 
 app.get('/api/lessons/:id', (req, res) => {
     const lessons = JSON.parse(fs.readFileSync('./data/lessons.json'));
-    const lesson = lessons.find(l => l.id == req.params.id);
-    res.json(lesson || { error: 'Lesson not found' });
+    const lessonIndex = lessons.findIndex(l => l.id == req.params.id);
+    
+    if (lessonIndex === -1) {
+        return res.status(404).json({ error: 'Lesson not found' });
+    }
+
+    // Update views counter
+    lessons[lessonIndex].views = (lessons[lessonIndex].views || 0) + 1;
+    fs.writeFileSync('./data/lessons.json', JSON.stringify(lessons, null, 2));
+    
+    res.json(lessons[lessonIndex]);
 });
 
 app.post('/api/lessons', requireAuth, (req, res) => {
-    const newLesson = req.body;
+    const newLesson = {
+        ...req.body,
+        id: Date.now().toString(),
+        views: 0,
+        lastUpdated: new Date().toISOString(),
+        created: new Date().toISOString()
+    };
+    
     const lessons = JSON.parse(fs.readFileSync('./data/lessons.json'));
     lessons.push(newLesson);
     fs.writeFileSync('./data/lessons.json', JSON.stringify(lessons, null, 2));
@@ -91,8 +107,18 @@ app.delete('/api/lessons/:id', requireAuth, (req, res) => {
 
 app.put('/api/lessons/:id', requireAuth, (req, res) => {
     const lessons = JSON.parse(fs.readFileSync('./data/lessons.json'));
-    const index = lessons.findIndex(l => l.id == req.body.id);
-    lessons[index] = req.body;
+    const index = lessons.findIndex(l => l.id == req.params.id);
+    
+    if (index === -1) {
+        return res.status(404).json({ error: 'Lesson not found' });
+    }
+
+    lessons[index] = {
+        ...lessons[index],
+        ...req.body,
+        lastUpdated: new Date().toISOString()
+    };
+    
     fs.writeFileSync('./data/lessons.json', JSON.stringify(lessons, null, 2));
     res.json({ success: true });
 });
