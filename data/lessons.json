@@ -1,0 +1,285 @@
+[
+  {
+    "id": "1738117868466",
+    "title": "Physics 101",
+    "color": "#7ff087",
+    "questions": [
+      {
+        "type": "number",
+        "question": "1 Newton + 1 Newton = ?",
+        "points": 1,
+        "correct": "2",
+        "image": null
+      },
+      {
+        "type": "truefalse",
+        "question": "Is it true that we can time travel?",
+        "points": 1,
+        "options": [
+          "Nah~",
+          "In Doraemon only",
+          "Doctor Who only",
+          "Ya boi why not"
+        ],
+        "correct": [
+          false,
+          false,
+          false,
+          true
+        ],
+        "image": null
+      },
+      {
+        "type": "abcd",
+        "question": "Why the apple fall?",
+        "points": 1,
+        "options": [
+          "Because it want",
+          "Because mother nature want",
+          "Because Newton",
+          "Because someone knock it down"
+        ],
+        "correct": "c",
+        "image": null
+      }
+    ],
+    "tags": [
+      "101"
+    ]
+  },
+  {
+    "id": "1738073427063",
+    "title": "Math Basics",
+    "color": "#ff0033",
+    "questions": [
+      {
+        "question": "9+9",
+        "points": 1,
+        "options": [
+          "18",
+          "122",
+          "23",
+          "33"
+        ],
+        "image": null,
+        "type": "abcd",
+        "correct": "a"
+      },
+      {
+        "question": "5*10",
+        "points": 1,
+        "options": [
+          "50",
+          "122",
+          "10",
+          "123"
+        ],
+        "image": null,
+        "type": "abcd",
+        "correct": "a"
+      },
+      {
+        "question": "2^10",
+        "points": 1,
+        "options": [
+          "512",
+          "1024",
+          "256",
+          "2048"
+        ],
+        "image": null,
+        "type": "abcd",
+        "correct": "b"
+      },
+      {
+        "question": "27-12",
+        "points": 1,
+        "options": [
+          "33",
+          "1600",
+          "15",
+          "2012"
+        ],
+        "image": null,
+        "type": "truefalse",
+        "correct": [
+          false,
+          false,
+          true,
+          false
+        ]
+      },
+      {
+        "question": "24*6",
+        "points": 1,
+        "options": [
+          "",
+          "",
+          "",
+          ""
+        ],
+        "image": null,
+        "type": "number",
+        "correct": 144
+      }
+    ],
+    "tags": [
+      "children",
+      "cat",
+      "dog"
+    ]
+  },
+  {
+    "id": 1738163848921,
+    "title": "test1",
+    "color": "#a4aeff",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "1+1",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "correct": [
+          false,
+          true,
+          false,
+          false
+        ],
+        "points": 1
+      }
+    ],
+    "tags": []
+  },
+  {
+    "id": 1738164067237,
+    "title": "lonseo",
+    "color": "#a4aeff",
+    "questions": [
+      {
+        "question": "Vị vua cuối cùng của chế độ phong kiến Việt Nam là",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Thành Thái.",
+          "Bảo Đại.",
+          "Duy Tân.",
+          "Khải Định."
+        ],
+        "correct": "b"
+      },
+      {
+        "question": "Hội nghị toàn quốc của Đảng họp từ ngày 13 đến 15/8/1945 ở",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Hà Nội.",
+          "Pác Bó (Cao Bằng).",
+          "Tân Trào (Tuyên Quang).",
+          "Bắc Sơn (Vũ Nhai)."
+        ],
+        "correct": "c"
+      },
+      {
+        "question": "Trong thời kì Đổi mới, Việt Nam đạt được thành tựu về xã hội nào sau đây?",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Chỉ số phát triển con người đứng đầu ASEAN.",
+          "Giải quyết vấn đề lao động và việc làm.",
+          "Miễn phí mọi chi phí y tế cho toàn dân.",
+          "Không còn tình trạng lao động thất nghiệp."
+        ],
+        "correct": "b"
+      },
+      {
+        "question": "Nét nổi bật về nghệ thuật chỉ đạo chiến tranh cách mạng của Đảng trong cuộc Tổng tiến công và nổi dậy Xuân 1975 là",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "lựa chọn đúng địa bàn và chủ động tạo thời cơ tiến công.",
+          "kết hợp đánh thắng nhanh và đánh chắc, tiến chắc.",
+          "đi từ khởi nghĩa từng phần tiến lên chiến tranh cách mạng.",
+          "kết hợp tiến công và khởi nghĩa của lực lượng vũ trang."
+        ],
+        "correct": "a"
+      },
+      {
+        "question": "Nội dung nào sau đây phản ánh đúng về thành tựu kinh tế Việt Nam trong thời kì Đổi mới?",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Trở thành nước có thu nhập cao nhất Đông Nam Á.",
+          "Việt Nam đã vượt qua khủng hoảng kinh tế - xã hội.",
+          "Tất cả các vấn đề xã hội được quan tâm giải quyết thích đáng.",
+          "Trở thành một trong ba trung tâm tài chính của thế giới."
+        ],
+        "correct": "b"
+      },
+      {
+        "question": "Nội dung nào sau đây không phải thành tựu của Việt Nam sau 10 năm Đổi mới (1986 – 1995)?",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Vượt qua khỏi khủng hoảng kinh tế - xã hội.",
+          "Ra khỏi nhóm nước có thu nhập thấp.",
+          "Từng bước vươn lên trở thành nước đang phát triển có thu nhập cao.",
+          "Từng bước vươn lên trở thành nước đang phát triển có thu nhập trung bình."
+        ],
+        "correct": "d"
+      },
+      {
+        "question": "Một trong những nội dung cơ bản của đường lối Đổi mới giai đoạn 1996 - 2006 ở Việt Nam về kinh tế là",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "nhấn mạnh phát triển giáo dục.",
+          "chú trọng phát triển nền văn hóa tiên tiến.",
+          "đẩy mạnh công nghiệp hóa, hiện đại hóa.",
+          "đổi mới hệ thống chính trị."
+        ],
+        "correct": "c"
+      },
+      {
+        "question": "Ở Việt Nam, kết hợp sức mạnh dân tộc với sức mạnh thời đại là một trong những bài học lớn, xuyên suốt quá trình đấu tranh giành độc lập dân tộc, trong đó",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "sức mạnh dân tộc chưa được phát huy.",
+          "sức mạnh dân tộc là yếu tố quyết định.",
+          "sức mạnh quốc tế chưa được phát huy.",
+          "sức mạnh thời đại là yếu tố quyết định."
+        ],
+        "correct": "b"
+      },
+      {
+        "question": "Cuộc kháng chiến chống Mĩ, cứu nước (1954 - 1975) của nhân dân Việt Nam thắng lợi đã",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "đánh dấu sự sụp đổ hoàn toàn của chủ nghĩa thực dân kiểu mới trên toàn thế giới.",
+          "làm sụp đổ hệ thống thuộc địa của chủ nghĩa thực dân cũ trên thế giới.",
+          "thúc đẩy cuộc đấu tranh vì hòa bình, dân chủ và tiến bộ trên thế giới.",
+          "đánh dấu hoàn thành cuộc cách mạng dân tộc dân chủ nhân dân ở các nước Đông Dương."
+        ],
+        "correct": "a"
+      },
+      {
+        "question": "Trung Quốc có hành động nào sau đây xâm phạm chủ quyền biển đảo Việt Nam ở Biển Đông?",
+        "type": "abcd",
+        "points": 1,
+        "options": [
+          "Đưa giàn khoan Hải Dương-981 đến hoạt động trong vùng đặc quyền kinh tế của Việt Nam.",
+          "Tham gia các diễn đàn quốc tế lớn để giải quyết tranh chấp ở Biển Đông.",
+          "Tăng cường lực lượng phòng vệ dân sự tại khu vực đặc quyền kinh tế của Việt Nam.",
+          "Xây dựng các chiến lược để phát triển kinh tế, trong đó có chiến lược kinh tế Biển Đông."
+        ],
+        "correct": "a"
+      }
+    ],
+    "tags": []
+  }
+]

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Application</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+    <h1>Choose a Lesson</h1>
+    
+    <div class="search-sort-container">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search lessons or tags...">
+            <div class="tags-container"></div>
+        </div>
+        <div class="sort-box">
+            <select id="sort-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="az">Name A-Z</option>
+                <option value="za">Name Z-A</option>
+            </select>
+        </div>
+    </div>
+    <div id="lessons"></div>
+    <div class="admin-controls">
+        <a href="/admin" class="button">Admin Panel</a>
+    </div>
+
+    <script src="/js/index.js"></script>
+</body>
+</html>
