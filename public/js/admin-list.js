@@ -35,6 +35,7 @@ async function loadLessonsForAdmin() {
                            onchange="updateLessonColor(${lesson.id}, this.value)"
                            style="margin-right: 10px; vertical-align: middle;">
                     <a href="/admin/edit/${lesson.id}" class="button">Edit</a>
+                    <a href="/admin/statistics/${lesson.id}" class="button">Statistics</a>
                     <button onclick="deleteLesson(${lesson.id})" class="delete-button">Delete</button>
                 </div>
             `;

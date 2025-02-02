@@ -23,27 +23,9 @@ async function displayResults() {
             return;
         }
     } else {
-        // New result - save to server
-        try {
-            const response = await fetch('/api/results', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(resultData)
-            });
-            if (!response.ok) throw new Error('Failed to save result');
-            const { resultId } = await response.json();
-            
-            // Update URL without reloading page
-            window.history.pushState({}, '', `/result/${resultId}`);
-            
-            // Store the result and display it
-            currentResult = resultData;
-            displaySortedResults('all');
-        } catch (error) {
-            console.error('Error saving result:', error);
-            document.getElementById('result').innerHTML = '<p>Failed to save result. Please try again.</p>';
-            return;
-        }
+        // Just display the result from localStorage
+        currentResult = resultData;
+        displaySortedResults('all');
     }
 }
 
@@ -77,6 +59,11 @@ function displaySortedResults(sortType) {
         <div class="final-score">
             <h3>Final Score: ${currentResult.score}/${currentResult.totalPoints} 
             (${Math.round(currentResult.score/currentResult.totalPoints * 100)}%)</h3>
+        </div>
+        <div class="submission-details">
+            <p><strong>Student Name:</strong> ${currentResult.studentInfo.name}</p>
+            <p><strong>Submitted From:</strong> ${currentResult.ipAddress || 'Not available'}</p>
+            <p><strong>Submitted At:</strong> ${new Date(currentResult.submittedAt).toLocaleString()}</p>
         </div>
         ${filteredQuestions.map((question, index) => `
             <div class="question-container ${question.isCorrect ? 'correct' : 'incorrect'}">

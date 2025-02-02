@@ -181,8 +181,26 @@ async function initializeLesson() {
 document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submit-quiz-btn');
     if (submitButton) {
+        // Get student info from localStorage
+        const studentInfo = JSON.parse(localStorage.getItem('studentInfo'));
+        if (!studentInfo) {
+            // If no student info, redirect back to home
+            window.location.href = '/';
+            return;
+        }
+
+        // Rest of your initialization code...
+        initializeLesson();
+
         submitButton.addEventListener('click', async () => {
+            // Disable the submit button to prevent multiple submissions
+            submitButton.disabled = true;
+            
             try {
+                // Get IP address
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                
                 const lessonId = window.location.pathname.split('/')[2];
                 const response = await fetch(`/api/lessons/${lessonId}`);
                 if (!response.ok) {
@@ -191,25 +209,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lesson = await response.json();
                 let score = 0;
                 let resultHtml = '';
+
+                const quizResults = {
+                    lessonId: lessonId,
+                    questions: [],
+                    studentInfo: JSON.parse(localStorage.getItem('studentInfo')),
+                    ipAddress: ipData.ip,
+                    submittedAt: new Date().toISOString()
+                };
                 
                 // Create separate results for each question type
                 const sections = {
-                    abcd: { title: 'Multiple Choice Questions', questions: [], count: 0 },
-                    truefalse: { title: 'True/False Questions', questions: [], count: 0 },
-                    number: { title: 'Numerical Questions', questions: [], count: 0 }
+                    'abcd': { title: 'Multiple Choice Questions', questions: [], count: 0 },
+                    'truefalse': { title: 'True/False Questions', questions: [], count: 0 },
+                    'number': { title: 'Numerical Answer Questions', questions: [], count: 0 }
                 };
-                
-                // Get all question elements and process them
+
                 const questionElements = document.querySelectorAll('.question');
-                
                 questionElements.forEach((questionElement) => {
                     const originalIndex = parseInt(questionElement.dataset.questionIndex);
                     const q = lesson.questions[originalIndex];
-                    
-                    let isCorrect = false;
-                    let userAnswer = '';
-                    let correctAnswer = '';
-                    
+                    let userAnswer, correctAnswer, isCorrect;
+
                     if (q.type === 'truefalse' && Array.isArray(q.options)) {
                         const userAnswers = q.options.map((_, idx) => {
                             const selectedInput = document.querySelector(`input[name="q${originalIndex}_${idx}"]:checked`);
@@ -250,13 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         correctAnswer = q.correct.toString();
                         isCorrect = userAnswer === correctAnswer;
                     }
-
-                    // Store structured data for results page
-                    const quizResults = {
-                        questions: [],
-                        totalPoints: 0,
-                        score: 0
-                    };
 
                     quizResults.questions.push({
                         type: q.type,
@@ -294,98 +308,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     `);
                 });
                 
-                // Combine all sections into final HTML
-                resultHtml = '<h3>Quiz Results</h3>';
-                Object.entries(sections).forEach(([type, section]) => {
-                    if (section.questions.length > 0) {
-                        resultHtml += `
-                            <div class="result-section">
-                                <h4>${section.title}</h4>
-                                ${section.questions.join('')}
-                            </div>
-                        `;
-                    }
-                });
-                
-                const totalPoints = lesson.questions.reduce((sum, q) => sum + q.points, 0);
-                resultHtml += `
-                    <div class="final-score">
-                        <h3>Final Score: ${score}/${totalPoints} (${Math.round(score/totalPoints * 100)}%)</h3>
-                    </div>
-                `;
-                
-                // Store results in localStorage and redirect to results page
-                const quizResults = {
-                    questions: [],
-                    totalPoints: totalPoints,
-                    score: score
-                };
+                // Update final scores
+                quizResults.totalPoints = lesson.questions.reduce((sum, q) => sum + q.points, 0);
+                quizResults.score = score;
 
-                questionElements.forEach((questionElement) => {
-                    const originalIndex = parseInt(questionElement.dataset.questionIndex);
-                    const q = lesson.questions[originalIndex];
-                    
-                    let isCorrect = false;
-                    let userAnswer = '';
-                    let correctAnswer = '';
-                    
-                    if (q.type === 'truefalse' && Array.isArray(q.options)) {
-                        const userAnswers = q.options.map((_, idx) => {
-                            const selectedInput = document.querySelector(`input[name="q${originalIndex}_${idx}"]:checked`);
-                            return selectedInput ? selectedInput.value === 'true' : null;
-                        });
-                        
-                        isCorrect = Array.isArray(q.correct) && q.correct.every((correctAns, idx) => 
-                            userAnswers[idx] !== null && userAnswers[idx] === correctAns
-                        );
-                        
-                        userAnswer = q.options.map((opt, idx) => 
-                            `${String.fromCharCode(65 + idx)}: ${opt} - ${userAnswers[idx] ? 'True' : 'False'}`
-                        ).join('\n');
-                        
-                        correctAnswer = q.options.map((opt, idx) => 
-                            `${String.fromCharCode(65 + idx)}: ${opt} - ${q.correct[idx] ? 'True' : 'False'}`
-                        ).join('\n');
-                    } else if (q.type === 'abcd') {
-                        const selectedRadio = document.querySelector(`input[name="q${originalIndex}"]:checked`);
-                        const selectedValue = selectedRadio ? selectedRadio.value : null;
-                        
-                        if (selectedValue) {
-                            const mapping = window.questionMappings[originalIndex];
-                            const selectedMapping = mapping.find(m => m.displayedLetter === selectedValue);
-                            
-                            if (selectedMapping) {
-                                userAnswer = q.options[selectedMapping.originalIndex];
-                                const correctIndex = q.correct.toUpperCase().charCodeAt(0) - 65;
-                                correctAnswer = q.options[correctIndex];
-                                isCorrect = selectedMapping.originalIndex === correctIndex;
-                            }
-                        } else {
-                            userAnswer = 'No answer';
-                            correctAnswer = q.options[q.correct.toUpperCase().charCodeAt(0) - 65];
-                        }
-                    } else if (q.type === 'number') {
-                        userAnswer = document.querySelector(`[name="q${originalIndex}"]`).value || 'No answer';
-                        correctAnswer = q.correct.toString();
-                        isCorrect = userAnswer === correctAnswer;
-                    }
-
-                    quizResults.questions.push({
-                        type: q.type,
-                        question: q.question,
-                        userAnswer: userAnswer,
-                        correctAnswer: correctAnswer,
-                        isCorrect: isCorrect,
-                        points: q.points,
-                        earnedPoints: isCorrect ? q.points : 0
+                try {
+                    // Save results to server
+                    const saveResponse = await fetch('/api/results', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(quizResults)
                     });
-                });
 
-                localStorage.setItem('quizResults', JSON.stringify(quizResults));
-                window.location.href = '/result';
+                    if (!saveResponse.ok) {
+                        throw new Error('Failed to save results');
+                    }
+
+                    localStorage.setItem('quizResults', JSON.stringify(quizResults));
+                    window.location.href = '/result';
+                } catch (error) {
+                    console.error('Error in quiz submission:', error);
+                    alert('Error submitting quiz. Please try again.');
+                }
             } catch (error) {
                 console.error('Error in quiz submission:', error);
                 alert('Error submitting quiz. Please try again.');
+            } finally {
+                // Re-enable the submit button if there was an error
+                submitButton.disabled = false;
             }
         });
     }

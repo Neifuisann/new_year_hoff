@@ -7,7 +7,9 @@ const fetch = require('node-fetch');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const path = require('path');
+const cookieParser = require('cookie-parser');
 
 // Set proper charset for all responses
 app.use((req, res, next) => {
@@ -15,6 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 app.use(express.static('public', { charset: 'utf-8' }));
@@ -40,6 +43,20 @@ const requireAuth = (req, res, next) => {
     }
 };
 
+// Add this middleware
+function requireStudentInfo(req, res, next) {
+    const path = req.path;
+    if (path.startsWith('/lesson/') && !path.includes('/admin/')) {
+        if (!req.session.studentInfo) {
+            return res.redirect('/?error=no_student_info');
+        }
+    }
+    next();
+}
+
+// Add the middleware to the app
+app.use(requireStudentInfo);
+
 // Routes
 app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
 app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
@@ -49,6 +66,11 @@ app.get('/admin/login', (req, res) => res.sendFile(__dirname + '/views/login.htm
 app.get('/lesson/:id', (req, res) => res.sendFile(__dirname + '/views/lesson.html'));
 app.get('/result', (req, res) => res.sendFile(__dirname + '/views/result.html'));
 app.get('/result/:id', (req, res) => res.sendFile(__dirname + '/views/result.html'));
+
+// Add new route for statistics page
+app.get('/admin/statistics/:id', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'lesson-statistics.html'));
+});
 
 // API Endpoints
 app.post('/api/login', async (req, res) => {
@@ -129,15 +151,17 @@ app.post('/api/lessons/reorder', requireAuth, (req, res) => {
     res.json({ success: true });
 });
 
-// Result endpoints
+// Update the existing results endpoint to include lesson ID and student info
 app.post('/api/results', (req, res) => {
     const results = JSON.parse(fs.readFileSync('./data/results.json'));
     const newResult = {
         id: Date.now().toString(),
+        lessonId: req.body.lessonId,
         timestamp: new Date().toISOString(),
         questions: req.body.questions,
         score: req.body.score,
-        totalPoints: req.body.totalPoints
+        totalPoints: req.body.totalPoints,
+        studentInfo: req.body.studentInfo
     };
     results.push(newResult);
     fs.writeFileSync('./data/results.json', JSON.stringify(results, null, 2));
@@ -313,4 +337,104 @@ app.post('/api/ocr', upload.single('image'), async (req, res) => {
     }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Add API endpoint for statistics
+app.get('/api/lessons/:id/statistics', requireAuth, (req, res) => {
+    const lessonId = req.params.id;
+    const results = JSON.parse(fs.readFileSync('./data/results.json'));
+    
+    // Filter results for this lesson
+    const lessonResults = results.filter(r => r.lessonId === lessonId);
+    
+    // Calculate unique students
+    const uniqueStudents = new Set(lessonResults.map(r => 
+        r.studentInfo?.studentId || r.studentInfo?.name
+    )).size;
+    
+    // Calculate percentage scores for ALL attempts
+    const scores = lessonResults.map(r => (r.score / r.totalPoints) * 100);
+    const averageScore = scores.length ? 
+        (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    
+    // Calculate score distributions for chart (using all attempts)
+    const scoreRanges = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+    const distribution = new Array(scoreRanges.length - 1).fill(0);
+    
+    lessonResults.forEach((result) => {
+        const score = (result.score / result.totalPoints) * 100;
+        const rangeIndex = Math.min(Math.floor(score / 10), 9);
+        distribution[rangeIndex]++;
+    });
+
+    // Question analysis
+    const questionStats = {};
+    lessonResults.forEach(result => {
+        result.questions.forEach(q => {
+            if (!questionStats[q.question]) {
+                questionStats[q.question] = {
+                    total: 0,
+                    completed: 0,
+                    correct: 0,
+                    incorrect: 0
+                };
+            }
+            questionStats[q.question].total++;
+            questionStats[q.question].completed++;
+            if (q.isCorrect) {
+                questionStats[q.question].correct++;
+            } else {
+                questionStats[q.question].incorrect++;
+            }
+        });
+    });
+
+    res.json({
+        uniqueStudents,
+        totalAttempts: lessonResults.length,
+        averageScore,
+        lowScores: scores.filter(s => s < 50).length,
+        highScores: scores.filter(s => s >= 50).length,
+        scoreDistribution: {
+            labels: scoreRanges.slice(0, -1).map((n, i) => 
+                i === 9 ? '90-100%' : `${n}-${n+10}%`
+            ),
+            data: distribution
+        },
+        questionStats: Object.entries(questionStats).map(([question, stats]) => ({
+            question,
+            totalStudents: stats.total,
+            completed: stats.completed,
+            notCompleted: stats.total - stats.completed,
+            correct: stats.correct,
+            incorrect: stats.incorrect
+        })),
+        transcripts: lessonResults.map(r => ({
+            name: r.studentInfo?.name || 'Anonymous',
+            dob: r.studentInfo?.dob || 'N/A',
+            score: ((r.score / r.totalPoints) * 100).toFixed(2) + '%',
+            timestamp: r.timestamp,
+            ip: r.ip
+        }))
+    });
+});
+
+app.post('/api/student-info', (req, res) => {
+    req.session.studentInfo = req.body;
+    res.json({ success: true });
+});
+
+// Add check-auth endpoint
+app.get('/api/check-auth', (req, res) => {
+    res.json({ isAuthenticated: !!req.session.isAuthenticated });
+});
+
+// Add error handling for the server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+}).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use. Please try another port or kill the process using this port.`);
+    } else {
+        console.error('Server error:', err);
+    }
+    process.exit(1);
+});

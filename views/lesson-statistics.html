@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lesson Statistics</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+    <div class="statistics-container">
+        <div class="stats-header">
+            <h1>Lesson Statistics</h1>
+            <div class="export-controls">
+                <button onclick="exportToExcel()" class="export-btn">
+                    Export to Excel
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="total-students">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="avg-score">0</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value" id="low-scores">0</div>
+                <div class="stat-label">Scores < 50%</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="high-scores">0</div>
+                <div class="stat-label">Scores ≥ 50%</div>
+            </div>
+            <div class="stat-card secondary">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value" id="total-attempts">0</div>
+                <div class="stat-label">Total Attempts</div>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <h3>Score Distribution</h3>
+            <canvas id="scoreChart"></canvas>
+        </div>
+
+        <div class="stats-card">
+            <h3>Question Analysis</h3>
+            <div class="table-responsive">
+                <table class="statistics-table" id="question-stats">
+                    <!-- Table headers and content will be populated by JavaScript -->
+                </table>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <h3>Student Transcripts</h3>
+            <div class="table-responsive">
+                <table class="statistics-table" id="transcripts">
+                    <!-- Table headers and content will be populated by JavaScript -->
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="/js/lesson-statistics.js"></script>
+</body>
+</html> 

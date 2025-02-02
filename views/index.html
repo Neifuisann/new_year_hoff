@@ -1,36 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Application</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <a href="/" class="home-button">
-        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
-    </a>
-    <h1>Choose a Lesson</h1>
+    <!-- Background Animation -->
+    <canvas id="network-canvas"></canvas>
     
-    <div class="search-sort-container">
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Search lessons or tags...">
-            <div class="tags-container"></div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="home-button-container">
+            <a href="/" class="home-button">
+                <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+            </a>
+            <div class="home-dropdown">
+                <div class="dropdown-item">
+                    <a href="#" class="account-link">Account</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="/admin/login" class="editor-link">Entering editor mode</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="#" class="dark-mode-link">Dark mode</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="#" class="logout-link">Logout</a>
+                </div>
+            </div>
         </div>
-        <div class="sort-box">
-            <select id="sort-select">
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="az">Name A-Z</option>
-                <option value="za">Name Z-A</option>
-                <option value="newest-changed">Newest Changed</option>
-                <option value="popular">Popular</option>
-            </select>
+        <h1>Choose a Lesson</h1>
+        
+        <div class="search-sort-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search lessons or tags...">
+                <div class="tags-container"></div>
+            </div>
+            <div class="sort-box">
+                <select id="sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="az">Name A-Z</option>
+                    <option value="za">Name Z-A</option>
+                    <option value="newest-changed">Newest Changed</option>
+                    <option value="popular">Popular</option>
+                </select>
+            </div>
         </div>
-    </div>
-    <div id="lessons"></div>
-    <div class="admin-controls" hidden>
-        <a href="/admin" class="button">Admin Panel</a>
+        <div id="lessons"></div>
+        <div class="admin-controls" hidden>
+            <a href="/admin" class="button">Admin Panel</a>
+        </div>
+
+        <div id="user-info-modal" class="modal">
+            <div class="modal-content">
+                <h2>Student Information</h2>
+                <form id="user-info-form">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="student-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="student-dob">
+                    </div>
+                    <div class="form-group">
+                        <label>Student ID</label>
+                        <input type="text" id="student-id">
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="submit">Start Lesson</button>
+                        <button type="button" onclick="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
+    <script src="/js/network-animation.js"></script>
     <script src="/js/index.js"></script>
 </body>
 </html>
