@@ -66,7 +66,7 @@ body {
 
 h1 {
     text-align: center;
-    color: #2c3e50;
+    color: #4375a7;
     margin: 30px 0;
     animation: fadeInDown 0.8s ease-out;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
@@ -640,7 +640,7 @@ input, select {
 
 .tags-container h3 {
     margin: 0 0 15px 0;
-    color: #2c3e50;
+    color: #4375a7;
     font-size: 1.1em;
     padding: 4px;
 }
@@ -652,7 +652,7 @@ input, select {
 }
 
 .tag-filter {
-    background: #e7f1ff;
+    background: #add4ff;
     color: #0366d6;
     border: none;
     padding: 8px 16px;
@@ -860,7 +860,7 @@ input, select {
 
 .option-row input[type="radio"]:checked + .option-label {
     border-color: #007bff;
-    background: #e7f1ff;
+    background: #add4ff;
 }
 
 .option-letter {
@@ -944,7 +944,7 @@ input, select {
 
 .truefalse-option-group input[type="radio"]:checked + .option-label {
     border-color: #007bff;
-    background: #e7f1ff;
+    background: #add4ff;
 }
 
 .truefalse-option-group .option-icon {
@@ -982,7 +982,7 @@ input, select {
 
 .statement-text strong, 
 .question p strong {
-    color: #2c3e50;
+    color: #4375a7;
     font-size: 18px;
     margin-right: 8px;
 }
@@ -990,7 +990,7 @@ input, select {
 .number-input-container p {
     font-size: 18px;
     font-weight: 500;
-    color: #2c3e50;
+    color: #4375a7;
     margin-bottom: 12px;
 }
 
@@ -1179,7 +1179,7 @@ input, select {
 
 .editor-header h1 {
     font-size: 32px;
-    color: #2c3e50;
+    color: #4375a7;
     margin: 0;
 }
 
@@ -1214,7 +1214,7 @@ input, select {
 
 .back-btn {
     background: #f8f9fa;
-    color: #2c3e50;
+    color: #4375a7;
     border: 2px solid #e9ecef;
 }
 
@@ -1336,7 +1336,7 @@ input, select {
 }
 
 .add-question-btn:hover {
-    background: #e7f1ff;
+    background: #add4ff;
     transform: translateY(-1px);
 }
 
@@ -1778,7 +1778,7 @@ input, select {
 }
 
 .modal-content h2 {
-    color: #2c3e50;
+    color: #4375a7;
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 1.5em;
@@ -1830,7 +1830,7 @@ input, select {
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
-    color: #2c3e50;
+    color: #4375a7;
     font-size: 14px;
 }
 
@@ -2035,7 +2035,7 @@ input, select {
 }
 
 .submission-details strong {
-    color: #2c3e50;
+    color: #4375a7;
 }
 
 #network-canvas {
@@ -2143,15 +2143,15 @@ body.dark-mode .sort-box select:focus {
 }
 
 body.dark-mode .lesson-tags .tag {
-    background: rgba(40, 40, 40, 0.9);
+    background: #4375a7e3;
     color: #fff;
 }
 
 body.dark-mode .tag-filter {
-    background: rgba(40, 40, 40, 0.8);
+    background: #4375a7e3;
     color: #fff;
 }
 
 body.dark-mode .tag-filter:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: #4375a734;
 }
