@@ -39,7 +39,7 @@ const requireAuth = (req, res, next) => {
     if (req.session.isAuthenticated) {
         next();
     } else {
-        res.redirect('/login');
+        res.redirect('/admin/login');
     }
 };
 
@@ -70,6 +70,11 @@ app.get('/result/:id', (req, res) => res.sendFile(__dirname + '/views/result.htm
 // Add new route for statistics page
 app.get('/admin/statistics/:id', requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'lesson-statistics.html'));
+});
+
+// New route added for activity log /history
+app.get('/history', requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'history.html'));
 });
 
 // API Endpoints
@@ -175,6 +180,30 @@ app.get('/api/results/:id', (req, res) => {
         res.json(result);
     } else {
         res.status(404).json({ error: 'Result not found' });
+    }
+});
+
+// New API endpoint for activity log based on results and lesson data
+app.get('/api/history', requireAuth, (req, res) => {
+    try {
+        const results = JSON.parse(fs.readFileSync('./data/results.json'));
+        const lessons = JSON.parse(fs.readFileSync('./data/lessons.json'));
+        const lessonMap = lessons.reduce((map, lesson) => {
+            map[lesson.id] = lesson.title;
+            return map;
+        }, {});
+        
+        const history = results.map(result => ({
+            studentName: result.studentInfo?.name || 'Anonymous',
+            lessonTitle: lessonMap[result.lessonId] || 'Unknown Lesson',
+            submittedAt: result.timestamp,
+            score: result.score
+        }));
+        
+        res.json(history);
+    } catch (error) {
+        console.error('Failed to load history:', error);
+        res.status(500).json({ error: 'Failed to load history' });
     }
 });
 

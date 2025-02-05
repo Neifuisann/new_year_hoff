@@ -151,4 +151,42 @@ function safeUpdateLabel(elementId, text) {
     if (label) label.textContent = text;
 }
 
+// Append student filter functionality for transcripts by student name
+document.addEventListener('DOMContentLoaded', () => {
+    const studentFilterInput = document.getElementById('student-filter-input');
+    const clearFilterBtn = document.getElementById('clear-filter-btn');
+    if (studentFilterInput) {
+        studentFilterInput.addEventListener('input', function() {
+            filterTranscripts(this.value);
+        });
+    }
+    if (clearFilterBtn) {
+        clearFilterBtn.addEventListener('click', function() {
+            if (studentFilterInput) {
+                studentFilterInput.value = '';
+                filterTranscripts('');
+            }
+        });
+    }
+});
+
+function filterTranscripts(filterValue) {
+    const transcriptsTable = document.getElementById('transcripts');
+    if (!transcriptsTable) return;
+    const tbody = transcriptsTable.querySelector('tbody');
+    if (!tbody) return;
+    const rows = tbody.getElementsByTagName('tr');
+    for (let row of rows) {
+        const nameCell = row.cells[1]; // Assuming Full Name is in the second column
+        if (nameCell) {
+            const nameText = nameCell.textContent.toLowerCase();
+            if (nameText.includes(filterValue.toLowerCase())) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', loadStatistics); 

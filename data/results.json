@@ -3312,5 +3312,315 @@
       "dob": null,
       "studentId": null
     }
+  },
+  {
+    "id": "1738767441746",
+    "lessonId": "1738740539431",
+    "timestamp": "2025-02-05T14:57:21.746Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Quan sát các nhiệt kế thủy ngân và nhiệt kế rượu thấy ở phần trên của nhiệt kế thường phình ra, chỗ phình ra đó có tác dụng",
+        "userAnswer": "No answer",
+        "correctAnswer": "chứa lượng thủy ngân hoặc rượu khi dâng lên",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế là thiết bị dùng để đo?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thao tác nào sau đây chưa chính xác khi dùng nhiệt kế thủy ngân?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng tay nắm chặt bầu nhiệt kế một lúc rồi mới đo",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Loại nhiệt kế nào được sử dụng để đo nhiệt độ cơ thể của người?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả ba đáp án A,B,C đều đúng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thời tiết mùa đông giá lạnh ở trong phòng học nếu sờ tay (vật 1) vào song sắt ở cửa sổ (vật 2) ta có cảm giác lạnh nhưng sờ tay vào bàn gỗ (vật 3 ) ta có cảm giác đỡ lạnh hơn. Gọi T_1,〖  T〗_2 và T_3 lần lượt là nhiệt độ của vật 1 , vật 2 và vật 3.",
+        "userAnswer": "No answer",
+        "correctAnswer": "T_1=T_2=T_3.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với nhiệt kế điện trở, nhiệt độ được xác định thông qua biểu thức sự phụ thuộc ...(1)... của vật theo nhiệt độ, từ giá tri điện trở đo được ta xác định được...(2)... cần đo. Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) điện trở; (2) nhiệt độ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vì sao có nhiệt kế rượu hoặc thuỷ ngân nhưng không có nhiệt kế nước?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước co dãn vì nhiệt không đều",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cho các bước như sau:",
+        "userAnswer": "No answer",
+        "correctAnswer": "(3), (2), (4), (1), (5).",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các nhiệt kế sau đây, em hãy chọn nhiệt kế phù hợp để đo nhiệt độ của nước sôi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế thuỷ ngân có thang chia độ từ -10^∘ C đến từ 110^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Việc ước lượng nhiệt độ trước khi đo có tác dụng gì?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Giúp chọn được nhiệt kế đo phù hợp trong các trường hợp khác nhau",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với nhiệt kế thủy ngân, nhiệt độ được xác định dựa trên hiện tượng...(1)... của thủy ngân. Thông qua việc xác định...(1)... của cột thủy ngân ở các nhiệt độ khác nhau ta xác định được nhiệt độ cần đo. Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) dãn nở vì nhiệt; (2) độ cao.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Không thể dùng nhiệt kế rượu để đo nhiệt độ của hơi nước đang sôi vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "rượu sôi ở nhiệt độ thấp hơn 100^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sắp xếp đúng thứ tự các bước đo nhiệt độ bằng nhiệt kế y tế điện tử.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(2), (3), (5), (4), (1)",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đo trên nhiệt kế được xác định thông qua việc xác định giá trị của...(1)... mà đại lượng này...(2)... Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) một đại lượng vật lý khác; (2) phụ thuộc vào nhiệt độ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Số chỉ của nhiệt kế dưới đây là",
+        "userAnswer": "No answer",
+        "correctAnswer": "16^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nhúng một nhiệt kế rượu vào nước nóng, mực rượu trong ống nhiệt kế tăng lên vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "cả ống nhiệt kế và rượu trong ống đều nở ra nhưng rượu nở nhiều hơn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Người ta...(1)...cảm giác nóng lạnh để đo nhiệt độ vì cảm giác này phụ thuộc vào chủ quan của con người và...(2)...được một cách chính xác. Cụm từ còn thiếu (1) và (2) lần lượt là",
+        "userAnswer": "No answer",
+        "correctAnswer": "không thể đo; không thể dùng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hình biểu diễn nhiệt kế dùng chất lỏng. Làm thế nào để tăng độ nhạy của nhiệt kế này?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Làm cho ống nhiệt kế hẹp lại.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn câu sai. Nhiệt kế thuỷ ngân dùng để đo",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ của lò luyện kim đang hoạt động.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế chất lỏng được chế tạo dựa trên nguyên tắc nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự nở vì nhiệt của chất lỏng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đông đặc của rượu là -117^∘ C, của thủy ngân là -38,83^∘ C. Ở nước lạnh người ta dùng nhiệt kế rượu hay nhiệt kế thủy ngân? Vì sao?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế nào sau đây có thể dùng để đo nhiệt độ của nước đang sôi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế thủy ngân",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Bảng chia độ của nhiệt kế y tế lại không có nhiệt độ dưới 35^∘ C và trên 42^∘ C là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ cơ thể người chỉ nằm trong khoảng từ 35^∘ C đến 42^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi đo nhiệt độ bằng nhiệt kế điện tử cần lưu ý điều gì?",
+        "userAnswer": "Tất cả các đáp án trên",
+        "correctAnswer": "Tất cả các đáp án trên",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 1,
+    "totalPoints": 25,
+    "studentInfo": {
+      "name": "dawwa",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738768327010",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T15:12:07.010Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào dưới đây là đúng khi nói về những đặc điểm của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có khối lượng, hình dạng, thể tích xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí không có hình dạng và thể tích riêng là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "khoảng cách giữa các phân tử rất xa, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động Brown là chuyển động hỗn loạn không ngừng của",
+        "userAnswer": "các phân tử",
+        "correctAnswer": "các hạt rất nhỏ",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
+        "userAnswer": "No answer",
+        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hình bên mô tả cấu trúc phân tử ở thể nào dưới đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể khí.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây nói về lực tương tác phân tử là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực tương tác phân tử không đáng kể khi các phân tử ở rất xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh bao gồm",
+        "userAnswer": "No answer",
+        "correctAnswer": "muối, thạch anh, kim cương.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào dưới đây không phải là chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thạch anh.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "đăda",
+      "dob": null,
+      "studentId": null
+    }
   }
 ]

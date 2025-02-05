@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Log</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a href="/" class="home-button">Home</a>
+    <div class="history-container">
+        <h1>Activity Log</h1>
+        <div id="history-filter-container">
+            <input type="text" id="history-filter-input" placeholder="Filter by student name or lesson title" />
+            <button id="history-clear-filter-btn">Clear</button>
+        </div>
+        <div class="table-responsive">
+            <table class="statistics-table" id="history-log">
+                <thead>
+                    <tr>
+                        <th>NO.</th>
+                        <th>Student Name</th>
+                        <th>Lesson Title</th>
+                        <th>Submission Time</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Activity log data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="/js/history.js"></script>
+</body>
+</html> 
