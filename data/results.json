@@ -39,5 +39,3278 @@
       "dob": "2007-12-10",
       "studentId": "123"
     }
+  },
+  {
+    "id": "1738571423273",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:30:23.273Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "Dao Huy",
+      "dob": "1003-12-20",
+      "studentId": "1212121"
+    }
+  },
+  {
+    "id": "1738571687989",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:34:47.989Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "No answer",
+        "correctAnswer": "2",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - False",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "No answer",
+        "correctAnswer": "6",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "d",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738571700460",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:35:00.460Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "d",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738571713664",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:35:13.664Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "dadadwa",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738571852169",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:37:32.169Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "dasda",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738572148259",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:42:28.259Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "dasda",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738572172426",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:42:52.426Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "3",
+        "correctAnswer": "2",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 2,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "dwadaw",
+      "dob": null,
+      "studentId": "12"
+    }
+  },
+  {
+    "id": "1738572471650",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-03T08:47:51.650Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "Phucngu",
+      "dob": "2000-12-10",
+      "studentId": "123"
+    }
+  },
+  {
+    "id": "1738738450916",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T06:54:10.916Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "1+1",
+        "userAnswer": "2",
+        "correctAnswer": "2",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "truefalse",
+        "question": "2+2",
+        "userAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "correctAnswer": "A: 1 - False\nB: 2 - False\nC: 3 - False\nD: 4 - True",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "number",
+        "question": "3+3",
+        "userAnswer": "6",
+        "correctAnswer": "6",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 3,
+    "studentInfo": {
+      "name": "huyyyy",
+      "dob": null,
+      "studentId": "666"
+    }
+  },
+  {
+    "id": "1738739103617",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T07:05:03.617Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh là:",
+        "userAnswer": "Chất rắn có cấu trúc đơn tinh thể",
+        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "Trật tự của các nguyên tử.",
+        "correctAnswer": "Kích thước của các nguyên tử.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động của các nguyên tử, phân tử được gọi là chuyển động",
+        "userAnswer": "chuyển động nhiệt.",
+        "correctAnswer": "chuyển động nhiệt.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Vật rắn có hình dạng xác định vì phân tử cấu tạo nên vật rắn",
+        "userAnswer": "No answer",
+        "correctAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có thể tồn tại ở những thể nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí không có hình dạng và thể tích riêng là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "khoảng cách giữa các phân tử rất xa, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hình bên mô tả cấu trúc phân tử ở thể nào dưới đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể khí.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nguyên tử, phân tử không có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nở ra khi nhiệt độ tăng, co lại khi nhiệt độ giảm.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tính chất nào sau đây không phải là tính chất của chất ở thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có hình dạng và thể tích riêng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử trong một miếng sắt có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đứng rất gần nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Question nào sau đây nói về lực tương tác phân tử là không đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với mô hình động học phân tử, sự khác biệt về cấu trúc của chất rắn, chất lỏng, chất khí là do sự khác biệt về",
+        "userAnswer": "No answer",
+        "correctAnswer": "độ lớn của lực tương tác giữa các phân tử trong mỗi chất.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào dưới đây không phải là chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thạch anh.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các phân tử khí chuyển động hỗn loạn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử quá nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nội dung thí nghiệm Brown là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Đặc điểm nào sau đây là đặc điểm của chất lỏng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có hình dạng của phần vật chứa nó, có thể rót được và chảy tràn trên bề mặt, khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhựa đường",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
+        "userAnswer": "No answer",
+        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn vô định hình là chất rắn",
+        "userAnswer": "No answer",
+        "correctAnswer": "không có cấu trúc tinh thể",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực liên kết giữa các phân tử càng mạnh thì khoảng cách giữa chúng càng xa.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mạng tinh thể.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây nói về lực tương tác phân tử là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực tương tác phân tử không đáng kể khi các phân tử ở rất xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí luôn luôn chiếm hết thể tích của bình chứa bởi vì:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về mạng tinh thể điều nào sau đây là sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mạng tinh thể của tất cả các chất đều có hình dạng giống nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào dưới đây là đúng khi nói về những đặc điểm của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có khối lượng, hình dạng, thể tích xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
+        "userAnswer": "No answer",
+        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh bao gồm",
+        "userAnswer": "No answer",
+        "correctAnswer": "muối, thạch anh, kim cương.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn:",
+        "userAnswer": "No answer",
+        "correctAnswer": "có lực tương tác giữa các phân tử rất mạnh",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một số chất khí có mùi thơm toả ra từ bông hoa hồng làm ta có thể ngửi thấy mùi hoa thơm. Điều này thể hiện tính chất nào của thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có thể lan toả trong không gian theo mọi hướng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cấu trúc tạo bởi các hạt mà mỗi hạt đó dao động nhiệt xung quanh một vị trí cân bằng trùng với đỉnh của khối lập phương là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tinh thể muối ăn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phân loại các chất rắn theo cách nào dưới đây là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất rắn kết tinh và chất rắn vô định hình.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai khi nói về chất khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các phân tử khí ở rất gần nhau so với các phân tử chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động Brown là chuyển động hỗn loạn không ngừng của",
+        "userAnswer": "No answer",
+        "correctAnswer": "các hạt rất nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tại sao người ta không nén chất rắn lại để tiết kiệm diện tích?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Do chất rắn liên kết chặt chẽ với nhau nên khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn phát biểu đúng về lực tương tác giữa các phân tử",
+        "userAnswer": "No answer",
+        "correctAnswer": "Giữa các phân tử có cả lực hút và lực đẩy.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Mô hình động học phân tử được xây dựng dựa trên quan điểm nào về cấu tạo chất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 42,
+    "studentInfo": {
+      "name": "DaoHuy",
+      "dob": null,
+      "studentId": "123"
+    }
+  },
+  {
+    "id": "1738739976466",
+    "lessonId": "1738739931367",
+    "timestamp": "2025-02-05T07:19:36.466Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Tại sao khi cầm vào vỏ bình ga mini đang sử dụng ta thường thấy có một lớp nước rất mỏng trên đó?",
+        "userAnswer": "Do vỏ bình ga lạnh hơn nhiệt độ môi trường nên hơi nước trong không khí ngưng tụ trên đó.",
+        "correctAnswer": "Do vỏ bình ga lạnh hơn nhiệt độ môi trường nên hơi nước trong không khí ngưng tụ trên đó.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Về mùa đông ở các xứ lạnh ta thấy người đi thường thở ra khói là do hơi thở của người",
+        "userAnswer": "có chứa nhiều hơi nước, khi ra ngoài không khí lạnh bị ngưng tụ thành các hạt nhỏ li ti tạo thành khói.",
+        "correctAnswer": "có chứa nhiều hơi nước, khi ra ngoài không khí lạnh bị ngưng tụ thành các hạt nhỏ li ti tạo thành khói.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Ở điều kiện thường, iot là chất rắn dạng tinh thể màu đen tím. Khi đun nóng, iot có sự thăng hoa. Vậy sự thăng hoa của iot là sự chuyển trạng thái từ thể",
+        "userAnswer": "No answer",
+        "correctAnswer": "rắn sang khí.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Đồ thị biểu diễn sự thay đổi nhiệt độ của nước theo thời gian khi đun và đề nguội. Dựa vào đồ thị hãy cho biết thời điểm ban đầu nhiệt độ của nước là bao nhiêu?",
+        "userAnswer": "No answer",
+        "correctAnswer": "20^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự đông đặc?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Rèn thép trong lò rèn.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các trường hợp dưới đây, trường hợp nào liên quan đến sự bay hơi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cốc nước bị cạn dần khi để ngoài trời nắng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Ở nhiệt độ trong phòng, chỉ có thể có khí ôxi, không thể có ôxi lỏng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ trong phòng cao hơn nhiệt độ sôi của ôxi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một bình cầu thủy tinh chứa (không đầy) một lượng nước nóng có nhiệt độ khoảng 80^∘ C và được nút kín. Dội nước lạnh lên phần trên gần cổ bình, ta thấy nước trong bình lại sôi là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) và (2) đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Có thể làm cho nước sôi mà không cần đun được không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có thể, chỉ cần hút khí để giảm áp suất tác dụng lên mặt thoáng của nước.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự bay hơi",
+        "userAnswer": "No answer",
+        "correctAnswer": "xảy ra ở bất kì nhiệt độ nào của chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Câu nào dưới đây là không đúng khi nói về sự nóng chảy của các chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất rắn vô định hình cũng nóng chảy ở một nhiệt độ xác định không đổi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nước sôi (áp suất tiêu chuẩn) ở",
+        "userAnswer": "No answer",
+        "correctAnswer": "100^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng vào mùa đông ở các nước vùng băng tuyết thường xảy ra sự cố vỡ đường ống nước là do:",
+        "userAnswer": "No answer",
+        "correctAnswer": "thể tích nước khi đông đặc tăng lên gây ra áp lực lớn lên thành ống.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khái niệm ẩn nhiệt nóng chảy được hiểu là phần năng lượng nhận thêm để",
+        "userAnswer": "No answer",
+        "correctAnswer": "phá vỡ liên kết giữa các phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Để có muối ăn, người ta tách muối ra khỏi nước biển mặn bằng cách nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Phơi nắng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ nóng chảy của nước đá (áp suất tiêu chuẩn) là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "0^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có thể chuyển từ thể này sang thể khác được không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các chất có thể chuyển từ thể này sang thể khác.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi xảy ra ở",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ sôi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình hóa hơi, khi đạt đến nhiệt độ sôi thì chất lỏng không tăng nhiệt độ là do",
+        "userAnswer": "No answer",
+        "correctAnswer": "phần nhiệt lượng nhận thêm dùng để phá vỡ liên kết với các phân tử xung quanh.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn phát biểu không đúng về nhiệt độ sôi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ sôi của nước là lớn nhất trong các chất lỏng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nóng chảy của một vật xảy ra khi",
+        "userAnswer": "No answer",
+        "correctAnswer": "đun nóng vật đến nhiệt độ nóng chảy của chất cấu thành vật thể đó.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Độ ẩm không khí liên quan đến quá trình thoát hơi nước ở lá như thế nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Độ ẩm không khí càng thấp, sự thoát hơi nước càng mạnh.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cho đồ thị biểu diễn sự thay đổi nhiệt độ theo thời gian của nước đá như hình vẽ. Thời gian nước đá tan từ phút nào:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Từ phút thứ 6 đến phút thứ 10",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự tạo thành hơi nước.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thế nào là sự bay hơi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự chuyển từ thể lỏng sang thể hơi được gọi là sự bay hơi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn phát biểu sai.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Áp suất khí càng nhỏ thì nhiệt độ sôi của chất lỏng càng cao.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Dây tóc bóng đèn sợi đốt được làm bằng:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vonfram.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Ở nhũ̃ng ngày rất lạnh, nhiều khu vực ở nước ta như Sapa, Mẫu sơn. nước có thể bị đóng băng. Hiện tượng này thể hiện sự chuyển thể nào của chất:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự đông đặc.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi trời lạnh, ô tô có bật điều hòa và đóng kín cửa, hành khách ngồi trên ô tô thấy hiện tượng gì?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Hơi nước ngưng tụ tạo thành giọt nước phía trong kính xe.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Ở trên núi cao người ta",
+        "userAnswer": "No answer",
+        "correctAnswer": "không thể luộc chín trứng trong nước sôi vì áp suất trên đó nhỏ hơn áp suất chuẩn (1 atm) nên nước sôi ở nhiệt độ thấp hơn 100^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thế nào là sự nóng chảy?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự chuyển từ thể rắn sang thể lỏng được gọi là sự nóng chảy.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước mưa trên đường nhựa biến mất khi Mặt Trời xuất hiện lại sau cơn mưa",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nước chỉ bắt đầu sôi khi",
+        "userAnswer": "No answer",
+        "correctAnswer": "các bọt khí vỡ tung trên mặt thoáng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Câu nào sau đây không đúng khi nói về sự bay hơi của các chất lỏng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự bay hơi là quá trình chuyển từ thể lỏng sang thể khí xảy ra ở cả bên trong và trên bề mặt chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(GK) Đặc điểm và tính chất nào dưới đây không liên quan đến chất rắn kết tinh?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có nhiệt độ nóng chảy không xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự bay hơi là sự hóa hơi xảy ra ở",
+        "userAnswer": "No answer",
+        "correctAnswer": "trên bề mặt chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một số chất ở thể rắn như iodine (i-ốt), băng phiến, đá khô ( CO_2 ở thể rắn), ... có thể chuyển trực tiếp sang...(1)...khi nó...(2)... Hiện tượng trên gọi là sự thăng hoa. Ngược lại, với sự thăng hoa là sự ngưng kết. Điền cụm từ thích hợp vào chỗ trống.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) thể hơi; (2) nhận nhiệt.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi đun nóng băng phiến, người ta thấy nhiệt độ của băng phiến tăng dần, khi tới 80^∘ C nhiệt độ của băng phiến ngừng lại không tăng, mặc dù vẫn tiếp tục đun. Lúc đó băng phiến tồn tại ở",
+        "userAnswer": "No answer",
+        "correctAnswer": "thể rắn và thể lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cồn y tế chuyển từ thể lỏng sang thể khí rất nhanh ở điều kiện thông thường. Khi xoa cồn vào da, ta cảm thấy lạnh ở vùng da đó vì cồn",
+        "userAnswer": "No answer",
+        "correctAnswer": "thu nhiệt lượng từ cơ thể qua chỗ da đó để bay hơi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trường hợp nào sau đây không liên quan đến sự ngưng tụ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Tuyết tan.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự nóng chảy?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đốt một ngọn đèn dầu",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong một thí nghiệm về sự chuyển thể của thiếc, kết quả thu được đồ thị biểu diễn sự thay đổi nhiệt độ của thiết theo thời gian mà nó nhận nhiệt lượng có dạng như hình vẽ. Giá trị 232^∘ C trên đồ thị là",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ nóng chảy của thiếc.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự bay hơi của nước diễn ra nhanh hơn khi nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khi nhiệt độ càng cao, gió càng mạnh và diện tích mặt thoáng của nước càng lớn.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trường hợp nào sau đây xuất hiện hiện tượng đông đặc?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thổi tắt ngọn nến.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Việc làm nào sau đây không đúng khi thực hiện thí nghiệm kiểm tra xem tốc độ bay hơi của một chất lỏng có phụ thuộc vào nhiệt độ hay không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng hai loại chất lỏng khác nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây về tính chất của chất kết tinh và chất vô định hình là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất kết tinh có nhiệt độ nóng chảy xác định, chất vô định hình không có nhiệt độ nóng chảy xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai khi nói về sự nóng chảy và sự đông đặc?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ của vật sẽ tăng dần trong quá trình nóng chảy và giảm dần trong quá trình đông đặc.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với điều kiện như thế nào thì các chất có thể chuyển từ thể này sang thể khác?",
+        "userAnswer": "No answer",
+        "correctAnswer": "thay đổi nhiệt độ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Ở một áp suất cụ thể, khi chất lỏng đạt nhiệt độ sôi thì",
+        "userAnswer": "No answer",
+        "correctAnswer": "nếu tiếp tục được cung cấp năng lượng, nhiệt độ của chất lỏng vẫn không tăng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật rắn khi bị nung nóng thì mềm dần. Đó là",
+        "userAnswer": "No answer",
+        "correctAnswer": "chất rắn vô định hình.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn có nhiệt độ nóng chảy xác định là",
+        "userAnswer": "No answer",
+        "correctAnswer": "đồng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thế nào là sự đông đặc?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự chuyển từ thể lỏng sang thể rắn được gọi là sự đông đặc.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự nóng chảy ở chất rắn kết tinh bắt đầu xảy ra khi",
+        "userAnswer": "No answer",
+        "correctAnswer": "một số phân tử thắng được lực liên kết với các phân tử xung quanh và thoát khỏi liên kết với chúng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một ấm nước đang sôi, nếu tiếp tục đun:",
+        "userAnswer": "No answer",
+        "correctAnswer": "nước trong ấm bay hơi nhiều hơn và cạn dần.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thời gian sắt đông đặc, nhiệt độ của nó",
+        "userAnswer": "No answer",
+        "correctAnswer": "không đổi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Câu nào sau đây không đúng sự nóng chảy:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Trong suốt quá trình nóng chảy, nhiệt độ nóng chảy luôn luôn thay đổi.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thế nào là sự ngưng tư?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự chuyển từ thể hơi sang thể lỏng được gọi là sự ngưng tụ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Quá trình chuyển từ thể khí sang thể rắn của các chất được gọi là",
+        "userAnswer": "No answer",
+        "correctAnswer": "sự ngưng kết.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi quan sát sự nóng chảy của nước đá, trong suốt thời gian nóng chảy thì:",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ của nước không thay đổi.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 2,
+    "totalPoints": 60,
+    "studentInfo": {
+      "name": "dấdadawwa",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738740629294",
+    "lessonId": "1738740539431",
+    "timestamp": "2025-02-05T07:30:29.294Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đông đặc của rượu là -117^∘ C, của thủy ngân là -38,83^∘ C. Ở nước lạnh người ta dùng nhiệt kế rượu hay nhiệt kế thủy ngân? Vì sao?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thời tiết mùa đông giá lạnh ở trong phòng học nếu sờ tay (vật 1) vào song sắt ở cửa sổ (vật 2) ta có cảm giác lạnh nhưng sờ tay vào bàn gỗ (vật 3 ) ta có cảm giác đỡ lạnh hơn. Gọi T_1,〖  T〗_2 và T_3 lần lượt là nhiệt độ của vật 1 , vật 2 và vật 3.",
+        "userAnswer": "No answer",
+        "correctAnswer": "T_1=T_2=T_3.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với nhiệt kế điện trở, nhiệt độ được xác định thông qua biểu thức sự phụ thuộc ...(1)... của vật theo nhiệt độ, từ giá tri điện trở đo được ta xác định được...(2)... cần đo. Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) điện trở; (2) nhiệt độ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Không thể dùng nhiệt kế rượu để đo nhiệt độ của hơi nước đang sôi vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "rượu sôi ở nhiệt độ thấp hơn 100^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sắp xếp đúng thứ tự các bước đo nhiệt độ bằng nhiệt kế y tế điện tử.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(2), (3), (5), (4), (1)",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Số chỉ của nhiệt kế dưới đây là",
+        "userAnswer": "No answer",
+        "correctAnswer": "16^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thao tác nào sau đây chưa chính xác khi dùng nhiệt kế thủy ngân?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng tay nắm chặt bầu nhiệt kế một lúc rồi mới đo",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Quan sát các nhiệt kế thủy ngân và nhiệt kế rượu thấy ở phần trên của nhiệt kế thường phình ra, chỗ phình ra đó có tác dụng",
+        "userAnswer": "No answer",
+        "correctAnswer": "chứa lượng thủy ngân hoặc rượu khi dâng lên",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cho các bước như sau:",
+        "userAnswer": "No answer",
+        "correctAnswer": "(3), (2), (4), (1), (5).",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nhúng một nhiệt kế rượu vào nước nóng, mực rượu trong ống nhiệt kế tăng lên vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "cả ống nhiệt kế và rượu trong ống đều nở ra nhưng rượu nở nhiều hơn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế nào sau đây có thể dùng để đo nhiệt độ của nước đang sôi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế thủy ngân",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đo trên nhiệt kế được xác định thông qua việc xác định giá trị của...(1)... mà đại lượng này...(2)... Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) một đại lượng vật lý khác; (2) phụ thuộc vào nhiệt độ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Việc ước lượng nhiệt độ trước khi đo có tác dụng gì?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Giúp chọn được nhiệt kế đo phù hợp trong các trường hợp khác nhau",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế là thiết bị dùng để đo?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Loại nhiệt kế nào được sử dụng để đo nhiệt độ cơ thể của người?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả ba đáp án A,B,C đều đúng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt kế chất lỏng được chế tạo dựa trên nguyên tắc nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự nở vì nhiệt của chất lỏng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với nhiệt kế thủy ngân, nhiệt độ được xác định dựa trên hiện tượng...(1)... của thủy ngân. Thông qua việc xác định...(1)... của cột thủy ngân ở các nhiệt độ khác nhau ta xác định được nhiệt độ cần đo. Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) dãn nở vì nhiệt; (2) độ cao.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi đo nhiệt độ bằng nhiệt kế điện tử cần lưu ý điều gì?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Tất cả các đáp án trên",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các nhiệt kế sau đây, em hãy chọn nhiệt kế phù hợp để đo nhiệt độ của nước sôi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế thuỷ ngân có thang chia độ từ -10^∘ C đến từ 110^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Người ta...(1)...cảm giác nóng lạnh để đo nhiệt độ vì cảm giác này phụ thuộc vào chủ quan của con người và...(2)...được một cách chính xác. Cụm từ còn thiếu (1) và (2) lần lượt là",
+        "userAnswer": "No answer",
+        "correctAnswer": "không thể đo; không thể dùng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Bảng chia độ của nhiệt kế y tế lại không có nhiệt độ dưới 35^∘ C và trên 42^∘ C là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt độ cơ thể người chỉ nằm trong khoảng từ 35^∘ C đến 42^∘ C",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vì sao có nhiệt kế rượu hoặc thuỷ ngân nhưng không có nhiệt kế nước?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước co dãn vì nhiệt không đều",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn câu sai. Nhiệt kế thuỷ ngân dùng để đo",
+        "userAnswer": "nhiệt độ của lò luyện kim đang hoạt động.",
+        "correctAnswer": "nhiệt độ của lò luyện kim đang hoạt động.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Hình biểu diễn nhiệt kế dùng chất lỏng. Làm thế nào để tăng độ nhạy của nhiệt kế này?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Làm cho ống nhiệt kế hẹp lại.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 25,
+    "studentInfo": {
+      "name": "đă",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738741986690",
+    "lessonId": "1738741936960",
+    "timestamp": "2025-02-05T07:53:06.690Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Để đảm bảo an toàn trong khi làm thí nghiệm cần phải chú ý. Chọn câu sai.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sử dụng bình nhiệt lượng kế được thiết kế cho mục đích đo nhiệt lượng và nứt cũng sử dụng được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Để đảm bảo an toàn trong tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước cần chú ý. Chọn câu sai",
+        "userAnswer": "nước không quá nóng và dòng điện nhỏ nên không cần chú ý.",
+        "correctAnswer": "nước không quá nóng và dòng điện nhỏ nên không cần chú ý.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây không dùng để xác định nhiệt hoá hơi riêng của nước?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt lượng cần cung cấp cho một lượng chất lỏng hoá hơi ở nhiệt độ không đổi",
+        "userAnswer": "No answer",
+        "correctAnswer": "phụ thuộc vào khối lượng và bản chất của chất lỏng",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Đồ thị nào sau đây biểu diễn mối quan hệ giữa khối lượng nước còn lại trong bình nhiệt lượng kế và thời gian của quá trình hoá hơi của nước",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đồ thị (3).",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Xác định nhiệt lượng nước trong bình nhiệt lượng kế thu được trong tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước bằng cách.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Xác định công suất trung bình của nguồn điện bằng oát kế và thời gian",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước phải thực hiện bước nào cuối cùng trong các bước sau.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bật nguồn điện",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là sai khi nói về nhiệt hoá hơi.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đơn vị của nhiệt hóa hơi là Jun trên kilôgam (J/kg).",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(GK) Nhiệt hóa hơi riêng của nước là 2,3⋅10^6 \" \" J/kg. Câu nào dưới đây là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mỗi kilogam nước cần thu một lượng nhiệt là 2,3⋅10^6 \" \" J để bay hơi hoàn toàn ở nhiệt độ sôi và áp suất chuẩn.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt hoá hơi riêng là",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt lượng cần để làm cho một kilogam chất lỏng đó hoá hơi hoàn toàn ở nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cần đo đại lượng nào để xác định nhiệt hoá hơi riêng của nước",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt lượng cần cung cấp cho nước hoá hơi và khối lượng của nước.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Oơn vị nào sau đây là đơn vị của nhiệt hoá hơi riêng của chất lỏng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Jun trên kilôgam (J/kg).",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 13,
+    "studentInfo": {
+      "name": "sdaw",
+      "dob": null,
+      "studentId": "123"
+    }
+  },
+  {
+    "id": "1738743125553",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T08:12:05.553Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Mô hình động học phân tử được xây dựng dựa trên quan điểm nào về cấu tạo chất?",
+        "userAnswer": "Dựa trên cả hai quan điểm là chất có cấu tạo liên tục và gián đoạn.",
+        "correctAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "Chiếc cốc thủy tinh",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Question nào sau đây nói về lực tương tác phân tử là không đúng?",
+        "userAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
+        "correctAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "Nước",
+        "correctAnswer": "Nước",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "Kích thước của các nguyên tử.",
+        "correctAnswer": "Kích thước của các nguyên tử.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai khi nói về chất khí?",
+        "userAnswer": "Các phân tử khí ở rất gần nhau so với các phân tử chất lỏng.",
+        "correctAnswer": "Các phân tử khí ở rất gần nhau so với các phân tử chất lỏng.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về mạng tinh thể điều nào sau đây là sai?",
+        "userAnswer": "Mạng tinh thể của tất cả các chất đều có hình dạng giống nhau.",
+        "correctAnswer": "Mạng tinh thể của tất cả các chất đều có hình dạng giống nhau.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Hình bên mô tả cấu trúc phân tử ở thể nào dưới đây?",
+        "userAnswer": "Thể khí.",
+        "correctAnswer": "Thể khí.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nguyên tử, phân tử không có tính chất nào sau đây?",
+        "userAnswer": "Nở ra khi nhiệt độ tăng, co lại khi nhiệt độ giảm.",
+        "correctAnswer": "Nở ra khi nhiệt độ tăng, co lại khi nhiệt độ giảm.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 9,
+    "totalPoints": 42,
+    "studentInfo": {
+      "name": "dawdadaw",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738743301596",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T08:15:01.596Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Chuyển động của các nguyên tử, phân tử được gọi là chuyển động",
+        "userAnswer": "No answer",
+        "correctAnswer": "chuyển động nhiệt.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một số chất khí có mùi thơm toả ra từ bông hoa hồng làm ta có thể ngửi thấy mùi hoa thơm. Điều này thể hiện tính chất nào của thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có thể lan toả trong không gian theo mọi hướng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
+        "userAnswer": "No answer",
+        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử trong một miếng sắt có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đứng rất gần nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nội dung thí nghiệm Brown là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "No answer",
+        "correctAnswer": "Kích thước của các nguyên tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động Brown là chuyển động hỗn loạn không ngừng của",
+        "userAnswer": "No answer",
+        "correctAnswer": "các hạt rất nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "sưdw",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738743348356",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T08:15:48.356Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Chuyển động của các nguyên tử, phân tử được gọi là chuyển động",
+        "userAnswer": "No answer",
+        "correctAnswer": "chuyển động nhiệt.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một số chất khí có mùi thơm toả ra từ bông hoa hồng làm ta có thể ngửi thấy mùi hoa thơm. Điều này thể hiện tính chất nào của thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có thể lan toả trong không gian theo mọi hướng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
+        "userAnswer": "No answer",
+        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử trong một miếng sắt có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đứng rất gần nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nội dung thí nghiệm Brown là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "No answer",
+        "correctAnswer": "Kích thước của các nguyên tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động Brown là chuyển động hỗn loạn không ngừng của",
+        "userAnswer": "No answer",
+        "correctAnswer": "các hạt rất nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 1,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "sưdw",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738756129048",
+    "lessonId": "1738755826332",
+    "timestamp": "2025-02-05T11:48:49.048Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "Cả A, B, C đều đúng.",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ của vật không phụ thuộc vào yếu tố nào sau đây?",
+        "userAnswer": "Cả ba yếu tố trên.",
+        "correctAnswer": "Khối lượng của vật.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Quan sát các nhiệt kế thủy ngân và nhiệt kế rượu thấy ở phần trên của nhiệt kế thường phình ra, chỗ phình ra đó có tác dụng",
+        "userAnswer": "chứa lượng khí còn dư khi thủy ngân hoặc rượu dâng lên",
+        "correctAnswer": "chứa lượng thủy ngân hoặc rượu khi dâng lên",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh là:",
+        "userAnswer": "Chất rắn có cấu trúc tinh thể",
+        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Khi hệ truyền nhiệt và thực hiện công thì nội năng của hệ",
+        "userAnswer": "giảm",
+        "correctAnswer": "giảm",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Khi tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước phải thực hiện bước nào cuối cùng trong các bước sau.",
+        "userAnswer": "Bật nguồn điện",
+        "correctAnswer": "Bật nguồn điện",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Điểm đóng băng và sôi của nước theo thang Kelvin là",
+        "userAnswer": "273 K và 373 K.",
+        "correctAnswer": "273 K và 373 K.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Người ta thả ba miếng đồng, nhôm, chì có cùng khối lượng và cùng được nung nóng tới 100^∘ C vào một cốc nước lạnh. Hãy so sánh nhiệt lượng do các miếng kim loại trên truyền cho nước. Biết nhiệt dung riêng của đồng, nhôm, chì lần lượt là: 380\" \" J/kg.K,880\" \" J/kg.K,130\" \" J/kg. K.",
+        "userAnswer": "Nhiệt lượng của miếng nhôm truyền cho nước lớn nhất, rồi đến miếng đồng, miếng chì.",
+        "correctAnswer": "Nhiệt lượng của miếng nhôm truyền cho nước lớn nhất, rồi đến miếng đồng, miếng chì.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây về tính chất của chất kết tinh và chất vô định hình là đúng?",
+        "userAnswer": "Chất kết tinh có nhiệt độ nóng chảy xác định, chất vô định hình không có nhiệt độ nóng chảy xác định.",
+        "correctAnswer": "Chất kết tinh có nhiệt độ nóng chảy xác định, chất vô định hình không có nhiệt độ nóng chảy xác định.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 7,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "Phucngu",
+      "dob": null,
+      "studentId": "1212121"
+    }
+  },
+  {
+    "id": "1738756614320",
+    "lessonId": "1738756486119",
+    "timestamp": "2025-02-05T11:56:54.320Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây dùng để xác định công suất của dòng điện",
+        "userAnswer": "Oát kế.",
+        "correctAnswer": "Oát kế.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây không dùng để xác định nhiệt hoá hơi riêng của nước?",
+        "userAnswer": "Nhiệt kế.",
+        "correctAnswer": "Nhiệt kế.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Ý nghĩa thí nghiệm của Jun là",
+        "userAnswer": "chứng minh có sự biến đổi của công thành nội năng.",
+        "correctAnswer": "tìm ra mối quan hệ tương đương giữa công và nhiệt lượng.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
+        "userAnswer": "Sự tạo thành hơi nước.",
+        "correctAnswer": "Sự tạo thành hơi nước.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có thể tồn tại ở những thể nào?",
+        "userAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về nội dung của định luật I nhiệt động lực học phát biểu nào sau đây sai?",
+        "userAnswer": "Độ biến thiên nội năng của vật bằng hiệu giữa công và nhiệt lượng mà vật nhận được",
+        "correctAnswer": "Độ biến thiên nội năng của vật bằng hiệu giữa công và nhiệt lượng mà vật nhận được",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Khi vật rắn tinh thể đang nóng chảy thì đại lượng nào của vật không thay đổi?",
+        "userAnswer": "Nhiệt độ của vật.",
+        "correctAnswer": "Nhiệt độ của vật.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đông đặc của rượu là -117^∘ C, của thủy ngân là -38,83^∘ C. Ở nước lạnh người ta dùng nhiệt kế rượu hay nhiệt kế thủy ngân? Vì sao?",
+        "userAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "correctAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật được làm lạnh từ 100^∘ C xuống 0^∘ C. Hỏi nhiệt độ của vật theo thang Kelvin giảm đi bao nhiêu độ?",
+        "userAnswer": "100 K",
+        "correctAnswer": "100 K",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 8,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "HuyIQ",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738756794322",
+    "lessonId": "1738756486119",
+    "timestamp": "2025-02-05T11:59:54.322Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
+        "userAnswer": "Sự tạo thành hơi nước.",
+        "correctAnswer": "Sự tạo thành hơi nước.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây không dùng để xác định nhiệt hoá hơi riêng của nước?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi vật rắn tinh thể đang nóng chảy thì đại lượng nào của vật không thay đổi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ của vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật được làm lạnh từ 100^∘ C xuống 0^∘ C. Hỏi nhiệt độ của vật theo thang Kelvin giảm đi bao nhiêu độ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "100 K",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về nội dung của định luật I nhiệt động lực học phát biểu nào sau đây sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Độ biến thiên nội năng của vật bằng hiệu giữa công và nhiệt lượng mà vật nhận được",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có thể tồn tại ở những thể nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây dùng để xác định công suất của dòng điện",
+        "userAnswer": "No answer",
+        "correctAnswer": "Oát kế.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đông đặc của rượu là -117^∘ C, của thủy ngân là -38,83^∘ C. Ở nước lạnh người ta dùng nhiệt kế rượu hay nhiệt kế thủy ngân? Vì sao?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Ý nghĩa thí nghiệm của Jun là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tìm ra mối quan hệ tương đương giữa công và nhiệt lượng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "Dao Huya",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738756931106",
+    "lessonId": "1738756486119",
+    "timestamp": "2025-02-05T12:02:11.106Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Các chất có thể tồn tại ở những thể nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây không dùng để xác định nhiệt hoá hơi riêng của nước?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt kế.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Ý nghĩa thí nghiệm của Jun là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tìm ra mối quan hệ tương đương giữa công và nhiệt lượng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi vật rắn tinh thể đang nóng chảy thì đại lượng nào của vật không thay đổi?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhiệt độ của vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về nội dung của định luật I nhiệt động lực học phát biểu nào sau đây sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Độ biến thiên nội năng của vật bằng hiệu giữa công và nhiệt lượng mà vật nhận được",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật được làm lạnh từ 100^∘ C xuống 0^∘ C. Hỏi nhiệt độ của vật theo thang Kelvin giảm đi bao nhiêu độ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "100 K",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây dùng để xác định công suất của dòng điện",
+        "userAnswer": "No answer",
+        "correctAnswer": "Oát kế.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ đông đặc của rượu là -117^∘ C, của thủy ngân là -38,83^∘ C. Ở nước lạnh người ta dùng nhiệt kế rượu hay nhiệt kế thủy ngân? Vì sao?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dùng nhiệt kế rượu vì nhiệt kế rượu có thể đo nhiệt độ môi trường -50^∘ C.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự tạo thành hơi nước.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "dadadwaa",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757088897",
+    "lessonId": "1738757070050",
+    "timestamp": "2025-02-05T12:04:48.897Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Trong các nhiệt kế sau đây, em hãy chọn nhiệt kế phù hợp để đo nhiệt độ của nước sôi?",
+        "userAnswer": "Nhiệt kế thuỷ ngân có thang chia độ từ -10^∘ C đến từ 110^∘ C.",
+        "correctAnswer": "Nhiệt kế thuỷ ngân có thang chia độ từ -10^∘ C đến từ 110^∘ C.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Đồ thị nào sau đây biểu diễn sự thay đổi nhiệt độ theo thời gian của viên nước đá ở 0^∘ C trong bình nhiệt lượng kế.",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đồ thị (1).",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ cao nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình A",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cấu trúc tạo bởi các hạt mà mỗi hạt đó dao động nhiệt xung quanh một vị trí cân bằng trùng với đỉnh của khối lập phương là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tinh thể muối ăn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi năng lượng của các phân tử cấu tạo nên vật giảm thì",
+        "userAnswer": "No answer",
+        "correctAnswer": "nội năng của vật cũng giảm.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Về mùa đông ở các xứ lạnh ta thấy người đi thường thở ra khói là do hơi thở của người",
+        "userAnswer": "No answer",
+        "correctAnswer": "có chứa nhiều hơi nước, khi ra ngoài không khí lạnh bị ngưng tụ thành các hạt nhỏ li ti tạo thành khói.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nếu nhiệt truyền từ một cái bàn sang một khối băng chuyển động ngang trượt trên mặt bàn thì điều nào sau đây phải đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối băng lạnh hơn cái bàn.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cần đo đại lượng nào để xác định nhiệt hoá hơi riêng của nước",
+        "userAnswer": "No answer",
+        "correctAnswer": "nhiệt lượng cần cung cấp cho nước hoá hơi và khối lượng của nước.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "adwda",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757370748",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:09:30.748Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "No answer",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "Cả A, B, C đều đúng.",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 1,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "ăd",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757387253",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:09:47.253Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "No answer",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "dâdw",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757615950",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:13:35.950Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "No answer",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "đawa",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757641208",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:14:01.208Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "mức độ nóng, lạnh của một vật.",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "đâ",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757694857",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:14:54.857Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "No answer",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "đă",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738757761365",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T12:16:01.365Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Mô hình động học phân tử được xây dựng dựa trên quan điểm nào về cấu tạo chất?",
+        "userAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
+        "correctAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nguyên tử, phân tử không có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nở ra khi nhiệt độ tăng, co lại khi nhiệt độ giảm.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động của các nguyên tử, phân tử được gọi là chuyển động",
+        "userAnswer": "No answer",
+        "correctAnswer": "chuyển động nhiệt.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chọn phát biểu đúng về lực tương tác giữa các phân tử",
+        "userAnswer": "No answer",
+        "correctAnswer": "Giữa các phân tử có cả lực hút và lực đẩy.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Question nào sau đây nói về lực tương tác phân tử là không đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
+        "userAnswer": "No answer",
+        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây nói về lực tương tác phân tử là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực tương tác phân tử không đáng kể khi các phân tử ở rất xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nội dung thí nghiệm Brown là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chuyển động Brown là chuyển động hỗn loạn không ngừng của",
+        "userAnswer": "No answer",
+        "correctAnswer": "các hạt rất nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có thể tồn tại ở những thể nào?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Với mô hình động học phân tử, sự khác biệt về cấu trúc của chất rắn, chất lỏng, chất khí là do sự khác biệt về",
+        "userAnswer": "No answer",
+        "correctAnswer": "độ lớn của lực tương tác giữa các phân tử trong mỗi chất.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực liên kết giữa các phân tử càng mạnh thì khoảng cách giữa chúng càng xa.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "No answer",
+        "correctAnswer": "Kích thước của các nguyên tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử trong một miếng sắt có tính chất nào sau đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Đứng rất gần nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn:",
+        "userAnswer": "No answer",
+        "correctAnswer": "có lực tương tác giữa các phân tử rất mạnh",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào dưới đây là đúng khi nói về những đặc điểm của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có khối lượng, hình dạng, thể tích xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật rắn có hình dạng xác định vì phân tử cấu tạo nên vật rắn",
+        "userAnswer": "No answer",
+        "correctAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tại sao người ta không nén chất rắn lại để tiết kiệm diện tích?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Do chất rắn liên kết chặt chẽ với nhau nên khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phân loại các chất rắn theo cách nào dưới đây là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất rắn kết tinh và chất rắn vô định hình.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mạng tinh thể.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi nói về mạng tinh thể điều nào sau đây là sai?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mạng tinh thể của tất cả các chất đều có hình dạng giống nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cấu trúc tạo bởi các hạt mà mỗi hạt đó dao động nhiệt xung quanh một vị trí cân bằng trùng với đỉnh của khối lập phương là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tinh thể muối ăn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn vô định hình là chất rắn",
+        "userAnswer": "No answer",
+        "correctAnswer": "không có cấu trúc tinh thể",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh bao gồm",
+        "userAnswer": "No answer",
+        "correctAnswer": "muối, thạch anh, kim cương.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào dưới đây không phải là chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thạch anh.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhựa đường",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Đặc điểm nào sau đây là đặc điểm của chất lỏng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có hình dạng của phần vật chứa nó, có thể rót được và chảy tràn trên bề mặt, khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
+        "userAnswer": "No answer",
+        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hình bên mô tả cấu trúc phân tử ở thể nào dưới đây?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thể khí.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các phân tử khí chuyển động hỗn loạn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử quá nhỏ",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai khi nói về chất khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các phân tử khí ở rất gần nhau so với các phân tử chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tính chất nào sau đây không phải là tính chất của chất ở thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có hình dạng và thể tích riêng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí không có hình dạng và thể tích riêng là vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "khoảng cách giữa các phân tử rất xa, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí luôn luôn chiếm hết thể tích của bình chứa bởi vì:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Một số chất khí có mùi thơm toả ra từ bông hoa hồng làm ta có thể ngửi thấy mùi hoa thơm. Điều này thể hiện tính chất nào của thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có thể lan toả trong không gian theo mọi hướng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 1,
+    "totalPoints": 42,
+    "studentInfo": {
+      "name": "Phucngu",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738759584722",
+    "lessonId": "1738757358251",
+    "timestamp": "2025-02-05T12:46:24.723Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Có 4 bình A,B,C,D đều đựng nước ở cùng một nhiệt độ với thể tích tương ứng là: 1 lít, 2 lít, 3 lít, 4 lít. Sau khi dùng các đèn cồn giống hệt nhau để đun các bình này khác nhau. Hỏi bình nào có nhiệt độ thấp nhất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Bình D",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ là khái niệm dùng để xác định",
+        "userAnswer": "No answer",
+        "correctAnswer": "mức độ nóng, lạnh của một vật.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Hệ thức nào dưới đây là phù hợp với quá trình một khối khí trong bình kín bị nung nóng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "ΔU=Q;Q>0.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi dùng nhiệt kế để đo nhiệt độ của chính cơ thể mình, người ta phải thực hiện các thao tác sau (chưa được sắp xếp theo đúng thứ tự):",
+        "userAnswer": "No answer",
+        "correctAnswer": "d, c, a, b",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Sự sôi của chất là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong quá trình thực hiện công,...(1)... từ dạng năng lượng khác (ví dụ cơ năng chẳng hạn) sang...(2)... Điền vào chỗ trống cụm từ thích hợp.",
+        "userAnswer": "No answer",
+        "correctAnswer": "(1) có sự chuyển hóa; (2) nội năng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "No answer",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là đúng khi nói về nhiệt nóng chảy riêng của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Cả A, B, C đều đúng.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 9,
+    "studentInfo": {
+      "name": "đă",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738761423518",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-05T13:17:03.518Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Mô hình động học phân tử được xây dựng dựa trên quan điểm nào về cấu tạo chất?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tính chất nào sau đây không phải là tính chất của chất ở thể khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có hình dạng và thể tích riêng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tại sao người ta không nén chất rắn lại để tiết kiệm diện tích?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Do chất rắn liên kết chặt chẽ với nhau nên khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Mạng tinh thể.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
+        "userAnswer": "No answer",
+        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nhựa đường",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây là sai khi nói về chất khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các phân tử khí ở rất gần nhau so với các phân tử chất lỏng.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
+        "userAnswer": "No answer",
+        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 12,
+    "studentInfo": {
+      "name": "dawda",
+      "dob": null,
+      "studentId": null
+    }
   }
 ]

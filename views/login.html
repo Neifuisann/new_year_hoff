@@ -1,7 +1,7 @@
-`<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Login</title>
+    <title data-i18n="adminLoginTitle">Admin Login</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -9,21 +9,25 @@
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
     <div class="login-container">
-        <h1>Admin Login</h1>
+        <h1 data-i18n="adminLoginTitle">Admin Login</h1>
         <form id="login-form" onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label>Username:</label>
+                <label data-i18n="usernameLabel">Username:</label>
                 <input type="text" id="username" required>
             </div>
             <div class="form-group">
-                <label>Password:</label>
+                <label data-i18n="passwordLabel">Password:</label>
                 <input type="password" id="password" required>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" data-i18n="loginBtn">Login</button>
         </form>
     </div>
     
     <script>
+        function currentLang() {
+            return localStorage.getItem('language') || 'en';
+        }
+
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -40,9 +44,17 @@
             if (result.success) {
                 window.location.href = '/admin';
             } else {
-                alert('Invalid credentials');
+                const errorMsg = translations[currentLang()].invalidCredentials || 'Invalid credentials';
+                alert(errorMsg);
             }
         }
+
+        // Initialize translations when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'en';
+            updateTexts(savedLang);
+        });
     </script>
+    <script src="/js/i18n.js"></script>
 </body>
 </html>`

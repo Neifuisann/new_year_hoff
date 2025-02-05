@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lesson</title>
+    <title data-i18n="lessonTitlePage">Lesson</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css">
@@ -14,19 +14,20 @@
     <h1 id="lesson-title"></h1>
     
     <div id="abcd-questions">
-        <h3>Multiple Choice Questions</h3>
+        <h3 data-i18n="multipleChoiceQuestions">Multiple Choice Questions</h3>
     </div>
     
     <div id="truefalse-questions">
-        <h3>True/False Questions</h3>
+        <h3 data-i18n="trueFalseQuestions">True/False Questions</h3>
     </div>
     
     <div id="number-questions">
-        <h3>Numerical Answer Questions</h3>
+        <h3 data-i18n="numericalQuestions">Numerical Answer Questions</h3>
     </div>
 
-    <button id="submit-quiz-btn">Submit</button>
+    <button id="submit-quiz-btn" data-i18n="submitQuiz">Submit</button>
     <div id="result"></div>
     <script src="/js/lesson.js"></script>
+    <script src="/js/i18n.js"></script>
 </body>
 </html>

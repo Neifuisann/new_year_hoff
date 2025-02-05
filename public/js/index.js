@@ -1,11 +1,33 @@
 let allLessons = [];
+let translations = {};
+
+// Import translations
+async function loadTranslations() {
+    try {
+        const response = await fetch('/api/translations');
+        translations = await response.json();
+    } catch (error) {
+        console.error('Error loading translations:', error);
+        // Fallback translations for critical text
+        translations = {
+            en: {
+                questions: 'questions',
+                startLesson: 'Start Lesson',
+                noResults: 'No results found',
+                accountSoon: 'Account feature coming soon',
+                logoutSoon: 'Logout feature coming soon'
+            }
+        };
+    }
+}
 
 async function loadLessons() {
     try {
         const response = await fetch('/api/lessons');
         const lessons = await response.json();
+        console.log('Loaded lessons:', lessons);
         allLessons = lessons;
-        renderLessons(lessons);
+        renderLessons(allLessons);
         // Update tags list immediately after loading lessons
         updateTagsList();
     } catch (error) {
@@ -14,52 +36,28 @@ async function loadLessons() {
 }
 
 function filterAndRenderLessons() {
+    console.log('Filtering lessons. Current allLessons:', allLessons); // Debug log
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    
-    // Filter lessons based on search term and tags
-    let filteredLessons = allLessons.filter(lesson => {
-        const matchesTitle = lesson.title.toLowerCase().includes(searchTerm);
-        const matchesTags = lesson.tags && lesson.tags.some(tag => 
-            tag.toLowerCase().includes(searchTerm)
-        );
-        return matchesTitle || matchesTags;
-    });
-    
     const sortMethod = document.getElementById('sort-select').value;
-    const lessonsContainer = document.getElementById('lessons');
+    console.log('Search term:', searchTerm, 'Sort method:', sortMethod); // Debug log
     
-    // Sort lessons based on selected method
-    filteredLessons = sortLessons(filteredLessons, sortMethod);
+    let filteredLessons = [...allLessons]; // Create a copy of allLessons
     
-    // Clear container
-    lessonsContainer.innerHTML = '';
-    
-    if (filteredLessons.length === 0) {
-        lessonsContainer.innerHTML = '<p class="no-results">No lessons found matching your search.</p>';
-        return;
+    if (searchTerm) {
+        filteredLessons = filteredLessons.filter(lesson => {
+            const matchesTitle = lesson.title.toLowerCase().includes(searchTerm);
+            const matchesTags = lesson.tags && lesson.tags.some(tag => 
+                tag.toLowerCase().includes(searchTerm)
+            );
+            return matchesTitle || matchesTags;
+        });
     }
     
-    // Render filtered and sorted lessons
-    filteredLessons.forEach(lesson => {
-        const lessonDiv = document.createElement('div');
-        lessonDiv.className = 'lesson-card';
-        lessonDiv.style.setProperty('--lesson-bg', lesson.color || '#a4aeff');
-        
-        const tagsHtml = lesson.tags ? 
-            `<div class="lesson-tags">
-                ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-             </div>` : '';
-        
-        lessonDiv.innerHTML = `
-            <div class="lesson-content">
-                <h3>${lesson.title}</h3>
-                <p>${lesson.questions?.length || 0} questions</p>
-                <button onclick="startLesson('${lesson.id}')" class="start-btn">Start Lesson</button>
-            </div>
-            ${tagsHtml}
-        `;
-        lessonsContainer.appendChild(lessonDiv);
-    });
+    console.log('Filtered lessons before sort:', filteredLessons); // Debug log
+    filteredLessons = sortLessons(filteredLessons, sortMethod);
+    console.log('Filtered lessons after sort:', filteredLessons); // Debug log
+    
+    renderLessons(filteredLessons);
 }
 
 function sortLessons(lessons, method) {
@@ -92,19 +90,16 @@ function updateTagsList() {
     const tagsContainer = document.querySelector('.tags-container');
     if (!tagsContainer) return;
     
-    // Clear existing content
     tagsContainer.innerHTML = '';
     
-    // Create and append the heading
     const heading = document.createElement('h3');
-    heading.textContent = 'Popular Tags';
+    heading.setAttribute('data-i18n', 'popularTags');
+    heading.textContent = translations[currentLang()].popularTags;
     tagsContainer.appendChild(heading);
     
-    // Create and append the tags list container
     const tagsList = document.createElement('div');
     tagsList.className = 'tags-list';
     
-    // Add tags to the list
     Array.from(allTags).sort().forEach(tag => {
         const tagButton = document.createElement('button');
         tagButton.className = 'tag-filter';
@@ -167,18 +162,58 @@ function startLesson(lessonId) {
 
 function renderLessons(lessons) {
     const lessonsContainer = document.getElementById('lessons');
-    lessonsContainer.innerHTML = lessons.map(lesson => `
-        <div class="lesson-card" style="--lesson-bg: ${lesson.color || '#a4aeff'}">
+    const currentLanguage = currentLang();
+    
+    // Ensure translations exist for current language
+    if (!translations[currentLanguage]) {
+        translations[currentLanguage] = {
+            questions: 'questions',
+            startLesson: 'Start Lesson',
+            noResults: 'No results found'
+        };
+    }
+    
+    if (lessons.length === 0) {
+        const noResults = document.createElement('p');
+        noResults.className = 'no-results';
+        noResults.setAttribute('data-i18n', 'noResults');
+        noResults.textContent = translations[currentLanguage].noResults;
+        lessonsContainer.innerHTML = '';
+        lessonsContainer.appendChild(noResults);
+        return;
+    }
+
+    lessonsContainer.innerHTML = '';
+    
+    lessons.forEach(lesson => {
+        const lessonDiv = document.createElement('div');
+        lessonDiv.className = 'lesson-card';
+        lessonDiv.style.setProperty('--lesson-bg', lesson.color || '#a4aeff');
+        
+        const questionsText = `${lesson.questions?.length || 0} ${translations[currentLanguage].questions}`;
+        
+        const tagsHtml = lesson.tags ? 
+            `<div class="lesson-tags">
+                ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+             </div>` : '';
+        
+        lessonDiv.innerHTML = `
             <div class="lesson-content">
                 <h3>${lesson.title}</h3>
-                <p>${lesson.questions?.length || 0} questions</p>
-                <button onclick="startLesson('${lesson.id}')" class="start-btn">Start Lesson</button>
+                <p>${questionsText}</p>
+                <button onclick="startLesson('${lesson.id}')" class="start-btn" data-i18n="startLesson">
+                    ${translations[currentLanguage].startLesson}
+                </button>
             </div>
-            <div class="lesson-tags">
-                ${(lesson.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('')}
-            </div>
-        </div>
-    `).join('');
+            ${tagsHtml}
+        `;
+        lessonsContainer.appendChild(lessonDiv);
+    });
+    
+    // Update any new elements with translations
+    if (typeof updateTexts === 'function') {
+        updateTexts(currentLanguage);
+    }
 }
 
 // Check admin authentication status
@@ -193,12 +228,25 @@ async function checkAdminAuth() {
     }
 }
 
+// Add helper function to get current language
+function currentLang() {
+    return localStorage.getItem('language') || 'en';
+}
+
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    loadLessons();
+    // Load translations first
+    await loadTranslations();
+    // Then load lessons
+    await loadLessons();
     
-    // Add event listener for search input
-    document.getElementById('search-input').addEventListener('input', filterAndRenderLessons);
+    // Add event listener for search input with debounce
+    const searchInput = document.getElementById('search-input');
+    let debounceTimeout;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(filterAndRenderLessons, 300);
+    });
     
     // Add event listener for sort select
     document.getElementById('sort-select').addEventListener('change', filterAndRenderLessons);
@@ -220,21 +268,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Account link (placeholder)
+    // Update account link handler
     const accountLink = document.querySelector('.account-link');
     if (accountLink) {
         accountLink.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Account functionality coming soon!');
+            alert(translations[currentLang()].accountSoon);
         });
     }
 
-    // Logout link (placeholder)
+    // Update logout link handler
     const logoutLink = document.querySelector('.logout-link');
     if (logoutLink) {
         logoutLink.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Logout functionality coming soon!');
+            alert(translations[currentLang()].logoutSoon);
         });
     }
     

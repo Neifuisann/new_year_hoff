@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         document.getElementById('lesson-title').value = currentLesson.title;
         document.getElementById('lesson-color').value = currentLesson.color || '#a4aeff';
+        document.getElementById('random-questions').value = currentLesson.randomQuestions || 0;
         
         // Load existing tags
         if (currentLesson.tags) {
@@ -413,6 +414,7 @@ async function saveLesson() {
             ...currentLesson,
             title: document.getElementById('lesson-title').value,
             color: document.getElementById('lesson-color').value,
+            randomQuestions: parseInt(document.getElementById('random-questions').value) || 0,
             tags: Array.from(currentTags),
             questions: currentLesson.questions,
             lastUpdated: now

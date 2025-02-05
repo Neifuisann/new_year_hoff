@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lesson Statistics</title>
+    <title data-i18n="lessonStatisticsTitle">Lesson Statistics</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -11,9 +11,9 @@
     </a>
     <div class="statistics-container">
         <div class="stats-header">
-            <h1>Lesson Statistics</h1>
+            <h1 data-i18n="lessonStatistics">Lesson Statistics</h1>
             <div class="export-controls">
-                <button onclick="exportToExcel()" class="export-btn">
+                <button onclick="exportToExcel()" class="export-btn" data-i18n="exportToExcel">
                     Export to Excel
                 </button>
             </div>
@@ -23,53 +23,78 @@
             <div class="stat-card primary">
                 <div class="stat-icon">👥</div>
                 <div class="stat-value" id="total-students">0</div>
-                <div class="stat-label">Total Students</div>
+                <div class="stat-label" data-i18n="totalStudents">Total Students</div>
             </div>
             <div class="stat-card success">
                 <div class="stat-icon">📊</div>
                 <div class="stat-value" id="avg-score">0</div>
-                <div class="stat-label">Average Score</div>
+                <div class="stat-label" data-i18n="averageScore">Average Score</div>
             </div>
             <div class="stat-card warning">
                 <div class="stat-icon">⚠️</div>
                 <div class="stat-value" id="low-scores">0</div>
-                <div class="stat-label">Scores < 50%</div>
+                <div class="stat-label" data-i18n="scoresBelow50">Scores < 50%</div>
             </div>
             <div class="stat-card info">
                 <div class="stat-icon">🎯</div>
                 <div class="stat-value" id="high-scores">0</div>
-                <div class="stat-label">Scores ≥ 50%</div>
+                <div class="stat-label" data-i18n="scoresAbove50">Scores ≥ 50%</div>
             </div>
             <div class="stat-card secondary">
                 <div class="stat-icon">📝</div>
                 <div class="stat-value" id="total-attempts">0</div>
-                <div class="stat-label">Total Attempts</div>
+                <div class="stat-label" data-i18n="totalAttempts">Total Attempts</div>
             </div>
         </div>
 
         <div class="stats-card">
-            <h3>Score Distribution</h3>
+            <h3 data-i18n="scoreDistribution">Score Distribution</h3>
             <canvas id="scoreChart"></canvas>
         </div>
 
         <div class="stats-card">
-            <h3>Question Analysis</h3>
+            <h3 data-i18n="questionAnalysis">Question Analysis</h3>
             <div class="table-responsive">
                 <table class="statistics-table" id="question-stats">
-                    <!-- Table headers and content will be populated by JavaScript -->
+                    <thead>
+                        <tr>
+                            <th data-i18n="number">NO.</th>
+                            <th data-i18n="question">Question</th>
+                            <th data-i18n="totalStudents">Total Students</th>
+                            <th data-i18n="completed">Completed</th>
+                            <th data-i18n="notCompleted">Not Completed</th>
+                            <th data-i18n="correct">Correct</th>
+                            <th data-i18n="incorrect">Incorrect</th>
+                            <th data-i18n="completionRate">Completion Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
 
         <div class="stats-card">
-            <h3>Student Transcripts</h3>
+            <h3 data-i18n="studentTranscripts">Student Transcripts</h3>
             <div class="table-responsive">
                 <table class="statistics-table" id="transcripts">
-                    <!-- Table headers and content will be populated by JavaScript -->
+                    <thead>
+                        <tr>
+                            <th data-i18n="number">NO.</th>
+                            <th data-i18n="fullName">Full Name</th>
+                            <th data-i18n="dateOfBirth">Date of Birth</th>
+                            <th data-i18n="score">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="/js/lesson-statistics.js"></script>
+    <script src="/js/i18n.js"></script>
 </body>
 </html> 

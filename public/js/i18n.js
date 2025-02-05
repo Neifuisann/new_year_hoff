@@ -1,0 +1,195 @@
+/* i18n.js - Simple internationalization script */
+(function() {
+  const translations = {
+    en: {
+      title: "Quiz Application",
+      account: "Account",
+      editorMode: "Entering editor mode",
+      darkMode: "Dark mode",
+      logout: "Logout",
+      languageLabel: "Language:",
+      chooseLesson: "Choose a Lesson",
+      searchPlaceholder: "Search lessons or tags...",
+      lessonTitlePage: "Lesson",
+      multipleChoiceQuestions: "Multiple Choice Questions",
+      trueFalseQuestions: "True/False Questions",
+      numericalQuestions: "Numerical Answer Questions",
+      submitQuiz: "Submit",
+      adminLoginTitle: "Admin Login",
+      usernameLabel: "Username:",
+      passwordLabel: "Password:",
+      loginBtn: "Login",
+      quizResultsTitle: "Quiz Results",
+      allQuestions: "All Questions",
+      correctAnswers: "Correct Answers",
+      incorrectAnswers: "Incorrect Answers",
+      adminEditTitle: "Admin Panel - Edit Lesson",
+      editLesson: "Edit Lesson",
+      saveLesson: "Save Lesson",
+      backToList: "Back to List",
+      enterLessonTitle: "Enter lesson title...",
+      themeColor: "Theme Color",
+      addTags: "Add tags...",
+      jsonEditor: "JSON Editor",
+      applyChanges: "Apply Changes",
+      questionEditor: "Question Editor",
+      render: "Render",
+      questions: "Questions",
+      addNewQuestion: "Add New Question",
+      adminLessonsListTitle: "Admin Panel - Lessons List",
+      adminPanel: "Admin Panel",
+      createNewLesson: "Create New Lesson",
+      createFromImage: "Create New Lesson from Image",
+      existingLessons: "Existing Lessons",
+      edit: "Edit",
+      statistics: "Statistics",
+      delete: "Delete",
+      lessonStatisticsTitle: "Lesson Statistics",
+      lessonStatistics: "Lesson Statistics",
+      randomQuestions: "Random Questions",
+      randomQuestionsHelp: "Set how many random questions to use (0 = all questions)",
+      totalStudents: "Total Students",
+      averageScore: "Average Score",
+      scoresBelow50: "Scores < 50%",
+      scoresAbove50: "Scores ≥ 50%",
+      totalAttempts: "Total Attempts",
+      scoreDistribution: "Score Distribution",
+      questionAnalysis: "Question Analysis",
+      studentTranscripts: "Student Transcripts",
+      exportToExcel: "Export to Excel",
+      sortNewest: "Newest First",
+      sortOldest: "Oldest First",
+      sortAZ: "Name A-Z",
+      sortZA: "Name Z-A",
+      sortNewestChanged: "Newest Changed",
+      sortPopular: "Popular",
+      studentInfo: "Student Information",
+      fullName: "Full Name *",
+      dateOfBirth: "Date of Birth",
+      studentId: "Student ID",
+      startLesson: "Start Lesson",
+      cancel: "Cancel",
+      noResults: "No lessons found matching your search.",
+      popularTags: "Popular Tags",
+      accountSoon: "Account functionality coming soon!",
+      logoutSoon: "Logout functionality coming soon!",
+      number: "NO.",
+      question: "Question",
+      completed: "Completed",
+      notCompleted: "Not Completed",
+      correct: "Correct",
+      incorrect: "Incorrect",
+      completionRate: "Completion Rate",
+      score: "Score"
+    },
+    vi: {
+      title: "Ứng dụng trắc nghiệm",
+      account: "Tài khoản",
+      editorMode: "Chế độ biên tập",
+      darkMode: "Chế độ tối",
+      logout: "Đăng xuất",
+      languageLabel: "Ngôn ngữ:",
+      chooseLesson: "Chọn bài học",
+      searchPlaceholder: "Tìm kiếm bài học hoặc nhãn...",
+      lessonTitlePage: "Bài học",
+      multipleChoiceQuestions: "Câu hỏi trắc nghiệm",
+      trueFalseQuestions: "Câu hỏi đúng/sai",
+      numericalQuestions: "Câu hỏi số",
+      submitQuiz: "Nộp bài",
+      adminLoginTitle: "Đăng nhập Quản trị",
+      usernameLabel: "Tên đăng nhập:",
+      passwordLabel: "Mật khẩu:",
+      loginBtn: "Đăng nhập",
+      quizResultsTitle: "Kết quả trắc nghiệm",
+      allQuestions: "Tất cả câu hỏi",
+      correctAnswers: "Đáp án đúng",
+      incorrectAnswers: "Đáp án sai",
+      adminEditTitle: "Quản trị - Chỉnh sửa bài học",
+      editLesson: "Chỉnh sửa bài học",
+      saveLesson: "Lưu bài học",
+      backToList: "Trở lại danh sách",
+      enterLessonTitle: "Nhập tiêu đề bài học...",
+      themeColor: "Màu chủ đề",
+      addTags: "Thêm nhãn...",
+      jsonEditor: "Trình chỉnh sửa JSON",
+      applyChanges: "Áp dụng thay đổi",
+      questionEditor: "Trình chỉnh sửa câu hỏi",
+      render: "Hiển thị",
+      questions: "Câu hỏi",
+      addNewQuestion: "Thêm câu hỏi mới",
+      adminLessonsListTitle: "Quản trị - Danh sách bài học",
+      adminPanel: "Bảng quản trị",
+      createNewLesson: "Tạo bài học mới",
+      createFromImage: "Tạo bài học mới từ hình ảnh",
+      existingLessons: "Bài học hiện có",
+      edit: "Chỉnh sửa",
+      statistics: "Thống kê",
+      delete: "Xóa",
+      lessonStatisticsTitle: "Thống kê bài học",
+      lessonStatistics: "Thống kê bài học",
+      randomQuestions: "Câu hỏi ngẫu nhiên",
+      randomQuestionsHelp: "Đặt số câu hỏi ngẫu nhiên để sử dụng (0 = tất cả câu hỏi)",
+      totalStudents: "Tổng số học viên",
+      averageScore: "Điểm trung bình",
+      scoresBelow50: "Điểm dưới 50%",
+      scoresAbove50: "Điểm từ 50% trở lên",
+      totalAttempts: "Tổng số lượt làm bài",
+      scoreDistribution: "Phân bố điểm số",
+      questionAnalysis: "Phân tích câu hỏi",
+      studentTranscripts: "Bảng điểm học viên",
+      exportToExcel: "Xuất ra Excel",
+      sortNewest: "Mới nhất",
+      sortOldest: "Cũ nhất",
+      sortAZ: "Tên A-Z",
+      sortZA: "Tên Z-A",
+      sortNewestChanged: "Thay đổi mới nhất",
+      sortPopular: "Phổ biến",
+      studentInfo: "Thông tin học viên",
+      fullName: "Họ và tên *",
+      dateOfBirth: "Ngày sinh",
+      studentId: "Mã số học viên",
+      startLesson: "Bắt đầu bài học",
+      cancel: "Hủy",
+      noResults: "Không tìm thấy bài học phù hợp.",
+      popularTags: "Nhãn phổ biến",
+      accountSoon: "Chức năng tài khoản sắp ra mắt!",
+      logoutSoon: "Chức năng đăng xuất sắp ra mắt!",
+      number: "STT",
+      question: "Câu hỏi",
+      completed: "Đã hoàn thành",
+      notCompleted: "Chưa hoàn thành",
+      correct: "Đúng",
+      incorrect: "Sai",
+      completionRate: "Tỷ lệ hoàn thành",
+      score: "Điểm số"
+    }
+  };
+
+  function updateTexts(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (translations[lang] && translations[lang][key]) {
+        el.textContent = translations[lang][key];
+      }
+    });
+    // Update placeholder texts
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (translations[lang] && translations[lang][key]) {
+        el.setAttribute('placeholder', translations[lang][key]);
+      }
+    });
+  }
+
+  function setLanguage(lang) {
+    localStorage.setItem('language', lang);
+    updateTexts(lang);
+  }
+
+  // On page load, set the language based on saved preference or default to 'en'
+  const savedLang = localStorage.getItem('language') || 'en';
+  updateTexts(savedLang);
+
+  // Expose setLanguage function globally
+  window.setLanguage = setLanguage;
+})(); 

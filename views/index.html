@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Application</title>
+    <title data-i18n="title">Quiz Application</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -18,34 +18,39 @@
             </a>
             <div class="home-dropdown">
                 <div class="dropdown-item">
-                    <a href="#" class="account-link">Account</a>
+                    <a href="#" class="account-link" data-i18n="account">Account</a>
                 </div>
                 <div class="dropdown-item">
-                    <a href="/admin/login" class="editor-link">Entering editor mode</a>
+                    <a href="/admin/login" class="editor-link" data-i18n="editorMode">Entering editor mode</a>
                 </div>
                 <div class="dropdown-item">
-                    <a href="#" class="dark-mode-link">Dark mode</a>
+                    <a href="#" class="dark-mode-link" data-i18n="darkMode">Dark mode</a>
                 </div>
                 <div class="dropdown-item">
-                    <a href="#" class="logout-link">Logout</a>
+                    <a href="#" class="logout-link" data-i18n="logout">Logout</a>
+                </div>
+                <div class="dropdown-item language-item">
+                    <span data-i18n="languageLabel">Language:</span>
+                    <img src="https://flagcdn.com/24x18/us.png" alt="English" onclick="setLanguage('en')" style="cursor:pointer; margin-left:5px;">
+                    <img src="https://flagcdn.com/24x18/vn.png" alt="Tiếng Việt" onclick="setLanguage('vi')" style="cursor:pointer; margin-left:5px;">
                 </div>
             </div>
         </div>
-        <h1>Choose a Lesson</h1>
+        <h1 data-i18n="chooseLesson">Choose a Lesson</h1>
         
         <div class="search-sort-container">
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="Search lessons or tags...">
+                <input type="text" id="search-input" placeholder="Search lessons or tags..." data-i18n-placeholder="searchPlaceholder">
                 <div class="tags-container"></div>
             </div>
             <div class="sort-box">
                 <select id="sort-select">
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="az">Name A-Z</option>
-                    <option value="za">Name Z-A</option>
-                    <option value="newest-changed">Newest Changed</option>
-                    <option value="popular">Popular</option>
+                    <option value="newest" data-i18n="sortNewest">Newest First</option>
+                    <option value="oldest" data-i18n="sortOldest">Oldest First</option>
+                    <option value="az" data-i18n="sortAZ">Name A-Z</option>
+                    <option value="za" data-i18n="sortZA">Name Z-A</option>
+                    <option value="newest-changed" data-i18n="sortNewestChanged">Newest Changed</option>
+                    <option value="popular" data-i18n="sortPopular">Popular</option>
                 </select>
             </div>
         </div>
@@ -56,23 +61,23 @@
 
         <div id="user-info-modal" class="modal">
             <div class="modal-content">
-                <h2>Student Information</h2>
+                <h2 data-i18n="studentInfo">Student Information</h2>
                 <form id="user-info-form">
                     <div class="form-group">
-                        <label>Full Name *</label>
+                        <label data-i18n="fullName">Full Name *</label>
                         <input type="text" id="student-name" required>
                     </div>
                     <div class="form-group">
-                        <label>Date of Birth</label>
+                        <label data-i18n="dateOfBirth">Date of Birth</label>
                         <input type="date" id="student-dob">
                     </div>
                     <div class="form-group">
-                        <label>Student ID</label>
+                        <label data-i18n="studentId">Student ID</label>
                         <input type="text" id="student-id">
                     </div>
                     <div class="modal-buttons">
-                        <button type="submit">Start Lesson</button>
-                        <button type="button" onclick="closeModal()">Cancel</button>
+                        <button type="submit" data-i18n="startLesson">Start Lesson</button>
+                        <button type="button" onclick="closeModal()" data-i18n="cancel">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -81,5 +86,6 @@
 
     <script src="/js/network-animation.js"></script>
     <script src="/js/index.js"></script>
+    <script src="/js/i18n.js"></script>
 </body>
 </html>

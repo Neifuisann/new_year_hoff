@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel - Edit Lesson</title>
+    <title data-i18n="adminEditTitle">Admin Panel - Edit Lesson</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     
     <div class="lesson-editor">
         <div class="editor-header">
-            <h1>Edit Lesson</h1>
+            <h1 data-i18n="editLesson">Edit Lesson</h1>
             <div class="header-actions">
                 <button onclick="saveLesson()" class="save-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -19,13 +19,13 @@
                         <polyline points="17 21 17 13 7 13 7 21"/>
                         <polyline points="7 3 7 8 15 8"/>
                     </svg>
-                    Save Lesson
+                    <span data-i18n="saveLesson">Save Lesson</span>
                 </button>
                 <a href="/admin" class="back-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
-                    Back to List
+                    <span data-i18n="backToList">Back to List</span>
                 </a>
             </div>
         </div>
@@ -33,26 +33,34 @@
         <div class="editor-grid">
             <div class="form-section">
                 <div class="form-group">
-                    <input type="text" id="lesson-title" class="modern-input" placeholder="Enter lesson title...">
+                    <input type="text" id="lesson-title" class="modern-input" data-i18n-placeholder="enterLessonTitle">
                 </div>
 
                 <div class="color-picker-group">
                     <input type="color" id="lesson-color" value="#a4aeff">
-                    <label for="lesson-color">Theme Color</label>
+                    <label for="lesson-color" data-i18n="themeColor">Theme Color</label>
+                </div>
+
+                <div class="random-questions-group">
+                    <label for="random-questions" data-i18n="randomQuestions">Random Questions</label>
+                    <div class="random-questions-input">
+                        <input type="number" id="random-questions" class="modern-input" min="0" placeholder="0 = Use all questions">
+                        <span class="help-text" data-i18n="randomQuestionsHelp">Set how many random questions to use (0 = all questions)</span>
+                    </div>
                 </div>
 
                 <div class="tags-group">
                     <div class="tags-input-container">
-                        <input type="text" id="tag-input" class="modern-input" placeholder="Add tags...">
+                        <input type="text" id="tag-input" class="modern-input" data-i18n-placeholder="addTags">
                         <div id="tags-list" class="tags-list"></div>
                     </div>
                 </div>
             </div>
             <div class="json-editor-panel">
                 <div class="json-editor-header">
-                    <h3>JSON Editor</h3>
+                    <h3 data-i18n="jsonEditor">JSON Editor</h3>
                     <div class="json-editor-controls">
-                        <button onclick="applyJsonChanges()" class="apply-json-btn">Apply Changes</button>
+                        <button onclick="applyJsonChanges()" class="apply-json-btn" data-i18n="applyChanges">Apply Changes</button>
                         <button onclick="toggleJsonEditor()" class="toggle-json-btn">
                             <svg width="20" height="20" viewBox="0 0 24 24">
                                 <path d="M7 10l5 5 5-5" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
@@ -67,8 +75,8 @@
             <div class="text-editor-panel">
                 <div class="text-editor-content">
                     <div class="text-editor-header">
-                        <h3>Question Editor</h3>
-                        <button onclick="renderQuestions()" class="render-btn">Render</button>
+                        <h3 data-i18n="questionEditor">Question Editor</h3>
+                        <button onclick="renderQuestions()" class="render-btn" data-i18n="render">Render</button>
                     </div>
                     <div class="text-editor-container">
                         <textarea id="text-editor" spellcheck="false"></textarea>
@@ -78,12 +86,12 @@
         </div>
 
         <div class="questions-header">
-            <h2>Questions</h2>
+            <h2 data-i18n="questions">Questions</h2>
             <button onclick="minimizeAllQuestions()" class="minimize-all-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M4 9h16M4 15h16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                Minimize All
+                <span data-i18n="minimizeAll">Minimize All</span>
             </button>
         </div>
         <div id="questions"></div>
@@ -91,11 +99,12 @@
             <svg width="24" height="24" viewBox="0 0 24 24">
                 <path d="M12 5v14M5 12h14"/>
             </svg>
-            Add New Question
+            <span data-i18n="addNewQuestion">Add New Question</span>
         </button>
     </div>
     
     <script src="/js/admin-edit.js"></script>
     <script src="/js/drag-utils.js"></script>
+    <script src="/js/i18n.js"></script>
 </body>
 </html>

@@ -1,6 +1,10 @@
 // Store shuffled options mapping globally
 window.questionMappings = {};
 
+function currentLang() {
+    return localStorage.getItem('language') || 'en';
+}
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -16,13 +20,54 @@ async function renderQuestions(lesson) {
         number: { element: document.getElementById('number-questions'), questions: [] }
     };
 
-    // Group and shuffle all questions by type
+    // Group all questions by type
     lesson.questions.forEach(q => sections[q.type]?.questions.push(q));
     
-    // Shuffle questions within each type group
+    // If randomQuestions is set, select random questions while maintaining proportions
+    if (lesson.randomQuestions > 0 && lesson.randomQuestions < lesson.questions.length) {
+        // Calculate the proportion of each question type
+        const totalQuestions = lesson.questions.length;
+        const proportions = {};
+        Object.keys(sections).forEach(type => {
+            proportions[type] = sections[type].questions.length / totalQuestions;
+        });
+
+        // Calculate how many questions of each type to include
+        const randomCounts = {};
+        let remainingCount = lesson.randomQuestions;
+        Object.keys(proportions).forEach(type => {
+            randomCounts[type] = Math.round(lesson.randomQuestions * proportions[type]);
+            remainingCount -= randomCounts[type];
+        });
+
+        // Adjust for rounding errors
+        if (remainingCount > 0) {
+            // Add remaining to the type with the most questions
+            const maxType = Object.keys(sections).reduce((a, b) => 
+                sections[a].questions.length > sections[b].questions.length ? a : b
+            );
+            randomCounts[maxType] += remainingCount;
+        }
+
+        // Shuffle and select questions for each type
+        Object.keys(sections).forEach(type => {
+            if (sections[type].questions.length > 0) {
+                sections[type].questions = shuffleArray([...sections[type].questions])
+                    .slice(0, randomCounts[type]);
+            }
+        });
+    } else {
+        // If no random selection, just shuffle all questions within their types
+        Object.values(sections).forEach(section => {
+            if (section.element) {
+                section.questions = shuffleArray([...section.questions]);
+            }
+        });
+    }
+    
+    // Clear existing questions
     Object.values(sections).forEach(section => {
         if (section.element) {
-            section.questions = shuffleArray([...section.questions]);
             section.element.innerHTML = `<h3>${section.element.querySelector('h3')?.textContent || ''}</h3>`;
         }
     });
@@ -208,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const lesson = await response.json();
                 let score = 0;
+                let totalPossiblePoints = 0;
                 let resultHtml = '';
 
                 const quizResults = {
@@ -217,18 +263,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     ipAddress: ipData.ip,
                     submittedAt: new Date().toISOString()
                 };
-                
-                // Create separate results for each question type
-                const sections = {
-                    'abcd': { title: 'Multiple Choice Questions', questions: [], count: 0 },
-                    'truefalse': { title: 'True/False Questions', questions: [], count: 0 },
-                    'number': { title: 'Numerical Answer Questions', questions: [], count: 0 }
-                };
 
+                // Get all displayed questions
                 const questionElements = document.querySelectorAll('.question');
                 questionElements.forEach((questionElement) => {
                     const originalIndex = parseInt(questionElement.dataset.questionIndex);
                     const q = lesson.questions[originalIndex];
+                    totalPossiblePoints += q.points;
                     let userAnswer, correctAnswer, isCorrect;
 
                     if (q.type === 'truefalse' && Array.isArray(q.options)) {
@@ -285,31 +326,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isCorrect) {
                         score += q.points;
                     }
-                    
-                    sections[q.type].count++;
-                    sections[q.type].questions.push(`
-                        <div class="question-result ${isCorrect ? 'correct' : 'incorrect'}">
-                            <p><strong>Question ${sections[q.type].count}:</strong> ${q.question}</p>
-                            <p>Your answer:</p>
-                            <pre>${userAnswer}</pre>
-                            <p>Correct answer:</p>
-                            <pre>${correctAnswer}</pre>
-                            <p>Points: ${isCorrect ? q.points : 0}/${q.points}</p>
-                            <button class="explain-btn" 
-                                    data-question="${q.question}" 
-                                    data-user-answer="${userAnswer}" 
-                                    data-correct-answer="${correctAnswer}">
-                                Get AI Explanation
-                            </button>
-                            <div class="explanation-box" style="display: none;">
-                                <div class="explanation-content"></div>
-                            </div>
-                        </div>
-                    `);
                 });
                 
-                // Update final scores
-                quizResults.totalPoints = lesson.questions.reduce((sum, q) => sum + q.points, 0);
+                // Update final scores using only displayed questions
+                quizResults.totalPoints = totalPossiblePoints;
                 quizResults.score = score;
 
                 try {
@@ -324,8 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         throw new Error('Failed to save results');
                     }
 
+                    const resultData = await saveResponse.json();
                     localStorage.setItem('quizResults', JSON.stringify(quizResults));
-                    window.location.href = '/result';
+                    window.location.href = `/result/${resultData.resultId}`;
                 } catch (error) {
                     console.error('Error in quiz submission:', error);
                     alert('Error submitting quiz. Please try again.');
@@ -343,3 +364,105 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize the lesson when the page loads
 document.addEventListener('DOMContentLoaded', initializeLesson);
+
+// Update the renderQuestion function to handle translations
+function renderQuestion(question, index, type) {
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'question';
+    
+    // Translate question type labels
+    const typeLabels = {
+        'abcd': translations[currentLang()].multipleChoiceQuestions,
+        'truefalse': translations[currentLang()].trueFalseQuestions,
+        'number': translations[currentLang()].numericalQuestions
+    };
+
+    let html = `<p><strong>Q${index + 1}:</strong> ${question.question}</p>`;
+    
+    if (type === 'abcd') {
+        html += `<div class="options-grid">`;
+        question.options.forEach((option, i) => {
+            const letter = String.fromCharCode(65 + i);
+            html += `
+                <div class="option-row">
+                    <input type="radio" name="q${index}" value="${i}" id="q${index}o${i}">
+                    <label class="option-label" for="q${index}o${i}">
+                        <span class="option-letter">${letter}</span>
+                        <span class="option-text">${option}</span>
+                    </label>
+                </div>`;
+        });
+        html += `</div>`;
+    } else if (type === 'truefalse') {
+        html += `
+            <div class="truefalse-option-group">
+                <div class="true-option">
+                    <input type="radio" name="q${index}" value="true" id="q${index}true">
+                    <label class="option-label" for="q${index}true">
+                        <span class="option-icon">✓</span>
+                        ${translations[currentLang()].true || 'True'}
+                    </label>
+                </div>
+                <div class="false-option">
+                    <input type="radio" name="q${index}" value="false" id="q${index}false">
+                    <label class="option-label" for="q${index}false">
+                        <span class="option-icon">✗</span>
+                        ${translations[currentLang()].false || 'False'}
+                    </label>
+                </div>
+            </div>`;
+    } else if (type === 'number') {
+        html += `
+            <div class="number-input-container">
+                <input type="number" class="modern-number-input" name="q${index}" 
+                       placeholder="${translations[currentLang()].enterNumber || 'Enter your answer...'}"
+                       step="any">
+            </div>`;
+    }
+    
+    questionDiv.innerHTML = html;
+    return questionDiv;
+}
+
+// Update the loadLesson function
+async function loadLesson() {
+    try {
+        const lessonId = window.location.pathname.split('/').pop();
+        const response = await fetch(`/api/lessons/${lessonId}`);
+        const lesson = await response.json();
+        
+        document.getElementById('lesson-title').textContent = lesson.title;
+        
+        if (lesson.questions) {
+            lesson.questions.forEach((question, index) => {
+                const container = document.getElementById(`${question.type}-questions`);
+                if (container) {
+                    container.appendChild(renderQuestion(question, index, question.type));
+                }
+            });
+        }
+        
+        // Update translations after rendering dynamic content
+        updateTexts(currentLang());
+    } catch (error) {
+        console.error('Error loading lesson:', error);
+    }
+}
+
+// Add translation keys for lesson-specific content
+if (typeof translations !== 'undefined') {
+    Object.keys(translations).forEach(lang => {
+        translations[lang] = {
+            ...translations[lang],
+            true: lang === 'vi' ? 'Đúng' : 'True',
+            false: lang === 'vi' ? 'Sai' : 'False',
+            enterNumber: lang === 'vi' ? 'Nhập câu trả lời của bạn...' : 'Enter your answer...',
+            invalidCredentials: lang === 'vi' ? 'Thông tin không hợp lệ' : 'Invalid credentials'
+        };
+    });
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    loadLesson();
+});
