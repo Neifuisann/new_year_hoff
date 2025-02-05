@@ -3622,5 +3622,136 @@
       "dob": null,
       "studentId": null
     }
+  },
+  {
+    "id": "1738768731079",
+    "lessonId": "1738741936960",
+    "timestamp": "2025-02-05T15:18:51.079Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Cần đo đại lượng nào để xác định nhiệt hoá hơi riêng của nước",
+        "userAnswer": "nhiệt lượng cung cấp cho khối chất lỏng và khoảng thời gian cung cấp nhiệt lượng đó",
+        "correctAnswer": "nhiệt lượng cần cung cấp cho nước hoá hơi và khối lượng của nước.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Xác định nhiệt lượng nước trong bình nhiệt lượng kế thu được trong tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước bằng cách.",
+        "userAnswer": "Xác định công suất trung bình của nguồn điện bằng oát kế và thời gian",
+        "correctAnswer": "Xác định công suất trung bình của nguồn điện bằng oát kế và thời gian",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Trong thí nghiệm đo nhiệt hoá hơi riêng của nước, nhiệt hoá hơi riêng của nước được xác định bằng công thức: L=(P⋅τ)/Δm. Giá trị Δm là",
+        "userAnswer": "Khối lượng nước và ấm đun.",
+        "correctAnswer": "Khối lượng nước bị bay hơi sau thời gian τ.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Để đảm bảo an toàn trong khi làm thí nghiệm cần phải chú ý. Chọn câu sai.",
+        "userAnswer": "Luôn luôn tuân thủ các quy tắc an toàn khi làm việc với nguồn nhiệt và các thiết bị đốt cháy.",
+        "correctAnswer": "Sử dụng bình nhiệt lượng kế được thiết kế cho mục đích đo nhiệt lượng và nứt cũng sử dụng được.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Thiết bị nào sau đây không dùng để xác định nhiệt hoá hơi riêng của nước?",
+        "userAnswer": "Oát kế.",
+        "correctAnswer": "Nhiệt kế.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Để đảm bảo an toàn trong tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước cần chú ý. Chọn câu sai",
+        "userAnswer": "cẩn thận khi sử dụng nước nóng và nguồn điện",
+        "correctAnswer": "nước không quá nóng và dòng điện nhỏ nên không cần chú ý.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Khi tiến hành thí nghiệm xác định nhiệt hoá hơi riêng của nước phải thực hiện bước nào cuối cùng trong các bước sau.",
+        "userAnswer": "Nối oát kế với điện trở và nguồn điện",
+        "correctAnswer": "Bật nguồn điện",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Đồ thị nào sau đây biểu diễn mối quan hệ giữa khối lượng nước còn lại trong bình nhiệt lượng kế và thời gian của quá trình hoá hơi của nước",
+        "userAnswer": "Đồ thị (3).",
+        "correctAnswer": "Đồ thị (3).",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt hoá hơi riêng là",
+        "userAnswer": "nhiệt lượng cần để làm cho một kilogam chất lỏng đó hoá hơi hoàn toàn ở nhiệt độ xác định.",
+        "correctAnswer": "nhiệt lượng cần để làm cho một kilogam chất lỏng đó hoá hơi hoàn toàn ở nhiệt độ xác định.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "(GK) Nhiệt hóa hơi riêng của nước là 2,3⋅10^6 \" \" J/kg. Câu nào dưới đây là đúng?",
+        "userAnswer": "Mỗi kilogam nước cần thu một lượng nhiệt là 2,3⋅10^6 \" \" J để bay hơi hoàn toàn ở nhiệt độ sôi và áp suất chuẩn.",
+        "correctAnswer": "Mỗi kilogam nước cần thu một lượng nhiệt là 2,3⋅10^6 \" \" J để bay hơi hoàn toàn ở nhiệt độ sôi và áp suất chuẩn.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt lượng cần cung cấp cho một lượng chất lỏng hoá hơi ở nhiệt độ không đổi",
+        "userAnswer": "chỉ phụ thuộc vào khối lượng của chất lỏng",
+        "correctAnswer": "phụ thuộc vào khối lượng và bản chất của chất lỏng",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Điều nào sau đây là sai khi nói về nhiệt hoá hơi.",
+        "userAnswer": "Nhiệt hoá hơi được tính bằng công thức Q=Lm trong đó L là nhiệt hóa hơi riêng của chất lỏng, m là khối lượng của chất lỏng.",
+        "correctAnswer": "Đơn vị của nhiệt hóa hơi là Jun trên kilôgam (J/kg).",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Oơn vị nào sau đây là đơn vị của nhiệt hoá hơi riêng của chất lỏng?",
+        "userAnswer": "Jun (J).",
+        "correctAnswer": "Jun trên kilôgam (J/kg).",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 4,
+    "totalPoints": 13,
+    "studentInfo": {
+      "name": "lalala",
+      "dob": null,
+      "studentId": null
+    }
   }
 ]
