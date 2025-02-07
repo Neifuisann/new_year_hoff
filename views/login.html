@@ -25,7 +25,7 @@
     
     <script>
         function currentLang() {
-            return localStorage.getItem('language') || 'en';
+            return localStorage.getItem('language') || 'vi';
         }
 
         async function handleLogin(event) {
@@ -51,7 +51,7 @@
 
         // Initialize translations when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('language') || 'en';
+            const savedLang = localStorage.getItem('language') || 'vi';
             updateTexts(savedLang);
         });
     </script>

@@ -236,7 +236,7 @@ async function checkAdminAuth() {
 
 // Add helper function to get current language
 function currentLang() {
-    return localStorage.getItem('language') || 'en';
+    return localStorage.getItem('language') || 'vi';
 }
 
 // Initialize when page loads

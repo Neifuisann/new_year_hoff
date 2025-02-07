@@ -1,3 +1,6 @@
+// Store chart instance globally
+let scoreChartInstance = null;
+
 async function loadStatistics() {
     try {
         const lessonId = window.location.pathname.split('/').pop();
@@ -8,6 +11,9 @@ async function loadStatistics() {
         }
 
         const stats = await response.json();
+        
+        // Store stats globally for export
+        window.lessonStats = stats;
 
         // Update basic stats - Add null checks
         safeUpdateText('total-students', stats.uniqueStudents);
@@ -23,7 +29,13 @@ async function loadStatistics() {
         // Modified score chart section
         const scoreChart = document.getElementById('scoreChart');
         if (scoreChart) {
-            new Chart(scoreChart, {
+            // Destroy existing chart if it exists
+            if (scoreChartInstance) {
+                scoreChartInstance.destroy();
+            }
+
+            // Create new chart
+            scoreChartInstance = new Chart(scoreChart, {
                 type: 'bar',
                 data: {
                     labels: stats.scoreDistribution.labels,
@@ -139,6 +151,74 @@ async function loadStatistics() {
     }
 }
 
+function exportToExcel() {
+    if (!window.lessonStats) return;
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+
+    // Add Overview sheet
+    const overviewData = [
+        {
+            'Chỉ số': 'Tổng số học sinh',
+            'Giá trị': window.lessonStats.uniqueStudents
+        },
+        {
+            'Chỉ số': 'Tổng số lần làm bài',
+            'Giá trị': window.lessonStats.totalAttempts
+        },
+        {
+            'Chỉ số': 'Điểm trung bình',
+            'Giá trị': parseFloat(window.lessonStats.averageScore).toFixed(2)
+        },
+        {
+            'Chỉ số': 'Tỉ lệ đúng < 50%',
+            'Giá trị': window.lessonStats.lowScores
+        },
+        {
+            'Chỉ số': 'Tỉ lệ đúng ≥ 50%',
+            'Giá trị': window.lessonStats.highScores
+        }
+    ];
+    const overviewSheet = XLSX.utils.json_to_sheet(overviewData);
+    XLSX.utils.book_append_sheet(workbook, overviewSheet, 'Tổng quan');
+
+    // Add Question Analysis sheet
+    const questionData = window.lessonStats.questionStats.map((q, idx) => ({
+        'STT': idx + 1,
+        'Câu hỏi': q.question,
+        'Tổng số học sinh': q.totalStudents,
+        'Đã làm': q.completed,
+        'Chưa làm': q.notCompleted,
+        'Làm đúng': q.correct,
+        'Làm sai': q.incorrect,
+        'Tỉ lệ làm': `${(q.completed/q.totalStudents * 100).toFixed(2)}%`
+    }));
+    const questionSheet = XLSX.utils.json_to_sheet(questionData);
+    XLSX.utils.book_append_sheet(workbook, questionSheet, 'Phân tích câu hỏi');
+
+    // Add Student Transcripts sheet
+    const transcriptData = window.lessonStats.transcripts.map((t, idx) => ({
+        'STT': idx + 1,
+        'Tên': t.name,
+        'Ngày sinh': t.dob || 'N/A',
+        'Điểm': t.score
+    }));
+    const transcriptSheet = XLSX.utils.json_to_sheet(transcriptData);
+    XLSX.utils.book_append_sheet(workbook, transcriptSheet, 'Bảng điểm');
+
+    // Add Score Distribution sheet
+    const distributionData = window.lessonStats.scoreDistribution.labels.map((label, idx) => ({
+        'Khoảng điểm': label,
+        'Số lượt làm bài': window.lessonStats.scoreDistribution.data[idx]
+    }));
+    const distributionSheet = XLSX.utils.json_to_sheet(distributionData);
+    XLSX.utils.book_append_sheet(workbook, distributionSheet, 'Phân bố điểm');
+
+    // Generate Excel file
+    XLSX.writeFile(workbook, 'lesson_statistics.xlsx');
+}
+
 // Add helper functions to handle null elements
 function safeUpdateText(elementId, value) {
     const element = document.getElementById(elementId);
@@ -153,6 +233,8 @@ function safeUpdateLabel(elementId, text) {
 
 // Append student filter functionality for transcripts by student name
 document.addEventListener('DOMContentLoaded', () => {
+    loadStatistics();
+    
     const studentFilterInput = document.getElementById('student-filter-input');
     const clearFilterBtn = document.getElementById('clear-filter-btn');
     if (studentFilterInput) {
@@ -187,6 +269,4 @@ function filterTranscripts(filterValue) {
             }
         }
     }
-}
-
-document.addEventListener('DOMContentLoaded', loadStatistics); 
+} 

@@ -1,0 +1,8 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+*.json
+*.txt
+*.md
+*.pdf
+*.docx
+*.doc
+*.xls

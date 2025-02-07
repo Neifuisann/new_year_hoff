@@ -2,7 +2,7 @@
 window.questionMappings = {};
 
 function currentLang() {
-    return localStorage.getItem('language') || 'en';
+    return localStorage.getItem('language') || 'vi';
 }
 
 function shuffleArray(array) {

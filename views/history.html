@@ -4,30 +4,84 @@
     <meta charset="UTF-8">
     <title>Activity Log</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <a href="/" class="home-button">Home</a>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
     <div class="history-container">
-        <h1>Các bài nộp</h1>
-        <div id="history-filter-container">
-            <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" />
-            <button id="history-clear-filter-btn">Xoá tiềm kiếm</button>
+        <div class="history-header">
+            <h1><i class="fas fa-history"></i> Các bài nộp</h1>
+            <div class="export-controls">
+                <button onclick="exportToExcel()" class="export-btn">
+                    <i class="fas fa-file-export"></i> Xuất Excel
+                </button>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="statistics-table" id="history-log">
-                <thead>
-                    <tr>
-                        <th>STT.</th>
-                        <th>Tên</th>
-                        <th>Bài</th>
-                        <th>Thời gian nộp</th>
-                        <th>Điểm</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Activity log data will be populated by JavaScript -->
-                </tbody>
-            </table>
+
+        <div class="history-stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value" id="total-students-history">0</div>
+                <div class="stat-label">Tổng số học sinh</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-value" id="total-submissions">0</div>
+                <div class="stat-label">Tổng số bài nộp</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value" id="avg-score-history">0</div>
+                <div class="stat-label">Điểm trung bình</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-value" id="submissions-today">0</div>
+                <div class="stat-label">Bài nộp hôm nay</div>
+            </div>
+        </div>
+
+        <div class="history-content">
+            <div class="history-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> Danh sách bài nộp</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" />
+                        <button id="history-clear-filter-btn" class="clear-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="statistics-table" id="history-log">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> STT.</th>
+                                <th><i class="fas fa-user"></i> Tên</th>
+                                <th><i class="fas fa-book"></i> Bài</th>
+                                <th><i class="fas fa-clock"></i> Thời gian nộp</th>
+                                <th><i class="fas fa-star"></i> Điểm</th>
+                                <th><i class="fas fa-eye"></i> Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Activity log data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <script src="/js/history.js"></script>
