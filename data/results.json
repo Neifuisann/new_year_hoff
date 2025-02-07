@@ -721,5 +721,131 @@
       "dob": null,
       "studentId": null
     }
+  },
+  {
+    "id": "1738941266775",
+    "lessonId": "1738941256532",
+    "timestamp": "2025-02-07T15:14:26.775Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "nani",
+        "userAnswer": "",
+        "correctAnswer": "oke",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 1,
+    "studentInfo": {
+      "name": "dadw",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1738941644574",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-07T15:20:44.574Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Chất khí không có hình dạng và thể tích riêng là vì",
+        "userAnswer": "khoảng cách giữa các phân tử rất gần, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "correctAnswer": "khoảng cách giữa các phân tử rất xa, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nội dung thí nghiệm Brown là:",
+        "userAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất lỏng có thể tích xác định vì",
+        "userAnswer": "lực liên kết giữa các phân tử trong chất lỏng là rất yếu.",
+        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh là:",
+        "userAnswer": "Chất rắn có cấu trúc đa tinh thể",
+        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
+        "userAnswer": "Muối ăn",
+        "correctAnswer": "Nhựa đường",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "Miếng thạch anh.",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "Vì cao su là chất đàn hồi nên sau khi bị thổi căng nó tự động co lại.",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Vật rắn có hình dạng xác định vì phân tử cấu tạo nên vật rắn",
+        "userAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
+        "correctAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 3,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "daohuy",
+      "dob": "2025-02-14",
+      "studentId": "123"
+    }
   }
 ]

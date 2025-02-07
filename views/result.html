@@ -1,22 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Quiz Results</title>
+    <title>Xem đáp án</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css">
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
-    <div class="sort-buttons">
-        <button onclick="sortResults('all')" class="sort-btn active">All Questions</button>
-        <button onclick="sortResults('correct')" class="sort-btn">Correct Answers</button>
-        <button onclick="sortResults('incorrect')" class="sort-btn">Incorrect Answers</button>
+
+    <div class="results-container">
+        <div class="results-header">
+            <h1>Xem đáp án</h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-value" id="score-value">-</div>
+                <div class="stat-label">Điểm</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="stat-value" id="correct-answers">-</div>
+                <div class="stat-label">Số câu đúng</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="stat-value" id="incorrect-answers">-</div>
+                <div class="stat-label">Số câu sai</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-value" id="accuracy">-</div>
+                <div class="stat-label">Tỉ lệ hoàn thành</div>
+            </div>
+        </div>
+
+        <div class="results-content">
+            <div class="sort-buttons">
+                <button onclick="sortResults('all')" class="sort-btn active">Tất cả</button>
+                <button onclick="sortResults('correct')" class="sort-btn">Câu đúng</button>
+                <button onclick="sortResults('incorrect')" class="sort-btn">Câu sai</button>
+            </div>
+            <div id="result" class="results-list"></div>
+        </div>
     </div>
-    <div id="result"></div>
     <script src="/js/result.js"></script>
 </body>
 </html>

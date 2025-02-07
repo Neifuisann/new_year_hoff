@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
     <title data-i18n="title">Quiz Application</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -55,14 +56,11 @@
             </div>
         </div>
         <div id="lessons"></div>
-        <div class="admin-controls" hidden>
-            <a href="/admin" class="button">Admin Panel</a>
-        </div>
 
         <div id="user-info-modal" class="modal">
             <div class="modal-content">
                 <h2 data-i18n="studentInfo">Student Information</h2>
-                <form id="user-info-form">
+                <form id="user-info-form" autocomplete="off">
                     <div class="form-group">
                         <label data-i18n="fullName">Full Name *</label>
                         <input type="text" id="student-name" required>

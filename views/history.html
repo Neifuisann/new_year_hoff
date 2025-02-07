@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Activity Log</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -22,14 +23,14 @@
         </div>
 
         <div class="history-stats-grid">
-            <div class="stat-card primary">
+            <div class="stat-card primary mobile-full">
                 <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-value" id="total-students-history">0</div>
                 <div class="stat-label">Tổng số học sinh</div>
             </div>
-            <div class="stat-card success">
+            <div class="stat-card success mobile-full">
                 <div class="stat-icon">
                     <i class="fas fa-file-alt"></i>
                 </div>
@@ -58,22 +59,22 @@
                     <h3><i class="fas fa-list"></i> Danh sách bài nộp</h3>
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" />
+                        <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" class="modern-input" />
                         <button id="history-clear-filter-btn" class="clear-btn">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="statistics-table" id="history-log">
+                    <table class="statistics-table mobile-friendly" id="history-log">
                         <thead>
                             <tr>
-                                <th><i class="fas fa-hashtag"></i> STT.</th>
+                                <th class="mobile-hide"><i class="fas fa-hashtag"></i> STT.</th>
                                 <th><i class="fas fa-user"></i> Tên</th>
                                 <th><i class="fas fa-book"></i> Bài</th>
-                                <th><i class="fas fa-clock"></i> Thời gian nộp</th>
+                                <th class="mobile-optional"><i class="fas fa-clock"></i> Thời gian</th>
                                 <th><i class="fas fa-star"></i> Điểm</th>
-                                <th><i class="fas fa-eye"></i> Chi tiết</th>
+                                <th><i class="fas fa-eye"></i></th>
                             </tr>
                         </thead>
                         <tbody>
