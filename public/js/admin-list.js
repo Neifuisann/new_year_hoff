@@ -11,7 +11,7 @@ async function loadLessonsForAdmin() {
         lessons = await response.json();
         const lessonList = document.getElementById('lesson-list');
         
-        lessonList.innerHTML = '<h2>Existing Lessons</h2>';
+        lessonList.innerHTML = '<h2>Danh sách bài:</h2>';
         const container = document.createElement('div');
         container.id = 'sortable-lessons';
         container.className = 'sortable-container';
@@ -27,16 +27,16 @@ async function loadLessonsForAdmin() {
                 <span class="drag-handle">☰</span>
                 <span class="lesson-title">${lesson.title}</span>
                 <div class="lesson-info">
-                    ${lesson.questions?.length || 0} questions
+                    ${lesson.questions?.length || 0} câu hỏi
                 </div>
                 <div class="lesson-actions">
                     <input type="color" 
                            value="${lesson.color || '#a4aeff'}" 
                            onchange="updateLessonColor(${lesson.id}, this.value)"
                            style="margin-right: 10px; vertical-align: middle;">
-                    <a href="/admin/edit/${lesson.id}" class="button">Edit</a>
-                    <a href="/admin/statistics/${lesson.id}" class="button">Statistics</a>
-                    <button onclick="deleteLesson(${lesson.id})" class="delete-button">Delete</button>
+                    <a href="/admin/edit/${lesson.id}" class="button" >Chỉnh sửa</a>
+                    <a href="/admin/statistics/${lesson.id}" class="button">Thống kê</a>
+                    <button onclick="deleteLesson(${lesson.id})" class="delete-button">Xoá</button>
                 </div>
             `;
             

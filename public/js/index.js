@@ -12,7 +12,6 @@ async function loadTranslations() {
         translations = {
             en: {
                 questions: 'questions',
-                startLesson: 'Start Lesson',
                 noResults: 'No results found',
                 accountSoon: 'Account feature coming soon',
                 logoutSoon: 'Logout feature coming soon'
@@ -168,7 +167,7 @@ function renderLessons(lessons) {
     if (!translations[currentLanguage]) {
         translations[currentLanguage] = {
             questions: 'questions',
-            startLesson: 'Start Lesson',
+            startLesson: 'Làm bài',
             noResults: 'No results found'
         };
     }

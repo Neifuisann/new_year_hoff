@@ -114,20 +114,20 @@ function addQuestion(existingQuestion = null) {
     const contentHTML = `
         <div class="question-content">
             <div class="form-group">
-                <label>Question Type:</label>
+                <label>Dạng câu:</label>
                 <select class="question-type" onchange="handleQuestionTypeChange(this)">
-                    <option value="abcd">Multiple Choice</option>
-                    <option value="truefalse">True/False</option>
-                    <option value="number">Number</option>
+                    <option value="abcd">Bốn đáp án</option>
+                    <option value="truefalse">Đúng/Sai</option>
+                    <option value="number">Trả lời ngắn</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Question Text:</label>
+                <label>Nội dung câu hỏi:</label>
                 <input type="text" class="question-text" value="${existingQuestion?.question || ''}" 
                        oninput="updateQuestionPreview(this)">
             </div>
             <div class="form-group">
-                <label>Question Image:</label>
+                <label>Ảnh minh hoạ:</label>
                 <div class="image-upload-container">
                     <input type="file" class="question-image" accept="image/*" onchange="handleImageUpload(this)">
                     <button type="button" class="remove-image-btn" onclick="removeQuestionImage(this)" style="display: none;">X</button>
@@ -137,7 +137,7 @@ function addQuestion(existingQuestion = null) {
             <div class="options-container"></div>
             <div class="correct-answer-container"></div>
             <div class="form-group">
-                <label>Points:</label>
+                <label>Điểm:</label>
                 <input type="number" class="points" value="${existingQuestion?.points || 1}" 
                        min="1" oninput="handlePointsChange(this)">
             </div>
@@ -200,19 +200,19 @@ function handleQuestionTypeChange(select, existingQuestion = null) {
         optionsContainer.innerHTML = `
             <div class="options-grid">
                 <div class="form-group">
-                    <label>Option A:</label>
+                    <label>Câu A:</label>
                     <input type="text" class="option" value="${existingQuestion?.options?.[0] || ''}" oninput="handleOptionChange(this)">
                 </div>
                 <div class="form-group">
-                    <label>Option B:</label>
+                    <label>Câu B:</label>
                     <input type="text" class="option" value="${existingQuestion?.options?.[1] || ''}" oninput="handleOptionChange(this)">
                 </div>
                 <div class="form-group">
-                    <label>Option C:</label>
+                    <label>Câu C:</label>
                     <input type="text" class="option" value="${existingQuestion?.options?.[2] || ''}" oninput="handleOptionChange(this)">
                 </div>
                 <div class="form-group">
-                    <label>Option D:</label>
+                    <label>Câu D:</label>
                     <input type="text" class="option" value="${existingQuestion?.options?.[3] || ''}" oninput="handleOptionChange(this)">
                 </div>
             </div>
@@ -220,9 +220,9 @@ function handleQuestionTypeChange(select, existingQuestion = null) {
 
         correctContainer.innerHTML = `
             <div class="form-group">
-                <label>Correct Answer:</label>
+                <label>Đáp án:</label>
                 <select class="correct-answer" onchange="handleCorrectAnswerChange(this)">
-                    <option value="">Select correct answer</option>
+                    <option value="">Chọn đáp án</option>
                     ${['a', 'b', 'c', 'd'].map(char => `
                         <option value="${char}" ${existingQuestion?.correct === char ? 'selected' : ''}>
                             ${char.toUpperCase()}
@@ -234,7 +234,7 @@ function handleQuestionTypeChange(select, existingQuestion = null) {
     } else if (select.value === 'truefalse') {
         optionsContainer.innerHTML = `
             <div class="truefalse-options">
-                <button type="button" onclick="addTrueFalseOption(this)">Add Option</button>
+                <button type="button" onclick="addTrueFalseOption(this)">Thêm phương án</button>
                 <div class="options-list">
                     ${existingQuestion?.options?.map((opt, idx) => 
                         createTrueFalseOptionHTML(opt, idx, existingQuestion.correct[idx])
@@ -245,7 +245,7 @@ function handleQuestionTypeChange(select, existingQuestion = null) {
     } else if (select.value === 'number') {
         correctContainer.innerHTML = `
             <div class="form-group">
-                <label>Correct Answer:</label>
+                <label>Đáp án:</label>
                 <input type="number" class="correct-answer" value="${existingQuestion?.correct || ''}" 
                        oninput="handleCorrectAnswerChange(this)" required>
             </div>
@@ -868,14 +868,14 @@ function minimizeAllQuestions() {
                 <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M4 12h16M4 6h16M4 18h16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                Maximize All
+                Mở rộng tất cả
             `;
         } else {
             minimizeAllBtn.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 24 24">
                     <path d="M4 9h16M4 15h16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                Minimize All
+                Thu gọn tất cả
             `;
         }
     }

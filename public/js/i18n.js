@@ -67,7 +67,7 @@
       fullName: "Full Name *",
       dateOfBirth: "Date of Birth",
       studentId: "Student ID",
-      startLesson: "Start Lesson",
+      startLesson: "Làm bài",
       cancel: "Cancel",
       noResults: "No lessons found matching your search.",
       popularTags: "Popular Tags",
@@ -85,11 +85,11 @@
     vi: {
       title: "Ứng dụng trắc nghiệm",
       account: "Tài khoản",
-      editorMode: "Chế độ biên tập",
+      editorMode: "Màn hình giáo viên",
       darkMode: "Chế độ tối",
       logout: "Đăng xuất",
       languageLabel: "Ngôn ngữ:",
-      chooseLesson: "Chọn bài học",
+      chooseLesson: "Danh sách bài học",
       searchPlaceholder: "Tìm kiếm bài học hoặc nhãn...",
       lessonTitlePage: "Bài học",
       multipleChoiceQuestions: "Câu hỏi trắc nghiệm",
@@ -127,16 +127,16 @@
       delete: "Xóa",
       lessonStatisticsTitle: "Thống kê bài học",
       lessonStatistics: "Thống kê bài học",
-      randomQuestions: "Câu hỏi ngẫu nhiên",
-      randomQuestionsHelp: "Đặt số câu hỏi ngẫu nhiên để sử dụng (0 = tất cả câu hỏi)",
-      totalStudents: "Tổng số học viên",
-      averageScore: "Điểm trung bình",
+      randomQuestions: "‎‎ Tạo đề con",
+      randomQuestionsHelp: "Số câu hỏi tạo đề con (0 = tất cả)",
+      totalStudents: "Tổng số học sinh",
+      averageScore: "Tỉ lệ đúng trung bình",
       scoresBelow50: "Điểm dưới 50%",
       scoresAbove50: "Điểm từ 50% trở lên",
       totalAttempts: "Tổng số lượt làm bài",
       scoreDistribution: "Phân bố điểm số",
       questionAnalysis: "Phân tích câu hỏi",
-      studentTranscripts: "Bảng điểm học viên",
+      studentTranscripts: "Bảng điểm học sinh",
       exportToExcel: "Xuất ra Excel",
       sortNewest: "Mới nhất",
       sortOldest: "Cũ nhất",
@@ -144,10 +144,10 @@
       sortZA: "Tên Z-A",
       sortNewestChanged: "Thay đổi mới nhất",
       sortPopular: "Phổ biến",
-      studentInfo: "Thông tin học viên",
+      studentInfo: "Thông tin học sinh",
       fullName: "Họ và tên *",
       dateOfBirth: "Ngày sinh",
-      studentId: "Mã số học viên",
+      studentId: "Mã số học sinh",
       startLesson: "Bắt đầu bài học",
       cancel: "Hủy",
       noResults: "Không tìm thấy bài học phù hợp.",
@@ -161,7 +161,11 @@
       correct: "Đúng",
       incorrect: "Sai",
       completionRate: "Tỷ lệ hoàn thành",
-      score: "Điểm số"
+      score: "Điểm số",
+      activityLog: "Các bài nộp",
+      lessonEdit : "Chỉnh sửa",
+      startLesson: "Làm bài",
+      scoreDistribution: "Phân bố điểm",
     }
   };
 
@@ -187,7 +191,7 @@
   }
 
   // On page load, set the language based on saved preference or default to 'en'
-  const savedLang = localStorage.getItem('language') || 'en';
+  const savedLang = localStorage.getItem('language') || 'vi';
   updateTexts(savedLang);
 
   // Expose setLanguage function globally

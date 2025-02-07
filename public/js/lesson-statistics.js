@@ -17,8 +17,8 @@ async function loadStatistics() {
         safeUpdateText('high-scores', stats.highScores);
 
         // Update the stats card labels - Add null checks
-        safeUpdateLabel('low-scores', 'Scores < 50%');
-        safeUpdateLabel('high-scores', 'Scores ≥ 50%');
+        safeUpdateLabel('low-scores', 'Tỉ lệ đúng < 50%');
+        safeUpdateLabel('high-scores', 'Tỉ lệ đúng ≥ 50%');
 
         // Modified score chart section
         const scoreChart = document.getElementById('scoreChart');
@@ -28,7 +28,7 @@ async function loadStatistics() {
                 data: {
                     labels: stats.scoreDistribution.labels,
                     datasets: [{
-                        label: 'Number of Attempts',
+                        label: 'Số lượt làm bài',
                         data: stats.scoreDistribution.data,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -46,13 +46,13 @@ async function loadStatistics() {
                             },
                             title: {
                                 display: true,
-                                text: 'Number of Attempts'
+                                text: 'Số lượt làm bài'
                             }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: 'Score Range'
+                                text: 'Khoảng điểm'
                             }
                         }
                     },
@@ -63,7 +63,7 @@ async function loadStatistics() {
                         },
                         title: {
                             display: true,
-                            text: 'Score Distribution'
+                            text: 'Phân bố điểm'
                         },
                         tooltip: {
                             callbacks: {
@@ -83,14 +83,14 @@ async function loadStatistics() {
             questionTable.innerHTML = `
                 <thead>
                     <tr>
-                        <th>NO.</th>
-                        <th>Question</th>
-                        <th>Total Students</th>
-                        <th>Completed</th>
-                        <th>Not Completed</th>
-                        <th>Correct</th>
-                        <th>Incorrect</th>
-                        <th>Completion Rate</th>
+                        <th>STT.</th>
+                        <th>Câu</th>
+                        <th>Tổng số học sinh</th>
+                        <th>Đã làm</th>
+                        <th>Chưa làm</th>
+                        <th>Làm đúng</th>
+                        <th>Làm Sai</th>
+                        <th>Tỉ lệ làm</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,10 +115,10 @@ async function loadStatistics() {
             transcriptsTable.innerHTML = `
                 <thead>
                     <tr>
-                        <th>NO.</th>
-                        <th>Full Name</th>
-                        <th>Date of Birth</th>
-                        <th>Score</th>
+                        <th>STT.</th>
+                        <th>Tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Điểm</th>
                     </tr>
                 </thead>
                 <tbody>
