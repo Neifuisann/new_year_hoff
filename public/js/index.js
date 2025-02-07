@@ -190,21 +190,28 @@ function renderLessons(lessons) {
         lessonDiv.className = 'lesson-card';
         lessonDiv.style.setProperty('--lesson-bg', lesson.color || '#a4aeff');
         
-        const questionsText = `${lesson.questions?.length || 0} ${translations[currentLanguage].questions}`;
-        
         const tagsHtml = lesson.tags ? 
             `<div class="lesson-tags">
                 ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-             </div>` : '';
+            </div>` : '';
+        
+        // Add lesson image or placeholder in a container
+        const imageHtml = `
+            <div class="lesson-image-container">
+                ${lesson.lessonImage ? 
+                    `<img src="${lesson.lessonImage}" alt="${lesson.title}" class="lesson-image">` :
+                    `<div class="lesson-image-placeholder">📚</div>`
+                }
+            </div>`;
         
         lessonDiv.innerHTML = `
             <div class="lesson-content">
                 <h3>${lesson.title}</h3>
-                <p>${questionsText}</p>
                 <button onclick="startLesson('${lesson.id}')" class="start-btn" data-i18n="startLesson">
                     ${translations[currentLanguage].startLesson}
                 </button>
             </div>
+            ${imageHtml}
             ${tagsHtml}
         `;
         lessonsContainer.appendChild(lessonDiv);

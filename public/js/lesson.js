@@ -211,6 +211,14 @@ async function initializeLesson() {
             titleElement.textContent = lesson.title;
         }
         
+        // Display lesson image if present
+        if (lesson.lessonImage) {
+            const imageContainer = document.getElementById('lesson-image-container');
+            const imageElement = document.getElementById('lesson-image');
+            imageElement.src = lesson.lessonImage;
+            imageContainer.style.display = 'block';
+        }
+        
         await renderQuestions(lesson);
         console.log('Lesson initialized successfully');
     } catch (error) {

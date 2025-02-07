@@ -3753,5 +3753,99 @@
       "dob": null,
       "studentId": null
     }
+  },
+  {
+    "id": "1738919737275",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-07T09:15:37.275Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chiếc cốc thủy tinh",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào sau đây nói về lực tương tác phân tử là đúng?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Lực tương tác phân tử không đáng kể khi các phân tử ở rất xa nhau.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn kết tinh là:",
+        "userAnswer": "No answer",
+        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Phát biểu nào dưới đây là đúng khi nói về những đặc điểm của chất rắn?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Có khối lượng, hình dạng, thể tích xác định.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Tại sao người ta không nén chất rắn lại để tiết kiệm diện tích?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Do chất rắn liên kết chặt chẽ với nhau nên khó nén.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Nước",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Cấu trúc tạo bởi các hạt mà mỗi hạt đó dao động nhiệt xung quanh một vị trí cân bằng trùng với đỉnh của khối lập phương là",
+        "userAnswer": "No answer",
+        "correctAnswer": "tinh thể muối ăn",
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất rắn nào dưới đây không phải là chất rắn vô định hình?",
+        "userAnswer": "No answer",
+        "correctAnswer": "Thạch anh.",
+        "points": 1,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "hoang",
+      "dob": null,
+      "studentId": "123"
+    }
   }
 ]

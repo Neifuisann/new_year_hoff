@@ -58,7 +58,9 @@ function requireStudentInfo(req, res, next) {
 app.use(requireStudentInfo);
 
 // Routes
-app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/views/gallery.html'));
+app.get('/multiplechoice', (req, res) => res.sendFile(__dirname + '/views/index.html'));
+app.get('/truefalse', (req, res) => res.sendFile(__dirname + '/views/index.html')); // Reusing index.html for now
 app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
 app.get('/admin/new', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
 app.get('/admin/edit/:id', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
@@ -454,6 +456,23 @@ app.post('/api/student-info', (req, res) => {
 // Add check-auth endpoint
 app.get('/api/check-auth', (req, res) => {
     res.json({ isAuthenticated: !!req.session.isAuthenticated });
+});
+
+// API endpoint to get gallery images
+app.get('/api/gallery-images', (req, res) => {
+    const imagesDir = path.join(__dirname, 'public', 'lesson_images');
+    try {
+        if (!fs.existsSync(imagesDir)) {
+            fs.mkdirSync(imagesDir, { recursive: true });
+        }
+        const files = fs.readdirSync(imagesDir)
+            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+            .map(file => `/lesson_images/${file}`);
+        res.json(files);
+    } catch (error) {
+        console.error('Error reading gallery images:', error);
+        res.status(500).json({ error: 'Failed to load gallery images' });
+    }
 });
 
 // Add error handling for the server

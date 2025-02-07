@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('lesson-color').value = currentLesson.color || '#a4aeff';
         document.getElementById('random-questions').value = currentLesson.randomQuestions || 0;
         
+        // Load existing lesson image if present
+        if (currentLesson.lessonImage) {
+            const imagePreview = document.getElementById('lesson-image-preview');
+            const removeButton = document.querySelector('#lesson-image').nextElementSibling;
+            imagePreview.src = currentLesson.lessonImage;
+            imagePreview.style.display = 'block';
+            removeButton.style.display = 'inline-block';
+        }
+        
         // Load existing tags
         if (currentLesson.tags) {
             currentLesson.tags.forEach(tag => addTag(tag));
@@ -417,6 +426,7 @@ async function saveLesson() {
             randomQuestions: parseInt(document.getElementById('random-questions').value) || 0,
             tags: Array.from(currentTags),
             questions: currentLesson.questions,
+            lessonImage: currentLesson.lessonImage,
             lastUpdated: now
         };
         
@@ -999,4 +1009,86 @@ async function handleOCRUpload() {
             alert('Failed to process image: ' + error.message);
         }
     };
+}
+
+// Add new functions for lesson image handling
+async function handleLessonImageUpload(input) {
+    const file = input.files[0];
+    const preview = document.getElementById('lesson-image-preview');
+    const removeButton = input.nextElementSibling;
+    
+    if (file) {
+        try {
+            // Create a canvas to compress the image
+            const img = new Image();
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Create a promise to handle image loading
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+            
+            // Calculate new dimensions (max 800px width/height)
+            let width = img.width;
+            let height = img.height;
+            const maxSize = 800;
+            
+            if (width > maxSize || height > maxSize) {
+                if (width > height) {
+                    height *= maxSize / width;
+                    width = maxSize;
+                } else {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+            }
+            
+            // Set canvas size and draw image
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Get compressed image data
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            
+            // Update preview
+            preview.src = compressedDataUrl;
+            preview.style.display = 'block';
+            removeButton.style.display = 'inline-block';
+            
+            // Update lesson data
+            currentLesson.lessonImage = compressedDataUrl;
+            updateJsonEditor();
+            updateTextEditor();
+            
+            // Clean up
+            URL.revokeObjectURL(img.src);
+        } catch (error) {
+            console.error('Error processing image:', error);
+            alert('Error processing image. Please try again with a different image.');
+            input.value = '';
+        }
+    }
+}
+
+function removeLessonImage() {
+    const fileInput = document.getElementById('lesson-image');
+    const preview = document.getElementById('lesson-image-preview');
+    const removeButton = fileInput.nextElementSibling;
+    
+    // Reset file input
+    fileInput.value = '';
+    // Clear preview source and hide it
+    preview.removeAttribute('src');
+    preview.style.display = 'none';
+    // Hide remove button
+    removeButton.style.display = 'none';
+    
+    // Update lesson data
+    currentLesson.lessonImage = null;
+    updateJsonEditor();
+    updateTextEditor();
 }

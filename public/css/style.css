@@ -45,23 +45,93 @@ body {
 }
 
 .lesson-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
+    gap: 15px;
 }
 
 .lesson-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.lesson-content {
+    flex: 1;
+    min-width: 200px;
+}
+
+.lesson-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.lesson-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 68px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.lesson-image {
+    width: 120px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.lesson-image-placeholder {
+    width: 120px;
+    height: 68px;
+    background: rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0,0,0,0.3);
+    font-size: 24px;
+    border-radius: 4px;
+}
+
+.lesson-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 100px;
+}
+
+.tag {
+    background: var(--lesson-bg, #a4aeff);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    display: inline-block;
+    margin: 2px;
+}
+
+.start-btn {
+    background: #2c52fd;
+    color: hwb(0 100% 0%);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.start-btn:hover {
+    background: var(--lesson-bg-hover, #8892ff);
 }
 
 h1 {
@@ -250,6 +320,7 @@ h1 {
 .lesson-tags {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     gap: 5px;
     margin-left: 20px;
     max-width: 200px;
@@ -1805,7 +1876,7 @@ input, select {
     gap: 10px;
     margin-top: 20px;
 }
-
+    
 .modal-buttons button {
     padding: 8px 16px;
     border-radius: 6px;

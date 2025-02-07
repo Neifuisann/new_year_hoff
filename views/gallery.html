@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/gallery.css">
+</head>
+<body>
+    <!-- Background Animation -->
+    <canvas id="network-canvas"></canvas>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="gallery-container">
+            <div class="gallery-wrapper">
+                <button class="gallery-arrow prev-arrow">&lt;</button>
+                <div class="gallery-content"></div>
+                <div class="image-counter">0 / 0</div>
+                <button class="gallery-arrow next-arrow">&gt;</button>
+            </div>
+            
+            <div class="navigation-buttons">
+                <a href="/multiplechoice" class="nav-button">Multiple Choice Quiz</a>
+                <a href="/truefalse" class="nav-button">True/False Quiz</a>
+            </div>
+        </div>
+
+        <div class="image-modal">
+            <span class="close-modal">&times;</span>
+            <img class="modal-image" src="" alt="Enlarged image">
+        </div>
+    </div>
+
+    <script src="/js/network-animation.js"></script>
+    <script src="/js/gallery.js"></script>
+</body>
+</html> 

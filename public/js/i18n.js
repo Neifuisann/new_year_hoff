@@ -47,7 +47,7 @@
       lessonStatisticsTitle: "Lesson Statistics",
       lessonStatistics: "Lesson Statistics",
       randomQuestions: "Random Questions",
-      randomQuestionsHelp: "Set how many random questions to use (0 = all questions)",
+      randomQuestionsHelp: "Set how many random questions (0 = all)",
       totalStudents: "Total Students",
       averageScore: "Average Score",
       scoresBelow50: "Scores < 50%",
