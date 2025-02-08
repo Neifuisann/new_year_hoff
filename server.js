@@ -61,7 +61,7 @@ app.use(requireStudentInfo);
 app.get('/', (req, res) => res.sendFile(__dirname + '/views/landing.html'));
 app.get('/lythuyet', (req, res) => res.sendFile(__dirname + '/views/gallery.html'));
 app.get('/multiplechoice', (req, res) => res.sendFile(__dirname + '/views/index.html'));
-app.get('/quizgame', (req, res) => res.sendFile(__dirname + '/views/index.html')); // You can create a specific quizgame.html later
+app.get('/quizgame', (req, res) => res.sendFile(__dirname + '/views/quizgame.html'));
 app.get('/truefalse', (req, res) => res.sendFile(__dirname + '/views/index.html')); // Reusing index.html for now
 app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
 app.get('/admin/new', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
@@ -80,6 +80,9 @@ app.get('/admin/statistics/:id', requireAuth, (req, res) => {
 app.get('/history', requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'history.html'));
 });
+
+// Add these routes for quiz management
+app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-quiz-edit.html'));
 
 // API Endpoints
 app.post('/api/login', async (req, res) => {
@@ -474,6 +477,51 @@ app.get('/api/gallery-images', (req, res) => {
     } catch (error) {
         console.error('Error reading gallery images:', error);
         res.status(500).json({ error: 'Failed to load gallery images' });
+    }
+});
+
+// Add new quiz game routes
+app.get('/api/quiz', (req, res) => {
+    try {
+        const quizData = JSON.parse(fs.readFileSync('./data/quiz.json'));
+        res.json(quizData);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load quiz data' });
+    }
+});
+
+app.post('/api/quiz/submit', (req, res) => {
+    try {
+        const results = [];
+        if (fs.existsSync('./data/quiz_results.json')) {
+            results.push(...JSON.parse(fs.readFileSync('./data/quiz_results.json', 'utf8')));
+        }
+        
+        const resultId = Date.now().toString();
+        const newResult = {
+            id: resultId,
+            ...req.body,
+            timestamp: new Date().toISOString()
+        };
+        
+        results.push(newResult);
+        fs.writeFileSync('./data/quiz_results.json', JSON.stringify(results, null, 2));
+        
+        res.json({ success: true, resultId: resultId });
+    } catch (error) {
+        console.error('Error saving quiz results:', error);
+        res.status(500).json({ error: 'Failed to save quiz results' });
+    }
+});
+
+app.post('/api/quiz/save', (req, res) => {
+    try {
+        const quizData = req.body;
+        fs.writeFileSync('./data/quiz.json', JSON.stringify(quizData, null, 2));
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving quiz:', error);
+        res.status(500).json({ error: 'Failed to save quiz' });
     }
 });
 

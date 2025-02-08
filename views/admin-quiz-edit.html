@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Quiz Questions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="sortable-container">
+        <h2>Edit Quiz Questions</h2>
+        <div class="questions-header">
+            <button onclick="minimizeAllQuestions()" class="minimize-all-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M4 9h16M4 15h16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Thu gọn tất cả</span>
+            </button>
+        </div>
+        <div id="questions"></div>
+        <button onclick="addQuestion()" class="add-question-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Thêm câu hỏi</span>
+        </button>
+    </div>
+
+    <div class="text-editor-panel">
+        <div class="text-editor-toggle">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+                <path d="M15 19l-7-7 7-7" stroke="currentColor" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="text-editor-content">
+            <div class="text-editor-header">
+                <h3>Question Editor</h3>
+                <button onclick="renderQuestions()" class="render-btn">Render</button>
+            </div>
+            <div class="text-editor-container">
+                <textarea id="text-editor" spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/js/admin-quiz-edit.js"></script>
+</body>
+</html> 

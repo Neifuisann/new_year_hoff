@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Add score display -->
+    <div class="score-display">
+        <div class="score-content">
+            <div class="score-label">Điểm</div>
+            <div class="score-value">0</div>
+            <div class="score-total">/1000</div>
+        </div>
+        <div class="firework-container"></div>
+    </div>
+
+    <div class="quiz-game-container">
+        <div class="animation-background">
+            <div class="pendulum">
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+                <div class="ball"></div>
+            </div>
+            <div class="rubiks-cube">
+                <div class="cube-face front"></div>
+                <div class="cube-face back"></div>
+                <div class="cube-face right"></div>
+                <div class="cube-face left"></div>
+                <div class="cube-face top"></div>
+                <div class="cube-face bottom"></div>
+            </div>
+            <div class="pyramid"></div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress"></div>
+                <div class="milestone" style="left: 0%">0</div>
+                <div class="milestone" style="left: 23%">20</div>
+                <div class="milestone" style="left: 47%">30</div>
+                <div class="milestone" style="left: 72%">40</div>
+                <div class="milestone" style="left: 95%">50</div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <h2 class="question-text"></h2>
+            <div class="question-image-container"></div>
+            <div class="options-container">
+                <div class="option-area true-area">
+                    <button class="option-btn true-btn">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+                <div class="option-area false-area">
+                    <button class="option-btn false-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add firework container -->
+    <div class="fireworks-container"></div>
+
+    <!-- Student Info Modal -->
+    <div id="student-info-modal" class="modal">
+        <div class="modal-content">
+            <h2>Thông tin học sinh</h2>
+            <form id="student-info-form">
+                <div class="form-group">
+                    <label>Họ và tên *</label>
+                    <input type="text" id="student-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Ngày sinh</label>
+                    <input type="date" id="student-dob">
+                </div>
+                <div class="form-group">
+                    <label>Mã học sinh</label>
+                    <input type="text" id="student-id">
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit">Bắt đầu</button>
+                    <button type="button" onclick="window.location.href='/'">Huỷ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fireworks/1.0.0/fireworks.min.js"></script>
+    <script src="/js/quizgame.js"></script>
+</body>
+</html> 

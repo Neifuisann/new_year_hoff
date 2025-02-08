@@ -493,7 +493,7 @@ h1 {
     margin: 20px 0; 
     padding: 15px; 
     background: #f6f6f7; 
-    border-radius: 5px;
+    border-radius: 5px; 
     position: relative;
 }
 
@@ -508,7 +508,7 @@ h1 {
 }
 
 button, .button { 
-    padding: 12px 15px; 
+    padding: 50px 70px; 
     background: #007bff; 
     color: white; 
     border: none; 
@@ -3487,4 +3487,269 @@ textarea {
     textarea {
         font-size: 16px !important;
     }
+}
+
+/* Quiz Game Styles */
+.quiz-game-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.progress-container {
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+    max-width: 800px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    position: relative;
+    margin: 30px 0;
+}
+
+.progress {
+    height: 100%;
+    background: #4CAF50;
+    border-radius: 5px;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.milestone {
+    position: absolute;
+    top: -12px;
+    transform: translateX(-50%);
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    border: 2px solid #ddd;
+    font-weight: bold;
+}
+
+.milestone.reached {
+    border-color: #4CAF50;
+    background: #4CAF50;
+    color: white;
+}
+
+.question-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.question-text {
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.options-container {
+    display: flex;
+    width: 100%;
+    height: 200px;
+    margin-top: auto;
+}
+
+.option-area {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.true-area {
+    background-color: rgb(76 175 80);
+    border-bottom-left-radius: 10px;
+}
+
+.false-area {
+    background-color: rgb(244 67 54);
+    border-bottom-right-radius: 10px;
+}
+
+.true-area:hover {
+    background-color:  rgb(105, 186, 108);
+}
+
+.false-area:hover {
+    background-color:  rgb(246, 111, 102);
+}
+
+.option-btn {
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.option-btn i {
+    font-size: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.true-btn {
+    background: #4CAF50;
+}
+
+.false-btn {
+    background: #f44336;
+}
+/* Add click handlers to the areas */
+.option-area {
+    position: relative;
+}
+
+.option-area button {
+    pointer-events: none;
+}
+
+/* Ensure the original button click handlers still work */
+.option-btn {
+    z-index: 2;
+}
+
+/* Score Display */
+.score-display {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: slideIn 0.5s ease-out;
+}
+
+.score-content {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.score-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4375a7;
+    margin-right: 10px;
+}
+
+.score-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #28a745;
+    transition: all 0.3s ease;
+}
+
+.score-total {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Score update animation */
+@keyframes scoreUpdate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        color: #4CAF50;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.score-update {
+    animation: scoreUpdate 0.5s ease-out;
+}
+
+/* Firework animations */
+.firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(20);
+        opacity: 0;
+    }
+}
+
+/* Particle animations */
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: particle 1s ease-out forwards;
+}
+
+@keyframes particle {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty));
+        opacity: 0;
+    }
+}
+
+/* Slide in animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Correct answer celebration */
+.celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
 }
