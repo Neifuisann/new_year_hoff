@@ -58,8 +58,10 @@ function requireStudentInfo(req, res, next) {
 app.use(requireStudentInfo);
 
 // Routes
-app.get('/', (req, res) => res.sendFile(__dirname + '/views/gallery.html'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/views/landing.html'));
+app.get('/lythuyet', (req, res) => res.sendFile(__dirname + '/views/gallery.html'));
 app.get('/multiplechoice', (req, res) => res.sendFile(__dirname + '/views/index.html'));
+app.get('/quizgame', (req, res) => res.sendFile(__dirname + '/views/index.html')); // You can create a specific quizgame.html later
 app.get('/truefalse', (req, res) => res.sendFile(__dirname + '/views/index.html')); // Reusing index.html for now
 app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
 app.get('/admin/new', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
