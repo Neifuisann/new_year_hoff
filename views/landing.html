@@ -2,8 +2,9 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tự Học Lý 12</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Ôn luyện Vật lí 12</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         body {
@@ -596,6 +597,169 @@
             }
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-note {
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .animated-button {
+            background: #3498db;
+            color: white;
+        }
+
+        .animated-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background: #e9ecef;
+            color: #2c3e50;
+        }
+
+        .cancel-button:hover {
+            background: #dee2e6;
+        }
+
+        /* Modal Responsive Styles */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+                margin: 10px auto;
+            }
+
+            .form-group input {
+                padding: 0.7rem;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .modal-buttons button {
+                width: 100%;
+                padding: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 85%;
+                padding: 1.2rem;
+                margin: 15px auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-icon svg {
+                width: 48px;
+                height: 48px;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+            }
+
+            .form-note {
+                font-size: 0.8rem;
+            }
+
+            .form-group input {
+                padding: 0.6rem;
+            }
+        }
+
         /* Add Showcase Section Styles */
         .showcase-section {
             padding: 6rem 2rem;
@@ -789,7 +953,7 @@
                 <span class="gradient-text">lí</span>
                 <span class="gradient-text">12</span>
             </h1>
-            <p class="hero-subtitle">Khám phá thế giới vật lý qua những bài học tương tác và thú vị. Học tập hiệu quả chỉ với 15 phút mỗi ngày.</p>
+            <p class="hero-subtitle">Khám phá thế giới vật lí qua những bài học tương tác và thú vị. Học tập hiệu quả chỉ với 15 phút mỗi ngày.</p>
             <br>
             <br>
         </div>
@@ -866,8 +1030,7 @@
     </div>
 
     <footer>
-        <p>Đặng Triệu Triệu</p>
-        <p>SĐT: 123456789</p>
+        <p>Giáo viên: Đặng Triệu Triệu</p>
     </footer>
 
     <!-- User Info Modal -->

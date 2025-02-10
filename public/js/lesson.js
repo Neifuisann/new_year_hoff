@@ -80,7 +80,7 @@ async function renderQuestions(lesson) {
             const questionIndex = lesson.questions.indexOf(q);
             let questionHtml = `
                 <div class="question" data-question-index="${questionIndex}">
-                    <p><strong>Question ${index + 1}.</strong></p>
+                    <p><strong>Câu ${index + 1}.</strong></p>
                     <p>${q.question}</p>
             `;
 

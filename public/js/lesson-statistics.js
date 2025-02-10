@@ -102,7 +102,7 @@ async function loadStatistics() {
                         <th>Chưa làm</th>
                         <th>Làm đúng</th>
                         <th>Làm Sai</th>
-                        <th>Tỉ lệ làm</th>
+                        <th>Tỉ lệ làm đúng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,7 +115,7 @@ async function loadStatistics() {
                             <td>${q.notCompleted}</td>
                             <td>${q.correct}</td>
                             <td>${q.incorrect}</td>
-                            <td>${(q.completed/q.totalStudents * 100).toFixed(2)}%</td>
+                            <td>${q.completed > 0 ? (q.correct/q.completed * 100).toFixed(2) : "0.00"}%</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -192,7 +192,7 @@ function exportToExcel() {
         'Chưa làm': q.notCompleted,
         'Làm đúng': q.correct,
         'Làm sai': q.incorrect,
-        'Tỉ lệ làm': `${(q.completed/q.totalStudents * 100).toFixed(2)}%`
+        'Tỉ lệ làm đúng': `${q.completed > 0 ? (q.correct/q.completed * 100).toFixed(2) : "0.00"}%`
     }));
     const questionSheet = XLSX.utils.json_to_sheet(questionData);
     XLSX.utils.book_append_sheet(workbook, questionSheet, 'Phân tích câu hỏi');

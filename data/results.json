@@ -1,14 +1,1076 @@
 [
   {
-    "id": "1738940173533",
-    "lessonId": "1738517480804",
-    "timestamp": "2025-02-07T14:56:13.533Z",
+    "id": "1739199521018",
+    "lessonId": "1738740229142",
+    "timestamp": "2025-02-10T14:58:41.018Z",
     "questions": [
       {
         "type": "abcd",
-        "question": "Chất khí luôn luôn chiếm hết thể tích của bình chứa bởi vì:",
-        "userAnswer": "Trong chất khí có quá nhiều phân tử.",
-        "correctAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
+        "question": "Thang nhiệt độ Celsius có nhiệt độ âm là nhiệt độ:",
+        "userAnswer": "thấp hơn 0^∘ C.",
+        "correctAnswer": "thấp hơn 0^∘ C.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Đơn vị đo nhiệt độ thường dùng ở Việt Nam là:",
+        "userAnswer": "Độ Celsius (Kí hiệu ^∘ C )",
+        "correctAnswer": "Độ Celsius (Kí hiệu ^∘ C )",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật được làm lạnh từ 100^∘ C xuống 0^∘ C. Hỏi nhiệt độ của vật theo thang Kelvin giảm đi bao nhiêu độ?",
+        "userAnswer": "100 K",
+        "correctAnswer": "100 K",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các câu viết về nhiệt năng sau đây, câu nào là không đúng?",
+        "userAnswer": "Nhiệt năng của vật là nhiệt lượng vật thu vào hoặc toả ra.",
+        "correctAnswer": "Nhiệt năng của vật là nhiệt lượng vật thu vào hoặc toả ra.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Cho hai vật có nhiệt độ khác nhau tiếp xúc với nhau. Nhiệt được truyền từ vật nào sang vật nào?",
+        "userAnswer": "Từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.",
+        "correctAnswer": "Từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Ở nhiệt độ không tuyệt đối, tất cả các chất đều có động năng chuyển động nhiệt của các phân tử",
+        "userAnswer": "bằng không và thế năng của chúng là tối thiểu.",
+        "correctAnswer": "bằng không và thế năng của chúng là tối thiểu.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ tuyệt đối là:",
+        "userAnswer": "nhiệt độ được đo bằng thang Kelvin trong đó 0 là độ không tuyệt đối",
+        "correctAnswer": "nhiệt độ được đo bằng thang Kelvin trong đó 0 là độ không tuyệt đối",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ mà nước tinh khiết có thể tồn tại đồng thời ở cả ba thể rắn lỏng và hơi trong trạng thái cân bằng nhiệt ở áp suất 0,006 atm được gọi là",
+        "userAnswer": "nhiệt độ điểm ba của nước.",
+        "correctAnswer": "nhiệt độ điểm ba của nước.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Đơn vị đo nhiệt độ trong thang nhiệt celsius là",
+        "userAnswer": "^∘ C",
+        "correctAnswer": "^∘ C",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ của một vật là đại lượng vật lý đặc trưng cho mức độ....(1)... cấu tạo nên vật. Khi các phân tử chuyển động nhiệt...(2)... thì nhiệt độ của vật càng cao và ngược lại. Điền vào chỗ trống các cụm từ thích hợp.",
+        "userAnswer": "(1) chuyển động nhiệt của các phân tử; (2) càng nhanh.",
+        "correctAnswer": "(1) chuyển động nhiệt của các phân tử; (2) càng nhanh.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 10,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "2007-10-17",
+      "studentId": "290136"
+    }
+  },
+  {
+    "id": "1739200764692",
+    "timestamp": "2025-02-10T15:19:24.692Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 35
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt lượng là số đo độ biến thiên nội năng của vật trong quá trình truyền nhiệt.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Một vật có nội năng lớn khi cho tiếp xúc với vật khác có nội năng nhỏ hơn thì sẽ xảy ra quá trình truyền nhiệt.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 47
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 182,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739201688891",
+    "timestamp": "2025-02-10T15:34:48.891Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Thế năng phân tử phụ thuộc vào khoảng cách giữa các phân tử.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng là một dạng năng lượng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32^∘ F và 273^∘ F.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của một vật phụ thuộc vào thể tích và nhiệt độ của vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi nhiệt độ của vật tăng lên thì vật có động năng lớn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo động cơ đốt trong.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử dao động quanh những vị trí cân bằng có thể di chuyển được.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng có thể tích riêng nhưng không có hình dạng riêng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Người ta có thể dùng nước để chế tạo nhiệt kế.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai chất có cùng khối lượng và đang cùng nhiệt độ, khi chúng giảm nhiệt độ xuống đến cùng một nhiệt độ như nhau thì khối chất có nhiệt dung riêng nhỏ hơn sẽ tỏa ra nhiệt lượng ít hơn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 37
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của một vật phụ thuộc vào nhiệt độ và thể tích của vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      }
+    ],
+    "score": 987,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739207729106",
+    "lessonId": "1738740229142",
+    "timestamp": "2025-02-10T17:15:29.106Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Câu nào sau đây nói về điều kiện truyền nhiệt giữa hai vật là đúng?",
+        "userAnswer": "Nhiệt không thể truyền giữa hai vật có nhiệt năng bằng nhau.",
+        "correctAnswer": "Nhiệt không thể tự truyền được từ vật có nhiệt độ thấp sang vật có nhiệt độ cao hơn.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Nhiệt độ mà nước tinh khiết có thể tồn tại đồng thời ở cả ba thể rắn lỏng và hơi trong trạng thái cân bằng nhiệt ở áp suất 0,006 atm được gọi là",
+        "userAnswer": "nhiệt độ điểm ba của nước.",
+        "correctAnswer": "nhiệt độ điểm ba của nước.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Thang nhiệt độ Celsius có nhiệt độ âm là nhiệt độ:",
+        "userAnswer": "thấp hơn 0∘ C.",
+        "correctAnswer": "thấp hơn 0∘ C.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Một vật được làm lạnh từ 100∘ C xuống 0∘ C. Hỏi nhiệt độ của vật theo thang Kelvin giảm đi bao nhiêu độ?",
+        "userAnswer": "100 K",
+        "correctAnswer": "100 K",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Cho các nhiệt độ sau: 0∘ C;5∘ C;36,5∘ C;327∘ C. Đó là nhiệt độ có thể thích hợp cho mỗi trường hợp sau",
+        "userAnswer": "Nước đá, ly nước trà đá, nhiệt độ cơ thể người, chì nóng chảy.",
+        "correctAnswer": "Nước đá, ly nước trà đá, nhiệt độ cơ thể người, chì nóng chảy.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Thứ tự sắp xếp nhiệt độ của nước nóng, nước nguội, nước lạnh theo thứ tự tăng dần là",
+        "userAnswer": "nhiệt độ nước lạnh < nhiệt độ nước nguội < nhiệt độ nước nóng.",
+        "correctAnswer": "nhiệt độ nước lạnh < nhiệt độ nước nguội < nhiệt độ nước nóng.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Điểm đóng băng và sôi của nước theo thang Fahrenheit (ở điều kiện áp suất tiêu chuẩn) là",
+        "userAnswer": "32∘ F và 212∘ F.",
+        "correctAnswer": "32∘ F và 212∘ F.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Đặt cốc nhôm đựng 0,2 lít nước ở nhiệt độ 30∘ C (đo nhờ nhiệt kế 1-NK1) vào trong bình cách nhiệt đựng 0,5 lít nước ở nhiệt độ 60∘ C (đo nhờ nhiệt kế 2-NK2). Quan sát sự thay đổi nhiệt độ của nước trong bình và cốc từ khi bắt đầu thí nghiệm cho tới khi hai nhiệt độ này bằng nhau. Làm thế nào để nhận biết quá trình truyền nhiệt năng giữa nước trong bình và nước trong cốc đã kết thúc? Khi thấy số chỉ",
+        "userAnswer": "NK1 giảm còn số chỉ NK2 tăng.",
+        "correctAnswer": "NK1 và số chỉ NK2 bằng nhau.",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Trong các câu viết về nhiệt năng sau đây, câu nào là không đúng?",
+        "userAnswer": "Nhiệt năng của vật là nhiệt lượng vật thu vào hoặc toả ra.",
+        "correctAnswer": "Nhiệt năng của vật là nhiệt lượng vật thu vào hoặc toả ra.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      },
+      {
+        "type": "abcd",
+        "question": "Cho hai vật có nhiệt độ khác nhau tiếp xúc với nhau. Nhiệt được truyền từ vật nào sang vật nào?",
+        "userAnswer": "Từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.",
+        "correctAnswer": "Từ vật có nhiệt độ cao hơn sang vật có nhiệt độ thấp hơn.",
+        "isCorrect": true,
+        "points": 1,
+        "earnedPoints": 1
+      }
+    ],
+    "score": 8,
+    "totalPoints": 10,
+    "studentInfo": {
+      "name": "Hoàng",
+      "dob": null,
+      "studentId": null
+    }
+  },
+  {
+    "id": "1739208828199",
+    "timestamp": "2025-02-10T17:33:48.199Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Chất khí có các phân tử chuyển động hỗn loạn hơn so với chất rắn nên chất khí luôn có nhiệt độ cao hơn chất rắn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739208862368",
+    "timestamp": "2025-02-10T17:34:22.368Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn chứa các phân tử dao động quanh vị trí cân bằng xác định.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Thế năng phân tử phụ thuộc vào khoảng cách giữa các phân tử.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 200,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739209083321",
+    "timestamp": "2025-02-10T17:38:03.321Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Nội năng là một dạng năng lượng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi các phân tử chuyển động nhiệt càng nhanh thì nhiệt độ của vật càng cao.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Người ta có thể dùng nước để chế tạo nhiệt kế.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi các phân tử chuyển động nhiệt càng chậm thì nhiệt độ của vật càng thấp.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất có nhiệt dung riêng lớn hơn luôn có nhiệt độ nóng chảy cao hơn chất có nhiệt dung riêng nhỏ hơn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ sôi của nước là 100∘C.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 600,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Đào Huy",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739209458319",
+    "timestamp": "2025-02-10T17:44:18.319Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi các phân tử chuyển động nhiệt càng nhanh thì nhiệt độ của vật càng cao.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Trong khoảng thời gian đang nóng chảy, nội năng của chất không tăng.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đông đặc của nước là 0∘C.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích sự chuyển hóa năng lượng trong các quá trình chuyển thể.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của một vật phụ thuộc vào thể tích và nhiệt độ của vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của một vật phụ thuộc vào nhiệt độ và thể tích của vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai chất có cùng khối lượng và đang cùng nhiệt độ, khi chúng giảm nhiệt độ xuống đến cùng một nhiệt độ như nhau thì khối chất có nhiệt dung riêng nhỏ hơn sẽ tỏa ra nhiệt lượng ít hơn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Người ta có thể dùng nước để chế tạo nhiệt kế.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ sôi của nước là 100∘C.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32∘F và 273∘F.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      }
+    ],
+    "score": 1000,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Hoàng",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739209496105",
+    "timestamp": "2025-02-10T17:44:56.106Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Khi các phân tử chuyển động nhiệt càng nhanh thì nhiệt độ của vật càng cao.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai chất có cùng khối lượng và đang cùng nhiệt độ, khi chúng giảm nhiệt độ xuống đến cùng một nhiệt độ như nhau thì khối chất có nhiệt dung riêng nhỏ hơn sẽ tỏa ra nhiệt lượng ít hơn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Một vật lúc nào cũng có nội năng, do đó lúc nào vật cũng có nhiệt lượng.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đông đặc của nước là 0∘C.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích sự chuyển hóa năng lượng trong các quá trình chuyển thể.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32∘F và 273∘F.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng có thể tích riêng nhưng không có hình dạng riêng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng là một dạng năng lượng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Đơn vị của nhiệ̣t lượng cũng là đơn vị của nội năng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai vật A và B có cùng chất liệu. Nếu nội năng của vật A lớn hơn vật B thì nhiệt độ của vật A cũng lớn hơn vật B.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Trong khoảng thời gian đang nóng chảy, nội năng của chất không tăng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 150,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "Phúc",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1739209587373",
+    "lessonId": "1738517480804",
+    "timestamp": "2025-02-10T17:46:27.373Z",
+    "questions": [
+      {
+        "type": "abcd",
+        "question": "Phân loại các chất rắn theo cách nào dưới đây là đúng?",
+        "userAnswer": "Chất rắn đơn tinh thể và chất rắn đa tinh thể.",
+        "correctAnswer": "Chất rắn kết tinh và chất rắn vô định hình.",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
@@ -16,672 +1078,17 @@
       {
         "type": "abcd",
         "question": "Chất lỏng có thể tích xác định vì",
-        "userAnswer": "vị trí cân bằng của các phân tử có thể chuyển động từ nơi này đến nơi khác.",
+        "userAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
         "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
-        "isCorrect": false,
+        "isCorrect": true,
         "points": 1,
-        "earnedPoints": 0
+        "earnedPoints": 1
       },
       {
         "type": "abcd",
         "question": "Hình bên mô tả cấu trúc phân tử ở thể nào dưới đây?",
-        "userAnswer": "Thể khí.",
-        "correctAnswer": "Thể khí.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Vật rắn có hình dạng xác định vì phân tử cấu tạo nên vật rắn",
-        "userAnswer": "đứng sát nhau.",
-        "correctAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Mô hình động học phân tử được xây dựng dựa trên quan điểm nào về cấu tạo chất?",
-        "userAnswer": "Dựa trên cả hai quan điểm là chất có cấu tạo liên tục và gián đoạn.",
-        "correctAnswer": "Dựa trên quan điểm chất có cấu tạo gián đoạn.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
-        "userAnswer": "chỉ có lực đẩy.",
-        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn nào dưới đây không phải là chất rắn vô định hình?",
-        "userAnswer": "Sáp.",
-        "correctAnswer": "Thạch anh.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
-        "userAnswer": "Vì không khí nhẹ nên có thể chui qua chỗ buộc ra ngoài.",
-        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Question nào sau đây nói về lực tương tác phân tử là không đúng?",
-        "userAnswer": "Lực hút phân tử có thể lớn hơn lực đẩy phân tử.",
-        "correctAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các chất có thể tồn tại ở những thể nào?",
         "userAnswer": "Thể lỏng.",
-        "correctAnswer": "Thể rắn, thể lỏng hoặc thể khí",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 1,
-    "totalPoints": 10,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1738940219180",
-    "lessonId": "1738739931367",
-    "timestamp": "2025-02-07T14:56:59.180Z",
-    "questions": [
-      {
-        "type": "abcd",
-        "question": "Độ ẩm không khí liên quan đến quá trình thoát hơi nước ở lá như thế nào?",
-        "userAnswer": "Độ ẩm không khí càng thấp, sự thoát hơi nước càng mạnh.",
-        "correctAnswer": "Độ ẩm không khí càng thấp, sự thoát hơi nước càng mạnh.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Chọn phát biểu sai.",
-        "userAnswer": "Nhiệt độ sôi của chất lỏng phụ thuộc vào áp suất khí phía trên bề mặt chất lỏng.",
-        "correctAnswer": "Áp suất khí càng nhỏ thì nhiệt độ sôi của chất lỏng càng cao.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Nhiệt độ nóng chảy của nước đá (áp suất tiêu chuẩn) là:",
-        "userAnswer": "0^∘ C",
-        "correctAnswer": "0^∘ C",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Nước chỉ bắt đầu sôi khi",
-        "userAnswer": "các bọt khí từ đáy bình nổi lên.",
-        "correctAnswer": "các bọt khí vỡ tung trên mặt thoáng.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Đồ thị biểu diễn sự thay đổi nhiệt độ của nước theo thời gian khi đun và đề nguội. Dựa vào đồ thị hãy cho biết thời điểm ban đầu nhiệt độ của nước là bao nhiêu?",
-        "userAnswer": "0^∘ C",
-        "correctAnswer": "20^∘ C",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong một thí nghiệm về sự chuyển thể của thiếc, kết quả thu được đồ thị biểu diễn sự thay đổi nhiệt độ của thiết theo thời gian mà nó nhận nhiệt lượng có dạng như hình vẽ. Giá trị 232^∘ C trên đồ thị là",
-        "userAnswer": "nhiệt độ nóng chảy của thiếc.",
-        "correctAnswer": "nhiệt độ nóng chảy của thiếc.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Khi đun nóng băng phiến, người ta thấy nhiệt độ của băng phiến tăng dần, khi tới 80^∘ C nhiệt độ của băng phiến ngừng lại không tăng, mặc dù vẫn tiếp tục đun. Lúc đó băng phiến tồn tại ở",
-        "userAnswer": "thể lỏng.",
-        "correctAnswer": "thể rắn và thể lỏng.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Câu nào dưới đây là không đúng khi nói về sự nóng chảy của các chất rắn?",
-        "userAnswer": "Chất rắn vô định hình cũng nóng chảy ở một nhiệt độ xác định không đổi.",
-        "correctAnswer": "Chất rắn vô định hình cũng nóng chảy ở một nhiệt độ xác định không đổi.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Ở trên núi cao người ta",
-        "userAnswer": "có thể luộc chín trứng trong nước sôi vì áp suất trên đó nhỏ hơn áp suất chuẩn (1 atm) nên nước sôi ở nhiệt độ cao hơn 100^∘ C.",
-        "correctAnswer": "không thể luộc chín trứng trong nước sôi vì áp suất trên đó nhỏ hơn áp suất chuẩn (1 atm) nên nước sôi ở nhiệt độ thấp hơn 100^∘ C",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Để có muối ăn, người ta tách muối ra khỏi nước biển mặn bằng cách nào?",
-        "userAnswer": "Phơi nắng",
-        "correctAnswer": "Phơi nắng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Sự sôi xảy ra ở",
-        "userAnswer": "nhiệt độ sôi.",
-        "correctAnswer": "nhiệt độ sôi.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Một ấm nước đang sôi, nếu tiếp tục đun:",
-        "userAnswer": "nước trong ấm không bay hơi nữa.",
-        "correctAnswer": "nước trong ấm bay hơi nhiều hơn và cạn dần.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khi quan sát sự nóng chảy của nước đá, trong suốt thời gian nóng chảy thì:",
-        "userAnswer": "nhiệt độ của nước đá giảm.",
-        "correctAnswer": "nhiệt độ của nước không thay đổi.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Dây tóc bóng đèn sợi đốt được làm bằng:",
-        "userAnswer": "Nhôm.",
-        "correctAnswer": "Vonfram.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Câu nào sau đây không đúng khi nói về sự bay hơi của các chất lỏng?",
-        "userAnswer": "Sự bay hơi là quá trình chuyển từ thể lỏng sang thể khí xảy ra ở bề mặt chất lỏng.",
-        "correctAnswer": "Sự bay hơi là quá trình chuyển từ thể lỏng sang thể khí xảy ra ở cả bên trong và trên bề mặt chất lỏng.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Nước sôi (áp suất tiêu chuẩn) ở",
-        "userAnswer": "0^∘ C",
-        "correctAnswer": "100^∘ C",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Cho đồ thị biểu diễn sự thay đổi nhiệt độ theo thời gian của nước đá như hình vẽ. Thời gian nước đá tan từ phút nào:",
-        "userAnswer": "Từ phút thứ 6 đến phút thứ 10",
-        "correctAnswer": "Từ phút thứ 6 đến phút thứ 10",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
-        "userAnswer": "Khi hà hơi vào mặt kính cửa sổ sẽ xuất hiện những hạt nước nhỏ làm mờ kính",
-        "correctAnswer": "Nước mưa trên đường nhựa biến mất khi Mặt Trời xuất hiện lại sau cơn mưa",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong quá trình hóa hơi, khi đạt đến nhiệt độ sôi thì chất lỏng không tăng nhiệt độ là do",
-        "userAnswer": "phần nhiệt nhận thêm cân bằng với phần nhiệt tỏa ra môi trường bên ngoài.",
-        "correctAnswer": "phần nhiệt lượng nhận thêm dùng để phá vỡ liên kết với các phân tử xung quanh.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Thế nào là sự bay hơi?",
-        "userAnswer": "Sự chuyển từ thể rắn sang thể hơi được gọi là sự bay hơi.",
-        "correctAnswer": "Sự chuyển từ thể lỏng sang thể hơi được gọi là sự bay hơi.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Hiện tượng nóng chảy của một vật xảy ra khi",
-        "userAnswer": "đun nóng vật đến nhiệt độ nóng chảy của chất cấu thành vật thể đó.",
-        "correctAnswer": "đun nóng vật đến nhiệt độ nóng chảy của chất cấu thành vật thể đó.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn có nhiệt độ nóng chảy xác định là",
-        "userAnswer": "No answer",
-        "correctAnswer": "đồng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Một bình cầu thủy tinh chứa (không đầy) một lượng nước nóng có nhiệt độ khoảng 80^∘ C và được nút kín. Dội nước lạnh lên phần trên gần cổ bình, ta thấy nước trong bình lại sôi là vì",
-        "userAnswer": "No answer",
-        "correctAnswer": "(1) và (2) đúng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "(BT) Ở nhiệt độ trong phòng, chỉ có thể có khí ôxi, không thể có ôxi lỏng vì",
-        "userAnswer": "No answer",
-        "correctAnswer": "nhiệt độ trong phòng cao hơn nhiệt độ sôi của ôxi.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "(GK) Đặc điểm và tính chất nào dưới đây không liên quan đến chất rắn kết tinh?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Có nhiệt độ nóng chảy không xác định.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các chất có thể chuyển từ thể này sang thể khác được không?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Các chất có thể chuyển từ thể này sang thể khác.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Ở điều kiện thường, iot là chất rắn dạng tinh thể màu đen tím. Khi đun nóng, iot có sự thăng hoa. Vậy sự thăng hoa của iot là sự chuyển trạng thái từ thể",
-        "userAnswer": "No answer",
-        "correctAnswer": "rắn sang khí.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Câu nào sau đây không đúng sự nóng chảy:",
-        "userAnswer": "No answer",
-        "correctAnswer": "Trong suốt quá trình nóng chảy, nhiệt độ nóng chảy luôn luôn thay đổi.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Thế nào là sự ngưng tư?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự chuyển từ thể hơi sang thể lỏng được gọi là sự ngưng tụ.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Thế nào là sự nóng chảy?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự chuyển từ thể rắn sang thể lỏng được gọi là sự nóng chảy.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Sự bay hơi",
-        "userAnswer": "No answer",
-        "correctAnswer": "xảy ra ở bất kì nhiệt độ nào của chất lỏng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trường hợp nào sau đây không liên quan đến sự ngưng tụ?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Tuyết tan.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Với điều kiện như thế nào thì các chất có thể chuyển từ thể này sang thể khác?",
-        "userAnswer": "No answer",
-        "correctAnswer": "thay đổi nhiệt độ",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Tại sao khi cầm vào vỏ bình ga mini đang sử dụng ta thường thấy có một lớp nước rất mỏng trên đó?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Do vỏ bình ga lạnh hơn nhiệt độ môi trường nên hơi nước trong không khí ngưng tụ trên đó.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Có thể làm cho nước sôi mà không cần đun được không?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Có thể, chỉ cần hút khí để giảm áp suất tác dụng lên mặt thoáng của nước.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Sự nóng chảy ở chất rắn kết tinh bắt đầu xảy ra khi",
-        "userAnswer": "No answer",
-        "correctAnswer": "một số phân tử thắng được lực liên kết với các phân tử xung quanh và thoát khỏi liên kết với chúng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Một số chất ở thể rắn như iodine (i-ốt), băng phiến, đá khô ( CO_2 ở thể rắn), ... có thể chuyển trực tiếp sang...(1)...khi nó...(2)... Hiện tượng trên gọi là sự thăng hoa. Ngược lại, với sự thăng hoa là sự ngưng kết. Điền cụm từ thích hợp vào chỗ trống.",
-        "userAnswer": "No answer",
-        "correctAnswer": "(1) thể hơi; (2) nhận nhiệt.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong thời gian sắt đông đặc, nhiệt độ của nó",
-        "userAnswer": "No answer",
-        "correctAnswer": "không đổi.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Thế nào là sự đông đặc?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự chuyển từ thể lỏng sang thể rắn được gọi là sự đông đặc.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trường hợp nào sau đây xuất hiện hiện tượng đông đặc?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Thổi tắt ngọn nến.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Một vật rắn khi bị nung nóng thì mềm dần. Đó là",
-        "userAnswer": "No answer",
-        "correctAnswer": "chất rắn vô định hình.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Phát biểu nào sau đây là sai khi nói về sự nóng chảy và sự đông đặc?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Nhiệt độ của vật sẽ tăng dần trong quá trình nóng chảy và giảm dần trong quá trình đông đặc.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Sự bay hơi của nước diễn ra nhanh hơn khi nào?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Khi nhiệt độ càng cao, gió càng mạnh và diện tích mặt thoáng của nước càng lớn.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chọn phát biểu không đúng về nhiệt độ sôi?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Nhiệt độ sôi của nước là lớn nhất trong các chất lỏng",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Hiện tượng nào sau đây không phải là sự ngưng tụ?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự tạo thành hơi nước.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Phát biểu nào sau đây về tính chất của chất kết tinh và chất vô định hình là đúng?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Chất kết tinh có nhiệt độ nóng chảy xác định, chất vô định hình không có nhiệt độ nóng chảy xác định.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Ở nhũ̃ng ngày rất lạnh, nhiều khu vực ở nước ta như Sapa, Mẫu sơn. nước có thể bị đóng băng. Hiện tượng này thể hiện sự chuyển thể nào của chất:",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự đông đặc.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Cồn y tế chuyển từ thể lỏng sang thể khí rất nhanh ở điều kiện thông thường. Khi xoa cồn vào da, ta cảm thấy lạnh ở vùng da đó vì cồn",
-        "userAnswer": "No answer",
-        "correctAnswer": "thu nhiệt lượng từ cơ thể qua chỗ da đó để bay hơi.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Quá trình chuyển từ thể khí sang thể rắn của các chất được gọi là",
-        "userAnswer": "No answer",
-        "correctAnswer": "sự ngưng kết.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự đông đặc?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Rèn thép trong lò rèn.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khi trời lạnh, ô tô có bật điều hòa và đóng kín cửa, hành khách ngồi trên ô tô thấy hiện tượng gì?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Hơi nước ngưng tụ tạo thành giọt nước phía trong kính xe.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Hiện tượng vào mùa đông ở các nước vùng băng tuyết thường xảy ra sự cố vỡ đường ống nước là do:",
-        "userAnswer": "No answer",
-        "correctAnswer": "thể tích nước khi đông đặc tăng lên gây ra áp lực lớn lên thành ống.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khái niệm ẩn nhiệt nóng chảy được hiểu là phần năng lượng nhận thêm để",
-        "userAnswer": "No answer",
-        "correctAnswer": "phá vỡ liên kết giữa các phân tử.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong các hiện tượng sau đây, hiện tượng nào không liên quan đến sự nóng chảy?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Đốt một ngọn đèn dầu",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Việc làm nào sau đây không đúng khi thực hiện thí nghiệm kiểm tra xem tốc độ bay hơi của một chất lỏng có phụ thuộc vào nhiệt độ hay không?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Dùng hai loại chất lỏng khác nhau.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Ở một áp suất cụ thể, khi chất lỏng đạt nhiệt độ sôi thì",
-        "userAnswer": "No answer",
-        "correctAnswer": "nếu tiếp tục được cung cấp năng lượng, nhiệt độ của chất lỏng vẫn không tăng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Sự sôi của chất là",
-        "userAnswer": "No answer",
-        "correctAnswer": "Sự hóa hơi của chất xảy ra cả trên bề mặt và trong lòng khối chất lỏng ở một nhiệt độ xác định.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Sự bay hơi là sự hóa hơi xảy ra ở",
-        "userAnswer": "No answer",
-        "correctAnswer": "trên bề mặt chất lỏng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Về mùa đông ở các xứ lạnh ta thấy người đi thường thở ra khói là do hơi thở của người",
-        "userAnswer": "No answer",
-        "correctAnswer": "có chứa nhiều hơi nước, khi ra ngoài không khí lạnh bị ngưng tụ thành các hạt nhỏ li ti tạo thành khói.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong các trường hợp dưới đây, trường hợp nào liên quan đến sự bay hơi?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Cốc nước bị cạn dần khi để ngoài trời nắng.",
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 8,
-    "totalPoints": 60,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1738941159103",
-    "lessonId": "1738517480804",
-    "timestamp": "2025-02-07T15:12:39.103Z",
-    "questions": [
-      {
-        "type": "abcd",
-        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
-        "userAnswer": "Mạng tinh thể.",
-        "correctAnswer": "Mạng tinh thể.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Các nguyên tử trong một miếng sắt có tính chất nào sau đây?",
-        "userAnswer": "Khi nhiệt độ giảm thì co lại.",
-        "correctAnswer": "Đứng rất gần nhau.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
-        "userAnswer": "Các chất liền một khối.",
-        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Nguyên tử, phân tử không có tính chất nào sau đây?",
-        "userAnswer": "Chuyển động không ngừng.",
-        "correctAnswer": "Nở ra khi nhiệt độ tăng, co lại khi nhiệt độ giảm.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
-        "userAnswer": "Thạch anh",
-        "correctAnswer": "Nhựa đường",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn vô định hình là chất rắn",
-        "userAnswer": "có cấu trúc tinh thể",
-        "correctAnswer": "không có cấu trúc tinh thể",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các phân tử khí chuyển động hỗn loạn không ngừng vì",
-        "userAnswer": "khoảng cách giữa các phân tử khí quá gần nhau.",
-        "correctAnswer": "lực tương tác giữa các phân tử quá nhỏ",
+        "correctAnswer": "Thể khí.",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
@@ -697,64 +1104,27 @@
       },
       {
         "type": "abcd",
-        "question": "Chất khí luôn luôn chiếm hết thể tích của bình chứa bởi vì:",
-        "userAnswer": "Trong chất khí có quá nhiều phân tử.",
-        "correctAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
+        "question": "Chuyển động của các nguyên tử, phân tử được gọi là chuyển động",
+        "userAnswer": "chuyển động cơ.",
+        "correctAnswer": "chuyển động nhiệt.",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
       },
       {
         "type": "abcd",
-        "question": "Chọn phát biểu đúng về lực tương tác giữa các phân tử",
-        "userAnswer": "Giữa các phân tử chỉ có lực hút.",
-        "correctAnswer": "Giữa các phân tử có cả lực hút và lực đẩy.",
+        "question": "Tính chất nào sau đây không phải là tính chất của chất ở thể khí?",
+        "userAnswer": "Có lực tương tác phân tử nhỏ hơn lực tương tác phân tử ở thể rắn và thể lỏng.",
+        "correctAnswer": "Có hình dạng và thể tích riêng.",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
-      }
-    ],
-    "score": 1,
-    "totalPoints": 10,
-    "studentInfo": {
-      "name": "phuctoy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1738941266775",
-    "lessonId": "1738941256532",
-    "timestamp": "2025-02-07T15:14:26.775Z",
-    "questions": [
+      },
       {
         "type": "abcd",
-        "question": "nani",
-        "userAnswer": "",
-        "correctAnswer": "oke",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 1,
-    "studentInfo": {
-      "name": "dadw",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1738941644574",
-    "lessonId": "1738517480804",
-    "timestamp": "2025-02-07T15:20:44.574Z",
-    "questions": [
-      {
-        "type": "abcd",
-        "question": "Chất khí không có hình dạng và thể tích riêng là vì",
-        "userAnswer": "khoảng cách giữa các phân tử rất gần, lực tương tác giữa các phân tử chất khí rất yếu.",
-        "correctAnswer": "khoảng cách giữa các phân tử rất xa, lực tương tác giữa các phân tử chất khí rất yếu.",
+        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
+        "userAnswer": "Đường",
+        "correctAnswer": "Nước",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
@@ -762,2353 +1132,37 @@
       {
         "type": "abcd",
         "question": "Nội dung thí nghiệm Brown là:",
-        "userAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "userAnswer": "Quan sát cánh hoa trong nước bằng kính hiển vi.",
         "correctAnswer": "Quan sát chuyển động của hạt phấn hoa trong nước bằng kính hiển vi",
+        "isCorrect": false,
+        "points": 1,
+        "earnedPoints": 0
+      },
+      {
+        "type": "abcd",
+        "question": "Chất khí luôn luôn chiếm hết thể tích của bình chứa bởi vì:",
+        "userAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
+        "correctAnswer": "Lực liên kết giữa các phân tử chất khí rất yếu nên chúng chuyển động tự do về mọi phía.",
         "isCorrect": true,
         "points": 1,
         "earnedPoints": 1
       },
       {
         "type": "abcd",
-        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
-        "userAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
-        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "abcd",
-        "question": "Chất nào trong điều kiện hàng ngày ta thường thấy ở ba trạng thái rắn, lỏng, khí?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Nước",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất lỏng có thể tích xác định vì",
-        "userAnswer": "lực liên kết giữa các phân tử trong chất lỏng là rất yếu.",
-        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
+        "question": "Hãy chọn phương án sai trong các câu sau: Cùng một khối lượng của một chất nhưng khi ở các thể khác nhau thì sẽ khác nhau",
+        "userAnswer": "Thể tích.",
+        "correctAnswer": "Kích thước của các nguyên tử.",
         "isCorrect": false,
         "points": 1,
         "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn kết tinh là:",
-        "userAnswer": "Chất rắn có cấu trúc đa tinh thể",
-        "correctAnswer": "Chất rắn có cấu trúc tinh thể",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn nào sau đây thuộc dạng chất rắn vô định hình?",
-        "userAnswer": "Muối ăn",
-        "correctAnswer": "Nhựa đường",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
-        "userAnswer": "Miếng thạch anh.",
-        "correctAnswer": "Chiếc cốc thủy tinh",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "(BT) Tại sao quả bóng bay dù được buộc chặt để lâu ngày vẫn bị xẹp?",
-        "userAnswer": "Vì cao su là chất đàn hồi nên sau khi bị thổi căng nó tự động co lại.",
-        "correctAnswer": "Vì giữa các phân tử của chất làm vỏ bóng có khoảng cách nên các phân tử không khí có thể qua đó thoát ra ngoài.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Vật rắn có hình dạng xác định vì phân tử cấu tạo nên vật rắn",
-        "userAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
-        "correctAnswer": "chuyển động quanh một vị trí cân bằng xác định.",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
       }
     ],
-    "score": 3,
+    "score": 2,
     "totalPoints": 10,
     "studentInfo": {
-      "name": "daohuy",
-      "dob": "2025-02-14",
-      "studentId": "123"
-    }
-  },
-  {
-    "id": "1739011894921",
-    "timestamp": "2025-02-08T10:51:34.921Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": true,
-        "correctAnswer": "True",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "No answer",
-        "correctAnswer": "False",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1
-      }
-    ],
-    "score": 2,
-    "totalPoints": 2,
-    "studentInfo": {
-      "name": "daohuy",
+      "name": "Hoàng",
       "dob": null,
       "studentId": null
-    }
-  },
-  {
-    "id": "1739011911648",
-    "timestamp": "2025-02-08T10:51:51.648Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "No answer",
-        "correctAnswer": "True",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": true,
-        "correctAnswer": "False",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 2,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739011996009",
-    "timestamp": "2025-02-08T10:53:16.009Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 1,
-    "totalPoints": 2,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739012261457",
-    "timestamp": "2025-02-08T10:57:41.457Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 2,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739012777357",
-    "timestamp": "2025-02-08T11:06:17.357Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 2,
-    "totalPoints": 2,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739013040674",
-    "timestamp": "2025-02-08T11:10:40.674Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739013960109",
-    "timestamp": "2025-02-08T11:26:00.109Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "2^3=8",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 4,
-    "totalPoints": 4,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014028698",
-    "timestamp": "2025-02-08T11:27:08.698Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014300307",
-    "timestamp": "2025-02-08T11:31:40.307Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 2,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014347812",
-    "timestamp": "2025-02-08T11:32:27.812Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 2,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014532858",
-    "timestamp": "2025-02-08T11:35:32.858Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 1,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014607889",
-    "timestamp": "2025-02-08T11:36:47.889Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014684815",
-    "timestamp": "2025-02-08T11:38:04.815Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739014916798",
-    "timestamp": "2025-02-08T11:41:56.798Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 1,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739015138695",
-    "timestamp": "2025-02-08T11:45:38.695Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739015407853",
-    "timestamp": "2025-02-08T11:50:07.853Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739015893386",
-    "timestamp": "2025-02-08T11:58:13.386Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739015964816",
-    "timestamp": "2025-02-08T11:59:24.816Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739016046811",
-    "timestamp": "2025-02-08T12:00:46.811Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739016288573",
-    "timestamp": "2025-02-08T12:04:48.573Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739016316846",
-    "timestamp": "2025-02-08T12:05:16.846Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017228423",
-    "timestamp": "2025-02-08T12:20:28.423Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017486987",
-    "timestamp": "2025-02-08T12:24:46.987Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 2,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017581373",
-    "timestamp": "2025-02-08T12:26:21.373Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017602139",
-    "timestamp": "2025-02-08T12:26:42.139Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017638664",
-    "timestamp": "2025-02-08T12:27:18.664Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 1,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739017722973",
-    "timestamp": "2025-02-08T12:28:42.973Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Một vật chuyển động thẳng đều có vận tốc không đổi",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Gia tốc rơi tự do phụ thuộc vào khối lượng của vật",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "1+1=2",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      }
-    ],
-    "score": 3,
-    "totalPoints": 3,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018073683",
-    "timestamp": "2025-02-08T12:34:33.683Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Chất rắn chứa các phân tử dao động quanh vị trí cân bằng xác định.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất lỏng có thể tích riêng nhưng không có hình dạng riêng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Khi nhiệt độ của vật tăng lên thì vật có động năng lớn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất lỏng không có hình dạng xác định vì các phân tử dao động quanh những vị trí cân bằng có thể di chuyển được.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Khi các phân tử chuyển động nhiệt càng nhanh thì nhiệt độ của vật càng cao.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Khi các phân tử chuyển động nhiệt càng chậm thì nhiệt độ của vật càng thấp.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất khí có các phân tử chuyển động hỗn loạn hơn so với chất rắn nên chất khí luôn có nhiệt độ cao hơn chất rắn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ đông đặc của nước là 0^∘ C.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ sôi của nước là 100^∘ C.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32^∘ F và 273^∘ F.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Người ta có thể dùng nước để chế tạo nhiệt kế.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Thế năng phân tử phụ thuộc vào khoảng cách giữa các phân tử.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng của một vật phụ thuộc vào nhiệt độ và thể tích của vật.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng là một dạng năng lượng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng của một vật phụ thuộc vào thể tích và nhiệt độ của vật.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Hai vật A và B có cùng chất liệu. Nếu nội năng của vật A lớn hơn vật B thì nhiệt độ của vật A cũng lớn hơn vật B.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt lượng là số đo độ biến thiên nội năng của vật trong quá trình truyền nhiệt.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Đơn vị của nhiệ̣t lượng cũng là đơn vị của nội năng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Một vật lúc nào cũng có nội năng, do đó lúc nào vật cũng có nhiệt lượng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Một vật có nội năng lớn khi cho tiếp xúc với vật khác có nội năng nhỏ hơn thì sẽ xảy ra quá trình truyền nhiệt.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo động cơ đốt trong.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học dùng để giải thích sự chuyển hóa năng lượng trong các quá trình chuyển thể.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Hai chất có cùng khối lượng và đang cùng nhiệt độ, khi chúng giảm nhiệt độ xuống đến cùng một nhiệt độ như nhau thì khối chất có nhiệt dung riêng nhỏ hơn sẽ tỏa ra nhiệt lượng ít hơn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất có nhiệt dung riêng lớn hơn luôn có nhiệt độ nóng chảy cao hơn chất có nhiệt dung riêng nhỏ hơn.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Trong khoảng thời gian đang nóng chảy, nội năng của chất không tăng.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
-        "userAnswer": "Không trả lời",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 39,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018210197",
-    "timestamp": "2025-02-08T12:36:50.197Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 0,
-    "totalPoints": 20,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018229526",
-    "timestamp": "2025-02-08T12:37:09.526Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Nội năng là một dạng năng lượng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Hai vật A và B có cùng chất liệu. Nếu nội năng của vật A lớn hơn vật B thì nhiệt độ của vật A cũng lớn hơn vật B.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 1,
-    "totalPoints": 20,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018420064",
-    "timestamp": "2025-02-08T12:40:20.064Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Chất khí có các phân tử chuyển động hỗn loạn hơn so với chất rắn nên chất khí luôn có nhiệt độ cao hơn chất rắn.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Khi các phân tử chuyển động nhiệt càng chậm thì nhiệt độ của vật càng thấp.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ sôi của nước là 100^∘ C.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Trong khoảng thời gian đang nóng chảy, nội năng của chất không tăng.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Đơn vị của nhiệ̣t lượng cũng là đơn vị của nội năng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 1,
-        "earnedPoints": 1,
-        "explanation": ""
-      },
-      {
-        "type": "truefalse",
-        "question": "Một vật lúc nào cũng có nội năng, do đó lúc nào vật cũng có nhiệt lượng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0,
-        "explanation": ""
-      }
-    ],
-    "score": 357,
-    "totalPoints": 20,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018590975",
-    "timestamp": "2025-02-08T12:43:10.975Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ đông đặc của nước là 0^∘ C.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739018704323",
-    "timestamp": "2025-02-08T12:45:04.323Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 35
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 27
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 62,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739019320147",
-    "timestamp": "2025-02-08T12:55:20.147Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 7
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 46
-      },
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 35
-      },
-      {
-        "type": "truefalse",
-        "question": "Một vật lúc nào cũng có nội năng, do đó lúc nào vật cũng có nhiệt lượng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 88,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739019489573",
-    "timestamp": "2025-02-08T12:58:09.573Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 41
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt lượng là số đo độ biến thiên nội năng của vật trong quá trình truyền nhiệt.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 49
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 290,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "daohuy",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739019682827",
-    "lessonId": "1738517480804",
-    "timestamp": "2025-02-08T13:01:22.827Z",
-    "questions": [
-      {
-        "type": "abcd",
-        "question": "Chất lỏng không có hình dạng xác định vì các phân tử chất lỏng",
-        "userAnswer": "có thể chuyển động phân tán ra xa nhau.",
-        "correctAnswer": "dao động quanh các vị trí cân bằng có thể dịch chuyển được.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
-        "userAnswer": "No answer",
-        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Đặc điểm nào sau đây là đặc điểm của chất lỏng?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Có hình dạng của phần vật chứa nó, có thể rót được và chảy tràn trên bề mặt, khó nén.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Phân loại các chất rắn theo cách nào dưới đây là đúng?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Chất rắn kết tinh và chất rắn vô định hình.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
-        "userAnswer": "No answer",
-        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất lỏng có thể tích xác định vì",
-        "userAnswer": "No answer",
-        "correctAnswer": "lực tương tác giữa các phân tử vẫn đủ để giữ các phân tử không chuyển động phân tán ra xa nhau.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
-        "userAnswer": "No answer",
-        "correctAnswer": "Mạng tinh thể.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn:",
-        "userAnswer": "No answer",
-        "correctAnswer": "có lực tương tác giữa các phân tử rất mạnh",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Cấu trúc tạo bởi các hạt mà mỗi hạt đó dao động nhiệt xung quanh một vị trí cân bằng trùng với đỉnh của khối lập phương là",
-        "userAnswer": "No answer",
-        "correctAnswer": "tinh thể muối ăn",
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 10,
-    "studentInfo": {
-      "name": "đa",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739100826843",
-    "timestamp": "2025-02-09T11:33:46.845Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Chất có nhiệt dung riêng lớn hơn luôn có nhiệt độ nóng chảy cao hơn chất có nhiệt dung riêng nhỏ hơn.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất lỏng không có hình dạng xác định vì các phân tử dao động quanh những vị trí cân bằng có thể di chuyển được.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Nội năng của một vật phụ thuộc vào nhiệt độ và thể tích của vật.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 100,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "đa",
-      "dob": null,
-      "studentId": null
-    }
-  },
-  {
-    "id": "1739181300901",
-    "lessonId": "1738517480804",
-    "timestamp": "2025-02-10T09:55:00.903Z",
-    "questions": [
-      {
-        "type": "abcd",
-        "question": "Trong thí nghiệm của Brown các hạt phấn hoa chuyển động hỗn độn không ngừng vì",
-        "userAnswer": "chúng là các thực thể sống.",
-        "correctAnswer": "các phân tử nước chuyển động không ngừng, va chạm vào chúng từ mọi phía.",
-        "isCorrect": false,
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Vật nào sau đây không có cấu trúc tinh thể?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Chiếc cốc thủy tinh",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các nguyên tử sắp xếp theo một trật tự nhất định trong không gian được gọi là:",
-        "userAnswer": "No answer",
-        "correctAnswer": "Mạng tinh thể.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Khi khoảng cách giữa các phân tử rất nhỏ, thì giữa các phân tử",
-        "userAnswer": "No answer",
-        "correctAnswer": "có cả lực hút và lực đẩy, nhưng lực đẩy lớn hơn lực hút.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Một số chất khí có mùi thơm toả ra từ bông hoa hồng làm ta có thể ngửi thấy mùi hoa thơm. Điều này thể hiện tính chất nào của thể khí?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Có thể lan toả trong không gian theo mọi hướng.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Các chất có được cấu tạo từ các hạt riêng biệt không?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Các chất được cấu tạo từ các hạt riêng biệt vô cùng nhỏ bé là nguyên tử, phân tử.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Question nào sau đây nói về lực tương tác phân tử là không đúng?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Lực hút phân tử không thể lớn hơn lực đẩy phân tử.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Với mô hình động học phân tử, sự khác biệt về cấu trúc của chất rắn, chất lỏng, chất khí là do sự khác biệt về",
-        "userAnswer": "No answer",
-        "correctAnswer": "độ lớn của lực tương tác giữa các phân tử trong mỗi chất.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Chất rắn kết tinh bao gồm",
-        "userAnswer": "No answer",
-        "correctAnswer": "muối, thạch anh, kim cương.",
-        "points": 1,
-        "earnedPoints": 0
-      },
-      {
-        "type": "abcd",
-        "question": "Phát biểu nào dưới đây là đúng khi nói về những đặc điểm của chất rắn?",
-        "userAnswer": "No answer",
-        "correctAnswer": "Có khối lượng, hình dạng, thể tích xác định.",
-        "points": 1,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 10,
-    "studentInfo": {
-      "name": "Phucngu",
-      "dob": "2025-02-10",
-      "studentId": "696969"
-    }
-  },
-  {
-    "id": "1739181349680",
-    "timestamp": "2025-02-10T09:55:49.680Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 100,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "Phucngu",
-      "dob": "2025-02-10",
-      "studentId": "696969"
-    }
-  },
-  {
-    "id": "1739188634438",
-    "timestamp": "2025-02-10T11:57:14.438Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Sai",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 100,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "Phucngu",
-      "dob": "2025-02-10",
-      "studentId": "696969"
-    }
-  },
-  {
-    "id": "1739188811953",
-    "timestamp": "2025-02-10T12:00:11.953Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Đơn vị của nhiệ̣t lượng cũng là đơn vị của nội năng.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Đúng",
-        "isCorrect": true,
-        "points": 50,
-        "earnedPoints": 50
-      },
-      {
-        "type": "truefalse",
-        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 50,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "Phucngu",
-      "dob": "2025-02-10",
-      "studentId": "696969"
-    }
-  },
-  {
-    "id": "1739189203820",
-    "timestamp": "2025-02-10T12:06:43.820Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Hai vật A và B có cùng chất liệu. Nếu nội năng của vật A lớn hơn vật B thì nhiệt độ của vật A cũng lớn hơn vật B.",
-        "userAnswer": "Đúng",
-        "correctAnswer": "Sai",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "Đào Du",
-      "dob": "2025-02-10",
-      "id": "9999",
-      "studentId": "9999"
-    }
-  },
-  {
-    "id": "1739189603515",
-    "timestamp": "2025-02-10T12:13:23.515Z",
-    "questions": [
-      {
-        "type": "truefalse",
-        "question": "Nhiệt lượng là số đo độ biến thiên nội năng của vật trong quá trình truyền nhiệt.",
-        "userAnswer": "Sai",
-        "correctAnswer": "Đúng",
-        "isCorrect": false,
-        "points": 50,
-        "earnedPoints": 0
-      }
-    ],
-    "score": 0,
-    "totalPoints": 1000,
-    "studentInfo": {
-      "name": "Đào Huy",
-      "dob": "",
-      "id": "123",
-      "studentId": "123"
     }
   }
 ]

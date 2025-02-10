@@ -14,11 +14,12 @@
         <div class="admin-controls">
             <a href="/admin/new" class="button primary" data-i18n="createNewLesson">Create New Lesson</a>
             <a href="/history" class="button secondary" data-i18n="activityLog">Activity Log</a>
+            <button onclick="openReviewLessonModal()" class="button" data-i18n="reviewLesson">Tạo bài ôn tập</button>
         </div>
         <div class="admin-nav">
             <a href="/admin/quiz" class="nav-item">
                 <i class="fas fa-gamepad"></i>
-                <span>Quiz Game</span>
+                <span>Trò chơi chinh phục</span>
             </a>
         </div>
         <div id="lesson-list">
@@ -26,6 +27,22 @@
             <div class="lesson-items">
                 <!-- Lessons will be dynamically added here -->
             </div>
+        </div>
+    </div>
+    
+    <div id="review-lesson-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+        <div style="background: white; padding: 20px; border-radius: 5px; max-width: 400px; width: 100%; position: relative;">
+            <span onclick="closeReviewLessonModal()" style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 24px;">&times;</span>
+            <h2>Tạo bài ôn tập</h2>
+            <form id="review-lesson-form">
+                <div style="margin-bottom: 10px;">
+                    <label for="review-lesson-name">Tên bài:</label>
+                    <input type="text" id="review-lesson-name" required style="width: 100%;" placeholder="Nhập tên bài..." />
+                </div>
+                <div id="review-lesson-rows"></div>
+                <button type="button" onclick="addReviewRow()" class="button" style="width: 100%; margin-bottom: 10px;">Thêm bài</button>
+                <button type="submit" class="button primary" style="width: 100%;">Tạo</button>
+            </form>
         </div>
     </div>
     

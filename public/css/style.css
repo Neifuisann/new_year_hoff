@@ -667,12 +667,6 @@ button, .button {
     margin-right: 10px;
 }
 
-input, select { 
-    margin: 5px; 
-    padding: 5px; 
-    flex: 1;
-}
-
 .lesson-item { 
     padding: 20px; 
     margin: 5px 0; 
@@ -683,6 +677,34 @@ input, select {
     cursor: move;
     border-radius: 8px;
     transition: all 0.2s ease;
+}
+
+.lesson-title {
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.lesson-info {
+    margin: 0 10px;
+    white-space: nowrap;
+}
+
+.lesson-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.lesson-actions .button,
+.lesson-actions button {
+    padding: 8px 12px;
+    margin: 0;
+    font-size: 14px;
+    min-width: 80px;
+    text-align: center;
 }
 
 .lesson-item:hover {
@@ -877,7 +899,7 @@ input, select {
 
 .explain-btn {
     position: absolute;
-    top: 10px;
+    top: -60px;
     right: 10px;
     background: #007bff;
     color: white;
@@ -2468,6 +2490,58 @@ input, select {
         padding: 10px;
         margin-top: 60px;
     }
+
+    /* Mobile responsive styles */
+    @media screen and (max-width: 768px) {
+        .lesson-item {
+            flex-wrap: wrap;
+            padding: 15px;
+        }
+
+        .lesson-title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lesson-info {
+            margin: 0;
+        }
+
+        .lesson-actions {
+            width: 100%;
+            justify-content: flex-end;
+            margin-top: 10px;
+            gap: 6px;
+        }
+
+        .lesson-actions .button,
+        .lesson-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            min-width: 0;
+            max-width: none;
+        }
+
+        input[type="color"] {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .lesson-actions {
+            flex-wrap: wrap;
+        }
+
+        .lesson-actions .button,
+        .lesson-actions button {
+            flex: 1 1 calc(50% - 6px);
+            white-space: nowrap;
+        }
+    }
 }
 
 /* Additional adjustments for very small screens */
@@ -3143,7 +3217,7 @@ input, select {
     }
 
     .explain-btn {
-        width: 100%;
+        width: 50%;
         justify-content: center;
     }
 
@@ -3228,8 +3302,7 @@ input, select {
 
 .explain-btn {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -80px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -3264,8 +3337,7 @@ input, select {
     }
 
     .explain-btn {
-        position: relative;
-        width: 100%;
+        width: 50%;
         justify-content: center;
     }
 }
@@ -3678,16 +3750,23 @@ textarea {
     display: flex;
     flex-direction: column;
     min-height: 400px;
+    position: relative;
 }
 
 .question-text {
-    font-size: 24px;
-    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+.question-image-container {
     text-align: center;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 20px 0;
+}
+
+.question-image-container img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .options-container {
@@ -3695,6 +3774,28 @@ textarea {
     width: 100%;
     height: 200px;
     margin-top: auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive styles for landscape mode */
+@media screen and (orientation: landscape) {
+    .question-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .question-text {
+        transform: none;
+        top: auto;
+        left: -5%;
+        margin: auto 0;
+    }
+
+    .options-container {
+        margin-top: 20px;
+    }
 }
 
 .option-area {
@@ -3863,18 +3964,6 @@ textarea {
     }
 }
 
-/* Slide in animation */
-@keyframes slideIn {
-    from {
-        transform: translateX(-100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
 /* Correct answer celebration */
 .celebration {
     position: fixed;
@@ -3971,4 +4060,136 @@ textarea {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.lesson-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+    width: 100%;
+}
+
+.admin-nav {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.admin-nav .nav-item {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-nav .nav-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.admin-nav .nav-item i {
+    margin-right: 8px;
+}
+
+/* Quiz Info Styles */
+.quiz-info {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.question-counter {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.timer-label {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Celebration Overlay */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.celebration-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    animation: scale-in 0.5s ease-out;
+}
+
+.celebration-content h2 {
+    color: #2196F3;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.celebration-content p {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.milestone-number {
+    font-weight: bold;
+    color: #2196F3;
+}
+
+@keyframes scale-in {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Timer color transitions */
+.timer-value.warning {
+    color: #ff9800;
+}
+
+.timer-value.danger {
+    color: #f44336;
 }

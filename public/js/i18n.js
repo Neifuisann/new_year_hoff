@@ -83,7 +83,7 @@
       score: "Score"
     },
     vi: {
-      title: "Ứng dụng trắc nghiệm",
+      title: "Ôn luyện Vật lí 12",
       account: "Tài khoản",
       editorMode: "Màn hình giáo viên",
       darkMode: "Chế độ tối",
@@ -162,7 +162,7 @@
       incorrect: "Sai",
       completionRate: "Tỷ lệ hoàn thành",
       score: "Điểm số",
-      activityLog: "Các bài nộp",
+      activityLog: "Thống kê",
       lessonEdit : "Chỉnh sửa",
       startLesson: "Làm bài",
       scoreDistribution: "Phân bố điểm",

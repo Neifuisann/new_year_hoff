@@ -5,7 +5,7 @@ class NetworkAnimation {
         this.nodes = [];
         this.connections = [];
         this.mouse = { x: 0, y: 0 };
-        this.nodeCount = 100;
+        this.nodeCount = 50;
         this.connectionDistance = 200;
         this.isAnimating = true;
         this.color = '#4e54c8';

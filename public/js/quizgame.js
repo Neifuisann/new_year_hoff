@@ -2,9 +2,81 @@ let currentQuestion = 0;
 let questions = [];
 let score = 0;
 let timer;
-let timeLeft; // Add this to track remaining time
-const QUESTION_TIME = 30; // seconds per question
-const MAX_POINTS = 50; // maximum points possible per question
+let timeLeft;
+let isPaused = false;
+let currentMusicIndex = 0;
+let isTabActive = true;
+let correctStreak = 0;
+const QUESTION_TIME = 30;
+const MAX_POINTS = 50;
+const CELEBRATION_TIME = 5000; // 5 seconds for celebration
+const backgroundMusics = ['background-music-1', 'background-music-2', 'background-music-3'];
+const celebrationMusics = ['celebration-music-1', 'celebration-music-2', 'celebration-music-3'];
+
+// Handle tab visibility change
+document.addEventListener('visibilitychange', () => {
+    isTabActive = !document.hidden;
+});
+
+function pauseQuiz() {
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+    }
+    stopAllMusic();
+}
+
+function resumeQuiz() {
+    if (!timer && !isPaused) {
+        startTimer();
+        playBackgroundMusic();
+    }
+}
+
+function playBackgroundMusic() {
+    stopAllMusic();
+    const audio = document.getElementById(backgroundMusics[currentMusicIndex]);
+    audio.currentTime = QUESTION_TIME - timeLeft;
+    audio.play();
+}
+
+function playCorrectSound() {
+    stopAllMusic();
+    const soundIndex = Math.min(correctStreak, 5);
+    const audio = document.getElementById(`correct-${soundIndex}`);
+    audio.play();
+}
+
+function playIncorrectSound() {
+    stopAllMusic();
+    const audio = document.getElementById('incorrect');
+    audio.play();
+}
+
+function playPointsSound() {
+    const audio = document.getElementById('points');
+    audio.currentTime = 0;
+    audio.play();
+}
+
+function playCelebrationMusic() {
+    stopAllMusic();
+    const randomIndex = Math.floor(Math.random() * celebrationMusics.length);
+    const audio = document.getElementById(celebrationMusics[randomIndex]);
+    audio.play();
+}
+
+function stopAllMusic() {
+    const allAudios = document.getElementsByTagName('audio');
+    for (let audio of allAudios) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+}
+
+function updateQuestionCounter() {
+    document.getElementById('current-question').textContent = currentQuestion + 1;
+}
 
 async function initQuiz() {
     try {
@@ -63,21 +135,27 @@ function showQuestion() {
 function startTimer() {
     timeLeft = QUESTION_TIME;
     const progressBar = document.querySelector('.progress');
+    const timerDisplay = document.querySelector('.timer-value');
     
     if (timer) clearInterval(timer);
+    
+    playBackgroundMusic();
     
     timer = setInterval(() => {
         timeLeft -= 0.1;
         const percentage = (timeLeft / QUESTION_TIME) * 100;
         progressBar.style.width = `${percentage}%`;
         
+        // Update timer display
+        timerDisplay.textContent = Math.ceil(timeLeft);
+        
         // Calculate color transition from green to red
-        const hue = (timeLeft / QUESTION_TIME) * 120; // 120 is green, 0 is red in HSL
+        const hue = (timeLeft / QUESTION_TIME) * 120;
         progressBar.style.backgroundColor = `hsl(${hue}, 80%, 45%)`;
         
         if (timeLeft <= 0) {
             clearInterval(timer);
-            handleAnswer(null); // No answer selected
+            handleAnswer(null);
         }
     }, 100);
 }
@@ -132,43 +210,82 @@ function celebrate() {
     }
 }
 
+async function showCelebration(milestone) {
+    isPaused = true;
+    pauseQuiz();
+    
+    const overlay = document.querySelector('.celebration-overlay');
+    const milestoneSpan = overlay.querySelector('.milestone-number');
+    milestoneSpan.textContent = milestone;
+    overlay.style.display = 'flex';
+    
+    // Initialize AOS
+    AOS.init();
+    
+    // Play celebration music
+    playCelebrationMusic();
+    
+    // Wait for celebration duration
+    await new Promise(resolve => setTimeout(resolve, CELEBRATION_TIME));
+    
+    // Hide celebration overlay
+    overlay.style.display = 'none';
+    
+    isPaused = false;
+    if (isTabActive) {
+        resumeQuiz();
+    }
+}
+
 function handleAnswer(answer) {
     clearInterval(timer);
-    const question = questions[currentQuestion];
+    stopAllMusic();
     
-    // Store user's answer
+    const question = questions[currentQuestion];
     question.userAnswer = answer;
     
-    // Disable buttons
     document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
     
-    // Show correct/incorrect
     const isCorrect = answer === question.correct;
     if (isCorrect) {
-        // Calculate points based on time
-        let earnedPoints;
-        if (timeLeft >= 20) {
-            // First 10 seconds (timeLeft between 30-20): full 50 points
-            earnedPoints = MAX_POINTS;
-        } else {
-            // After 20 seconds remaining, scale points from 50 to 0
-            earnedPoints = Math.round(MAX_POINTS * (timeLeft / 20));
-        }
-        
+        correctStreak++;
+        let earnedPoints = timeLeft >= 20 ? MAX_POINTS : Math.round(MAX_POINTS * (timeLeft / 20));
         score += earnedPoints;
-        // Store earned points in question object for results
         question.earnedPoints = earnedPoints;
-        
-        // Update score display with animation
         updateScoreDisplay(score);
-        
-        // Show celebration animation
+        // Show a big score display overlay in the center with a zoom-in effect
+        const scoreDisplayEl = document.querySelector('.score-display');
+        scoreDisplayEl.style.display = 'block';
+        scoreDisplayEl.style.position = 'fixed';
+        scoreDisplayEl.style.top = '50%';
+        scoreDisplayEl.style.left = '50%';
+        scoreDisplayEl.style.zIndex = '1000';
+        scoreDisplayEl.style.transformOrigin = 'center center';
+        scoreDisplayEl.style.transition = 'transform 0.3s ease-out';
+        scoreDisplayEl.style.transform = 'translate(-50%, -50%) scale(2)';
+        requestAnimationFrame(() => {
+            scoreDisplayEl.style.transform = 'translate(-50%, -50%) scale(2)';
+        });
+        setTimeout(() => {
+            scoreDisplayEl.style.display = 'none';
+            scoreDisplayEl.style.position = '';
+            scoreDisplayEl.style.top = '';
+            scoreDisplayEl.style.left = '';
+            scoreDisplayEl.style.transform = '';
+            scoreDisplayEl.style.zIndex = '';
+            scoreDisplayEl.style.transition = '';
+        }, 1500);
+        playCorrectSound();
+        setTimeout(() => {
+            playPointsSound();
+        }, 500);
         celebrate();
     } else {
+        correctStreak = 0;
         question.earnedPoints = 0;
+        playIncorrectSound();
     }
     
-    // Highlight correct answer
     const buttons = document.querySelectorAll('.option-btn');
     buttons.forEach(btn => {
         const isTrue = btn.classList.contains('true-btn');
@@ -179,13 +296,16 @@ function handleAnswer(answer) {
         }
     });
 
-    // If answer is incorrect, end quiz after a short delay
-    // If answer is correct, continue to next question
-    setTimeout(() => {
+    setTimeout(async () => {
         if (!isCorrect) {
             endQuiz();
         } else {
             currentQuestion++;
+            if ([5, 10, 15, 20].includes(currentQuestion)) {
+                await showCelebration(currentQuestion);
+            }
+            currentMusicIndex = (currentMusicIndex + 1) % backgroundMusics.length;
+            updateQuestionCounter();
             showQuestion();
             updateProgress();
         }
@@ -218,16 +338,41 @@ function endQuiz() {
                 submittedAt: new Date().toISOString(),
                 totalPoints: MAX_POINTS * 20, // 20 questions * 50 points each = 1000 total possible points
                 score: score,
-                // Only include questions up to currentQuestion + 1 (the last question attempted)
-                questions: questions.slice(0, currentQuestion + 1).map((q, i) => ({
-                    type: 'truefalse',
-                    question: q.question,
-                    userAnswer: formatTrueFalseAnswer(q.userAnswer),
-                    correctAnswer: formatTrueFalseAnswer(q.correct),
-                    isCorrect: q.userAnswer === q.correct,
-                    points: MAX_POINTS, // Each question is worth 50 points max
-                    earnedPoints: q.earnedPoints || 0
-                }))
+                questions: (function() {
+                    const answeredQuestions = questions.slice(0, currentQuestion + 1);
+                    const finalQuestions = answeredQuestions.map(q => ({
+                        type: 'truefalse',
+                        question: q.question,
+                        userAnswer: formatTrueFalseAnswer(q.userAnswer),
+                        correctAnswer: formatTrueFalseAnswer(q.correct),
+                        isCorrect: q.userAnswer === q.correct,
+                        points: MAX_POINTS,
+                        earnedPoints: q.earnedPoints || 0,
+                    }));
+                    if (finalQuestions.length < 20) {
+                        const remainingQuestions = questions.slice(finalQuestions.length, 20);
+                        remainingQuestions.forEach(q => {
+                            finalQuestions.push({
+                                type: 'truefalse',
+                                question: q.question,
+                                userAnswer: formatTrueFalseAnswer(undefined),
+                                correctAnswer: formatTrueFalseAnswer(q.correct),
+                                isCorrect: false,
+                                points: MAX_POINTS,
+                                earnedPoints: 0,
+                            });
+                        });
+                    }
+                    return finalQuestions;
+                })(),
+                correctCount: (function() {
+                    const answered = questions.slice(0, currentQuestion + 1);
+                    return answered.filter(q => q.userAnswer === q.correct).length;
+                })(),
+                incorrectCount: (function() {
+                    const correct = questions.slice(0, currentQuestion + 1).filter(q => q.userAnswer === q.correct).length;
+                    return 20 - correct;
+                })()
             };
 
             localStorage.setItem('quizResults', JSON.stringify(quizResults));
@@ -274,6 +419,10 @@ if (localStorage.getItem('studentInfo')) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const scoreDisplayEl = document.querySelector('.score-display');
+    if(scoreDisplayEl) {
+        scoreDisplayEl.style.display = 'none';
+    }
     // Handle student info form submission
     document.getElementById('student-info-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -294,4 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     trueArea.addEventListener('click', () => trueBtn.click());
     falseArea.addEventListener('click', () => falseBtn.click());
+
+    // Initialize AOS
+    AOS.init();
 }); 

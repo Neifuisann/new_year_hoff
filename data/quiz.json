@@ -86,21 +86,21 @@
     },
     {
       "type": "truefalse",
-      "question": "Nhiệt độ đông đặc của nước là 0^∘ C.",
+      "question": "Nhiệt độ đông đặc của nước là 0∘C.",
       "correct": true,
       "points": 1,
       "image": "http://localhost:3000/admin/quiz"
     },
     {
       "type": "truefalse",
-      "question": "Nhiệt độ sôi của nước là 100^∘ C.",
+      "question": "Nhiệt độ sôi của nước là 100∘C.",
       "correct": true,
       "points": 1,
       "image": "http://localhost:3000/admin/quiz"
     },
     {
       "type": "truefalse",
-      "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32^∘ F và 273^∘ F.",
+      "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32∘F và 273∘F.",
       "correct": false,
       "points": 1,
       "image": "http://localhost:3000/admin/quiz"

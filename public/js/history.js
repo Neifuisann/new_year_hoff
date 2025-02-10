@@ -31,7 +31,14 @@ function updateStatisticsCards(historyData) {
     // Calculate statistics
     const uniqueStudents = new Set(historyData.map(log => log.studentName)).size;
     const totalSubmissions = historyData.length;
-    const avgScore = historyData.reduce((sum, log) => sum + parseFloat(log.score), 0) / totalSubmissions;
+    const avgScore = historyData.reduce((sum, log) => {
+        const score = parseFloat(log.score);
+        if(log.lessonTitle === "Chinh phục") {
+            return sum + (score / 100);
+        } else {
+            return sum + (score * 10);
+        }
+    }, 0) / totalSubmissions;
     
     // Count submissions from today
     const today = new Date().setHours(0, 0, 0, 0);

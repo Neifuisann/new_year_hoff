@@ -1,0 +1,31 @@
+/* Responsive adjustments for question-text and explain-btn on mobile devices */
+.question-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.question-text {
+    flex: 1 1 auto;
+    white-space: normal;
+    word-break: break-word;
+    margin: 0;
+}
+
+.explain-btn {
+    flex: 0 0 auto;
+    margin-left: 10px;
+}
+
+@media (max-width: 600px) {
+    .question-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .explain-btn {
+        margin-left: 0;
+        margin-top: 10px;
+        align-self: flex-end;
+    }
+} 
