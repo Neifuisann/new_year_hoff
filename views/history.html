@@ -57,11 +57,16 @@
             <div class="history-card">
                 <div class="card-header">
                     <h3><i class="fas fa-list"></i> Danh sách bài nộp</h3>
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" class="modern-input" />
-                        <button id="history-clear-filter-btn" class="clear-btn">
-                            <i class="fas fa-times"></i>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="history-filter-input" placeholder="Tìm tên học sinh hoặc tên bài" class="modern-input" />
+                            <button id="history-clear-filter-btn" class="clear-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button onclick="deleteAllHistory()" class="delete-all-btn">
+                            <i class="fas fa-trash"></i> Xóa tất cả
                         </button>
                     </div>
                 </div>
@@ -70,10 +75,10 @@
                         <thead>
                             <tr>
                                 <th class="mobile-hide"><i class="fas fa-hashtag"></i> STT.</th>
-                                <th><i class="fas fa-user"></i> Tên</th>
-                                <th><i class="fas fa-book"></i> Bài</th>
-                                <th class="mobile-optional"><i class="fas fa-clock"></i> Thời gian</th>
-                                <th><i class="fas fa-star"></i> Điểm</th>
+                                <th class="sortable" data-sort="name"><i class="fas fa-user"></i> Tên <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="lesson"><i class="fas fa-book"></i> Bài <i class="fas fa-sort"></i></th>
+                                <th class="mobile-optional sortable" data-sort="time"><i class="fas fa-clock"></i> Thời gian <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="score"><i class="fas fa-star"></i> Điểm <i class="fas fa-sort"></i></th>
                                 <th><i class="fas fa-eye"></i></th>
                             </tr>
                         </thead>

@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
     <meta name="format-detection" content="telephone=no">
     <title>Image Gallery</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/gallery.css">
 </head>
@@ -17,11 +25,16 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="gallery-container">
-            <div class="gallery-wrapper">
-                <button class="gallery-arrow prev-arrow">&lt;</button>
-                <div class="gallery-content"></div>
-                <div class="image-counter">0 / 0</div>
-                <button class="gallery-arrow next-arrow">&gt;</button>
+            <div class="gallery-layout">
+                <div class="gallery-main">
+                    <button class="gallery-arrow prev-arrow">&lt;</button>
+                    <div class="gallery-content"></div>
+                    <div class="image-counter">0 / 0</div>
+                    <button class="gallery-arrow next-arrow">&gt;</button>
+                </div>
+                <div class="gallery-preview">
+                    <div class="preview-strip"></div>
+                </div>
             </div>
         </div>
 

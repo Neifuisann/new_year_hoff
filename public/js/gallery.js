@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentImageIndex = 0;
     let images = [];
+    let isTransitioning = false;
+    const TRANSITION_DURATION = 300; // match this with CSS transition duration
+    
     const galleryContent = document.querySelector('.gallery-content');
+    const previewStrip = document.querySelector('.preview-strip');
     const prevButton = document.querySelector('.prev-arrow');
     const nextButton = document.querySelector('.next-arrow');
     const modal = document.querySelector('.image-modal');
@@ -17,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             images = await response.json();
             if (images.length > 0) {
                 showImage(currentImageIndex);
+                createPreviewStrip();
             }
             updateCounter();
         } catch (error) {
@@ -27,13 +32,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function createPreviewStrip() {
+        previewStrip.innerHTML = '';
+        images.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Preview ${index + 1}`;
+            img.className = index === currentImageIndex ? 'active' : '';
+            img.addEventListener('click', () => {
+                if (!isTransitioning && currentImageIndex !== index) {
+                    currentImageIndex = index;
+                    showImage(currentImageIndex);
+                }
+            });
+            previewStrip.appendChild(img);
+        });
+    }
+
+    function updatePreviewStrip() {
+        const previews = previewStrip.querySelectorAll('img');
+        previews.forEach((preview, index) => {
+            preview.className = index === currentImageIndex ? 'active' : '';
+        });
+        
+        // Scroll the active preview into view
+        const activePreview = previews[currentImageIndex];
+        if (activePreview) {
+            const isMobile = window.innerWidth <= 768;
+            const scrollOptions = {
+                behavior: 'smooth',
+                [isMobile ? 'left' : 'top']: activePreview.offsetTop - (isMobile ? 10 : 200)
+            };
+            previewStrip.scrollTo(scrollOptions);
+        }
+    }
+
     function updateCounter() {
         imageCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
     }
 
     function showImage(index, direction = 'next') {
-        if (images.length === 0) return;
+        if (images.length === 0 || isTransitioning) return;
         
+        isTransitioning = true;
         const oldImg = galleryContent.querySelector('img');
         const img = document.createElement('img');
         img.src = images[index];
@@ -65,22 +106,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (oldImg) {
             setTimeout(() => {
                 oldImg.remove();
-            }, 300);
+                isTransitioning = false;
+            }, TRANSITION_DURATION);
+        } else {
+            isTransitioning = false;
         }
         
         updateCounter();
+        updatePreviewStrip();
     }
 
-    // Event Listeners
-    prevButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-        showImage(currentImageIndex, 'prev');
-    });
+    // Event Listeners with debounce for navigation
+    function handleNavigation(direction) {
+        if (!isTransitioning) {
+            if (direction === 'prev') {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            } else {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+            }
+            showImage(currentImageIndex, direction);
+        }
+    }
 
-    nextButton.addEventListener('click', () => {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        showImage(currentImageIndex, 'next');
-    });
+    prevButton.addEventListener('click', () => handleNavigation('prev'));
+    nextButton.addEventListener('click', () => handleNavigation('next'));
 
     closeModal.addEventListener('click', () => {
         modal.classList.remove('active');
@@ -112,11 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (e.key === 'ArrowLeft') {
-                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-                showImage(currentImageIndex, 'prev');
+                handleNavigation('prev');
             } else if (e.key === 'ArrowRight') {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                showImage(currentImageIndex, 'next');
+                handleNavigation('next');
             }
         }
     });

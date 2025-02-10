@@ -202,7 +202,7 @@ app.get('/api/history', requireAuth, (req, res) => {
         
         const history = results.map(result => ({
             studentName: result.studentInfo?.name || 'Anonymous',
-            lessonTitle: lessonMap[result.lessonId] || 'Unknown Lesson',
+            lessonTitle: lessonMap[result.lessonId] || 'Chinh phục',
             submittedAt: result.timestamp,
             score: result.score
         }));

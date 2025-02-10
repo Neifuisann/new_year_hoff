@@ -93,7 +93,7 @@ function displaySortedResults(sortType) {
                         data-user-answer="${encodeURIComponent(question.userAnswer)}"
                         data-correct-answer="${encodeURIComponent(question.correctAnswer)}">
                         <i class="fas fa-lightbulb"></i>
-                        <span>Nhận giải thích (AI)</span>
+                        <span>Xem giải thích (AI)</span>
                     </button>
                 </div>
                 
