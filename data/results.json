@@ -1164,5 +1164,452 @@
       "dob": null,
       "studentId": null
     }
+  },
+  {
+    "id": "1740473915415",
+    "timestamp": "2025-02-25T08:58:35.415Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Hai vật A và B có cùng chất liệu. Nếu nội năng của vật A lớn hơn vật B thì nhiệt độ của vật A cũng lớn hơn vật B.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích sự chuyển hóa năng lượng trong các quá trình chuyển thể.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ sôi của nước là 100∘C.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất có nhiệt dung riêng lớn hơn luôn có nhiệt độ nóng chảy cao hơn chất có nhiệt dung riêng nhỏ hơn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi nhiệt độ của vật tăng lên thì vật có động năng lớn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng có thể tích riêng nhưng không có hình dạng riêng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn chứa các phân tử dao động quanh vị trí cân bằng xác định.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo máy hơi nước.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Thế năng phân tử phụ thuộc vào khoảng cách giữa các phân tử.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Một vật có nội năng lớn khi cho tiếp xúc với vật khác có nội năng nhỏ hơn thì sẽ xảy ra quá trình truyền nhiệt.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai chất có cùng khối lượng và đang cùng nhiệt độ, khi chúng giảm nhiệt độ xuống đến cùng một nhiệt độ như nhau thì khối chất có nhiệt dung riêng nhỏ hơn sẽ tỏa ra nhiệt lượng ít hơn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi các phân tử chuyển động nhiệt càng chậm thì nhiệt độ của vật càng thấp.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử dao động quanh những vị trí cân bằng có thể di chuyển được.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Các chất khí dễ nén hơn các chất lỏng vì khoảng cách trung bình giữa các phân tử chất khí lớn hơn khoảng cách trung bình giữa các phân tử chất lỏng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Có hai cách làm thay đổi nội năng của một vật là thực hiện công và truyền nhiệt.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "fe",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1740473923691",
+    "timestamp": "2025-02-25T08:58:43.691Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học dùng để giải thích các hiện tượng liên quan đến sự truyền và biến đổi nội năng.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn có hình dạng và thể tích xác định vì các phân tử cấu tạo nên nó đứng yên.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ của vật càng cao nếu số lượng phân tử cấu tạo nên vật càng lớn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Người ta có thể dùng nước để chế tạo nhiệt kế.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Tất cả các chất rắn đề có cấu trúc tinh thể nên có hình dạng xác định.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất rắn chứa các phân tử dao động quanh vị trí cân bằng xác định.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt lượng vật nhận được trong quá trình nóng chảy tỉ lệ nghịch với khối lượng của nó.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Trong bộ tản nhiệt của máy biến áp, nguyên nhân chính của việc dùng dầu mà không dùng nước là vì nhiệt dung riêng của nước lớn gấp hai lần nhiệt dung riêng của dầu.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Khi nhiệt độ của vật tăng lên thì vật có động năng lớn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Định luật I nhiệt động lực học có ứng dụng vào việc chế tạo động cơ đốt trong.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt độ đóng băng và nhiệt độ sôi của nước ứng với thang nhiệt độ Fahrenheit có giá trị lần lượt là 32∘F và 273∘F.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Một vật lúc nào cũng có nội năng, do đó lúc nào vật cũng có nhiệt lượng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí có các phân tử chuyển động hỗn loạn hơn so với chất rắn nên chất khí luôn có nhiệt độ cao hơn chất rắn.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí chứa các phân tử khí tương tác mạnh với nhau.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Nhiệt nóng chảy riêng và nhiệt độ nóng chảy là thông tin giúp xác định được năng lượng cần cung cấp cho lò nung, thời gian nung.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng không có hình dạng xác định vì các phân tử dao động quanh những vị trí cân bằng có thể di chuyển được.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Động năng phân tử phụ thuộc vào tốc độ chuyển động của phân tử.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Đơn vị của nhiệ̣t lượng cũng là đơn vị của nội năng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất lỏng có thể tích riêng nhưng không có hình dạng riêng.",
+        "userAnswer": "Không trả lời",
+        "correctAnswer": "Đúng",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 0,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "fedư",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
+  },
+  {
+    "id": "1740474029599",
+    "timestamp": "2025-02-25T09:00:29.599Z",
+    "questions": [
+      {
+        "type": "truefalse",
+        "question": "Trong khoảng thời gian đang nóng chảy, nội năng của chất không tăng.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của vật là tổng động năng và thế năng của các phân tử cấu tạo nên vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Chất khí có các phân tử chuyển động hỗn loạn hơn so với chất rắn nên chất khí luôn có nhiệt độ cao hơn chất rắn.",
+        "userAnswer": "Sai",
+        "correctAnswer": "Sai",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Nội năng của một vật phụ thuộc vào nhiệt độ và thể tích của vật.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Đúng",
+        "isCorrect": true,
+        "points": 50,
+        "earnedPoints": 50
+      },
+      {
+        "type": "truefalse",
+        "question": "Hai khối chất có cùng khối lượng và được cung cấp cùng một nhiệt lượng như nhau thì khối lượng chất làm bằng vật liệu có nhiệt dung riêng nhỏ hơn sẽ có nhiệt độ tăng lên ít hơn.",
+        "userAnswer": "Đúng",
+        "correctAnswer": "Sai",
+        "isCorrect": false,
+        "points": 50,
+        "earnedPoints": 0
+      }
+    ],
+    "score": 200,
+    "totalPoints": 1000,
+    "studentInfo": {
+      "name": "xadswa",
+      "dob": "",
+      "id": "",
+      "studentId": ""
+    }
   }
 ]

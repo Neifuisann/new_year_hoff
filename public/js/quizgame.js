@@ -349,19 +349,8 @@ function endQuiz() {
                         points: MAX_POINTS,
                         earnedPoints: q.earnedPoints || 0,
                     }));
-                    if (finalQuestions.length < 20) {
-                        const remainingQuestions = questions.slice(finalQuestions.length, 20);
-                        remainingQuestions.forEach(q => {
-                            finalQuestions.push({
-                                type: 'truefalse',
-                                question: q.question,
-                                userAnswer: formatTrueFalseAnswer(undefined),
-                                correctAnswer: formatTrueFalseAnswer(q.correct),
-                                isCorrect: false,
-                                points: MAX_POINTS,
-                                earnedPoints: 0,
-                            });
-                        });
+                    if (currentQuestion < questions.length) {
+                        finalQuestions.length = currentQuestion + 1;
                     }
                     return finalQuestions;
                 })(),
