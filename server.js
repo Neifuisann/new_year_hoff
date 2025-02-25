@@ -215,7 +215,7 @@ app.get('/api/history', requireAuth, (req, res) => {
 });
 
 app.post('/api/explain', async (req, res) => {
-    const API_KEY = "AIzaSyCK_5q_4qsHQqt29ZIAVGV12W2MbHIvQSg";
+    const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc";
     const { question, userAnswer, correctAnswer } = req.body;
     
     try {
@@ -280,7 +280,7 @@ app.post('/api/explain', async (req, res) => {
 });
 
 app.post('/api/ocr', upload.single('image'), async (req, res) => {
-    const API_KEY = "AIzaSyCK_5q_4qsHQqt29ZIAVGV12W2MbHIvQSg";
+    const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc";
     
     try {
         if (!req.file) {
