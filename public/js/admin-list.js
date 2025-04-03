@@ -131,13 +131,18 @@ function getDragAfterElement(container, y) {
 
 async function saveNewOrder() {
     const newOrder = Array.from(document.querySelectorAll('.lesson-item'))
-        .map(item => lessons[item.dataset.index]);
+        // Send only the ID and original index to map back to the full lesson if needed
+        .map(item => ({ id: item.dataset.id, originalIndex: parseInt(item.dataset.index) })); 
     
+    // If the backend only needs IDs in order, simplify further:
+    // const newOrderIds = Array.from(document.querySelectorAll('.lesson-item')).map(item => item.dataset.id);
+
     try {
         const response = await fetch('/api/lessons/reorder', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newOrder)
+            // Send the array of objects with IDs (backend expects this based on current server.js)
+            body: JSON.stringify(newOrder.map(item => lessons[item.originalIndex])) 
         });
 
         if (!response.ok) {
@@ -145,7 +150,7 @@ async function saveNewOrder() {
         }
 
         // Update the local lessons array to match the new order
-        lessons = newOrder;
+        lessons = newOrder.map(item => lessons[item.originalIndex]);
     } catch (error) {
         console.error('Error saving lesson order:', error);
         alert('Failed to save the new order. Please try again.');
@@ -239,104 +244,5 @@ function addReviewRow() {
 }
 
 function removeReviewRow(button) {
-    const container = document.getElementById('review-lesson-rows');
-    if (container.children.length > 1) {
-        button.parentElement.remove();
-    } else {
-        alert("At least one lesson row is required.");
-    }
+    // ... existing code ...
 }
-
-function populateReviewRowSelect(row) {
-    const select = row.querySelector('.review-lesson-select');
-    select.innerHTML = '';
-    lessons.forEach(lesson => {
-        const option = document.createElement('option');
-        option.value = lesson.id;
-        option.textContent = lesson.title || ('Lesson ' + lesson.id);
-        select.appendChild(option);
-    });
-}
-
-function closeReviewLessonModal() {
-    document.getElementById('review-lesson-modal').style.display = 'none';
-}
-
-// Helper function to shuffle an array
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-// Set up event listener for the review lesson form
-document.addEventListener('DOMContentLoaded', function() {
-    const reviewForm = document.getElementById('review-lesson-form');
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const rows = document.querySelectorAll('.review-lesson-row');
-            if (rows.length === 0) {
-                alert("No lesson rows found");
-                return;
-            }
-            let allSelectedQuestions = [];
-            let lessonTitles = [];
-            for (const row of rows) {
-                const select = row.querySelector('.review-lesson-select');
-                const input = row.querySelector('.review-question-count');
-                const lessonId = select.value;
-                const count = parseInt(input.value);
-                if (!lessonId || isNaN(count) || count < 1) {
-                    alert('Please select a lesson and enter a valid question count for each row.');
-                    return;
-                }
-                try {
-                    const response = await fetch(`/api/lessons/${lessonId}`);
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch lesson details for lesson ' + lessonId);
-                    }
-                    const lessonDetails = await response.json();
-                    lessonTitles.push(lessonDetails.title);
-                    let questions = lessonDetails.questions || [];
-                    if (questions.length < count) {
-                        alert(`Lesson "${lessonDetails.title}" only has ${questions.length} questions.`);
-                        return;
-                    }
-                    questions = shuffleArray(questions);
-                    allSelectedQuestions = allSelectedQuestions.concat(questions.slice(0, count));
-                } catch (error) {
-                    console.error('Error fetching lesson details:', error);
-                    alert('Error fetching lesson details: ' + error.message);
-                    return;
-                }
-            }
-            allSelectedQuestions = shuffleArray(allSelectedQuestions);
-            const reviewName = document.getElementById('review-lesson-name').value.trim();
-            const newLesson = {
-                title: reviewName || ('Review: ' + lessonTitles.join(', ')),
-                color: '#a4aeff',
-                questions: allSelectedQuestions,
-                tags: []
-            };
-            try {
-                const createRes = await fetch('/api/lessons', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newLesson)
-                });
-                if (!createRes.ok) {
-                    throw new Error('Failed to create review lesson');
-                }
-                alert('Review lesson created successfully!');
-                closeReviewLessonModal();
-                loadLessonsForAdmin();
-            } catch (error) {
-                console.error('Error creating review lesson:', error);
-                alert('Error creating review lesson: ' + error.message);
-            }
-        });
-    }
-});

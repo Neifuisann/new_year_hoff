@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="adminEditTitle">Admin Panel - Edit Lesson</title>
+    <title data-i18n="adminEditTextTitle">Admin Panel - Edit Lesson Content</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/theme/default.css"> <!-- Using default theme -->
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCETKfPFPcxLR7diph9NkLkq3Y" crossorigin="anonymous">
+    <!-- Keep theme CSS for now, JS change will apply default -->
 </head>
 <body>
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
     
-    <div class="lesson-editor">
+    <div class="lesson-editor stage-1">
         <div class="editor-header">
-            <h1 data-i18n="editLesson">Edit Lesson</h1>
+            <h1 data-i18n="editLessonContent">Edit Lesson Content</h1>
             <div class="header-actions">
-                <button onclick="saveLesson()" class="save-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                        <polyline points="17 21 17 13 7 13 7 21"/>
-                        <polyline points="7 3 7 8 15 8"/>
-                    </svg>
-                    <span data-i18n="saveLesson">Save Lesson</span>
+                <button onclick="proceedToConfiguration()" class="next-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
+                    <span data-i18n="nextConfigure">Next: Configure</span>
                 </button>
                 <a href="/admin" class="back-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -31,90 +33,50 @@
             </div>
         </div>
 
-        <div class="editor-grid">
-            <div class="form-section">
-                <div class="form-group">
-                    <input type="text" id="lesson-title" class="modern-input" data-i18n-placeholder="enterLessonTitle">
-                </div>
-
-                <div class="color-picker-group">
-                    <input type="color" id="lesson-color" value="#a4aeff">
-                    <label for="lesson-color" data-i18n="themeColor">Theme Color</label>
-                </div>
-
-                <div class="form-group">
-                    <label data-i18n="lessonImage">‎‎ Ảnh minh hoạ:</label>
-                    <div class="image-upload-container">
-                        <input type="file" id="lesson-image" accept="image/*" onchange="handleLessonImageUpload(this)">
-                        <button type="button" class="remove-image-btn" onclick="removeLessonImage()" style="display: none;">X</button>
-                    </div>
-                    <img id="lesson-image-preview" class="image-preview" style="display: none; max-width: 200px; margin-top: 10px;">
-                </div>
-
-                <div class="random-questions-group">
-                    <label for="random-questions" data-i18n="randomQuestions">Random Questions</label>
-                    <div class="random-questions-input">
-                        <input type="number" id="random-questions" class="modern-input" min="0" placeholder="0 = Use all questions">
-                        <span class="help-text" data-i18n="randomQuestionsHelp">Set how many random questions to use (0 = all questions)</span>
-                    </div>
-                </div>
-
-                <div class="tags-group">
-                    <div class="tags-input-container">
-                        <input type="text" id="tag-input" class="modern-input" data-i18n-placeholder="addTags">
-                        <div id="tags-list" class="tags-list"></div>
-                    </div>
-                </div>
+        <!-- Editor and Preview Section -->
+        <div class="editor-preview-container">
+            <!-- Swapped Order: Preview Panel First -->
+            <div class="preview-panel">
+                 <h2>Preview</h2>
+                 <div id="realtime-preview" class="azota-preview">
+                     <p data-i18n="previewPlaceholder">Preview will appear here...</p>
+                 </div>
             </div>
-            <div class="json-editor-panel">
-                <div class="json-editor-header">
-                    <h3 data-i18n="jsonEditor">JSON Editor</h3>
-                    <div class="json-editor-controls">
-                        <button onclick="applyJsonChanges()" class="apply-json-btn" data-i18n="applyChanges">Apply Changes</button>
-                        <button onclick="toggleJsonEditor()" class="toggle-json-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24">
-                                <path d="M7 10l5 5 5-5" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="json-editor-container">
-                    <textarea id="json-editor" spellcheck="false"></textarea>
-                </div>
-            </div>
-            <div class="text-editor-panel">
-                <div class="text-editor-content">
-                    <div class="text-editor-header">
-                        <h3 data-i18n="questionEditor">Question Editor</h3>
-                        <button onclick="renderQuestions()" class="render-btn" data-i18n="render">Render</button>
-                    </div>
-                    <div class="text-editor-container">
-                        <textarea id="text-editor" spellcheck="false"></textarea>
-                    </div>
-                </div>
+            
+            <!-- Swapped Order: Text Editor Panel Second -->
+            <div class="text-editor-main-panel">
+                <div class="editor-toolbar">
+                     <h2 data-i18n="questionsTextInput">Questions (Text Input)</h2>
+                     <div class="toolbar-buttons">
+                         <button onclick="insertImagePlaceholder()" title="Add Image Placeholder"><i class="fas fa-image"></i> Image</button>
+                         <button onclick="insertLatexDelimiters('$$')" title="Add Block LaTeX ($$...$$)"><i class="fas fa-calculator"></i> Block LaTeX</button>
+                         <button onclick="insertLatexDelimiters('$')" title="Add Inline LaTeX ($...$)"><i class="fas fa-square-root-alt"></i> Inline LaTeX</button>
+                         <!-- Add other toolbar buttons if needed -->
+                     </div>
+                 </div>
+                <textarea id="text-editor" spellcheck="false"></textarea>
             </div>
         </div>
+        
+        <!-- Remove the old JSON editor panel -->
+        <!-- Remove the old questions container and add button -->
 
-        <div class="questions-header">
-            <h2 data-i18n="questions">Questions</h2>
-            <button onclick="minimizeAllQuestions()" class="minimize-all-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24">
-                    <path d="M4 9h16M4 15h16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span data-i18n="minimizeAll">Thu gọn tất cả</span>
-            </button>
-        </div>
-        <div id="questions"></div>
-        <button onclick="addQuestion()" class="add-question-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24">
-                <path d="M12 5v14M5 12h14"/>
-            </svg>
-            <span data-i18n="addNewQuestion">Add New Question</span>
-        </button>
     </div>
     
-    <script src="/js/admin-edit.js"></script>
-    <script src="/js/drag-utils.js"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/mode/javascript/javascript.min.js"></script> 
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <!-- Optional: KaTeX auto-render extension -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script> 
+    
+    <script src="/js/admin-stage1-editor.js"></script>
+    <!-- Keep drag utils if needed for other parts, otherwise remove -->
+    <!-- <script src="/js/drag-utils.js"></script> --> 
     <script src="/js/i18n.js"></script>
+     <!-- Font Awesome for icons -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </body>
 </html>

@@ -95,8 +95,8 @@ async function renderQuestions(lesson) {
             switch(type) {
                 case 'abcd':
                     // Create shuffled options with their original indices
-                    const optionsWithIndices = q.options.map((text, idx) => ({
-                        text,
+                    const optionsWithIndices = q.options.map((option, idx) => ({
+                        text: option.text || option, // Handle both object and string format
                         originalIndex: idx,
                         letter: String.fromCharCode(65 + idx) // A, B, C, D
                     }));
@@ -130,9 +130,10 @@ async function renderQuestions(lesson) {
                             // Multiple true/false options
                             questionHtml += `<div class="truefalse-options">`;
                             q.options.forEach((option, idx) => {
+                                const optionText = option.text || option; // Handle both formats
                                 questionHtml += `
                                     <div class="truefalse-option-box">
-                                        <div class="option-text">${String.fromCharCode(65 + idx)}) ${option}</div>
+                                        <div class="option-text">${String.fromCharCode(65 + idx)}) ${optionText}</div>
                                         <div class="truefalse-buttons">
                                             <label class="option-button">
                                                 <input type="radio" 
@@ -219,6 +220,9 @@ async function initializeLesson() {
             imageContainer.style.display = 'block';
         }
         
+        // Add console log here to inspect the lesson object
+        console.log('Lesson object before rendering:', JSON.stringify(lesson, null, 2)); 
+        
         await renderQuestions(lesson);
         console.log('Lesson initialized successfully');
     } catch (error) {
@@ -290,13 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             userAnswers[idx] !== null && userAnswers[idx] === correctAns
                         );
                         
-                        userAnswer = q.options.map((opt, idx) => 
-                            `${String.fromCharCode(65 + idx)}: ${opt} - ${userAnswers[idx] ? 'True' : 'False'}`
-                        ).join('\n');
+                        userAnswer = q.options.map((opt, idx) => {
+                            const optionText = opt.text || opt; // Handle both formats
+                            return `${String.fromCharCode(65 + idx)}: ${optionText} - ${userAnswers[idx] ? 'True' : 'False'}`;
+                        }).join('\n');
                         
-                        correctAnswer = q.options.map((opt, idx) => 
-                            `${String.fromCharCode(65 + idx)}: ${opt} - ${q.correct[idx] ? 'True' : 'False'}`
-                        ).join('\n');
+                        correctAnswer = q.options.map((opt, idx) => {
+                            const optionText = opt.text || opt; // Handle both formats
+                            return `${String.fromCharCode(65 + idx)}: ${optionText} - ${q.correct[idx] ? 'True' : 'False'}`;
+                        }).join('\n');
                     } else if (q.type === 'abcd') {
                         const selectedRadio = document.querySelector(`input[name="q${originalIndex}"]:checked`);
                         const selectedValue = selectedRadio ? selectedRadio.value : null;
@@ -306,14 +312,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             const selectedMapping = mapping.find(m => m.displayedLetter === selectedValue);
                             
                             if (selectedMapping) {
-                                userAnswer = q.options[selectedMapping.originalIndex];
+                                const option = q.options[selectedMapping.originalIndex];
+                                userAnswer = option.text || option; // Handle both formats
+                                
                                 const correctIndex = q.correct.toUpperCase().charCodeAt(0) - 65;
-                                correctAnswer = q.options[correctIndex];
+                                const correctOption = q.options[correctIndex];
+                                correctAnswer = correctOption.text || correctOption; // Handle both formats
+                                
                                 isCorrect = selectedMapping.originalIndex === correctIndex;
                             }
                         } else {
                             userAnswer = 'No answer';
-                            correctAnswer = q.options[q.correct.toUpperCase().charCodeAt(0) - 65];
+                            const correctIndex = q.correct.toUpperCase().charCodeAt(0) - 65;
+                            const correctOption = q.options[correctIndex];
+                            correctAnswer = correctOption.text || correctOption; // Handle both formats
                         }
                     } else if (q.type === 'number') {
                         userAnswer = document.querySelector(`[name="q${originalIndex}"]`).value || 'No answer';
@@ -371,91 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Initialize the lesson when the page loads
-document.addEventListener('DOMContentLoaded', initializeLesson);
-
-// Update the renderQuestion function to handle translations
-function renderQuestion(question, index, type) {
-    const questionDiv = document.createElement('div');
-    questionDiv.className = 'question';
-    
-    // Translate question type labels
-    const typeLabels = {
-        'abcd': translations[currentLang()].multipleChoiceQuestions,
-        'truefalse': translations[currentLang()].trueFalseQuestions,
-        'number': translations[currentLang()].numericalQuestions
-    };
-
-    let html = `<p><strong>Q${index + 1}:</strong> ${question.question}</p>`;
-    
-    if (type === 'abcd') {
-        html += `<div class="options-grid">`;
-        question.options.forEach((option, i) => {
-            const letter = String.fromCharCode(65 + i);
-            html += `
-                <div class="option-row">
-                    <input type="radio" name="q${index}" value="${i}" id="q${index}o${i}">
-                    <label class="option-label" for="q${index}o${i}">
-                        <span class="option-letter">${letter}</span>
-                        <span class="option-text">${option}</span>
-                    </label>
-                </div>`;
-        });
-        html += `</div>`;
-    } else if (type === 'truefalse') {
-        html += `
-            <div class="truefalse-option-group">
-                <div class="true-option">
-                    <input type="radio" name="q${index}" value="true" id="q${index}true">
-                    <label class="option-label" for="q${index}true">
-                        <span class="option-icon">✓</span>
-                        ${translations[currentLang()].true || 'True'}
-                    </label>
-                </div>
-                <div class="false-option">
-                    <input type="radio" name="q${index}" value="false" id="q${index}false">
-                    <label class="option-label" for="q${index}false">
-                        <span class="option-icon">✗</span>
-                        ${translations[currentLang()].false || 'False'}
-                    </label>
-                </div>
-            </div>`;
-    } else if (type === 'number') {
-        html += `
-            <div class="number-input-container">
-                <input type="number" class="modern-number-input" name="q${index}" 
-                       placeholder="${translations[currentLang()].enterNumber || 'Enter your answer...'}"
-                       step="any">
-            </div>`;
-    }
-    
-    questionDiv.innerHTML = html;
-    return questionDiv;
-}
-
-// Update the loadLesson function
-async function loadLesson() {
-    try {
-        const lessonId = window.location.pathname.split('/').pop();
-        const response = await fetch(`/api/lessons/${lessonId}`);
-        const lesson = await response.json();
-        
-        document.getElementById('lesson-title').textContent = lesson.title;
-        
-        if (lesson.questions) {
-            lesson.questions.forEach((question, index) => {
-                const container = document.getElementById(`${question.type}-questions`);
-                if (container) {
-                    container.appendChild(renderQuestion(question, index, question.type));
-                }
-            });
-        }
-        
-        // Update translations after rendering dynamic content
-        updateTexts(currentLang());
-    } catch (error) {
-        console.error('Error loading lesson:', error);
-    }
-}
 
 // Add translation keys for lesson-specific content
 if (typeof translations !== 'undefined') {
@@ -469,8 +396,3 @@ if (typeof translations !== 'undefined') {
         };
     });
 }
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    loadLesson();
-});

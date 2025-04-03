@@ -21,12 +21,16 @@ async function displayResults() {
             currentResult = resultData;
         }
         
+        // Log the result for debugging
+        console.log('Result data:', currentResult);
+        
         // Update statistics cards
         updateStatisticsCards(currentResult);
         
         // Display results
         displaySortedResults('all');
     } catch (error) {
+        console.error('Error loading results:', error);
         document.getElementById('result').innerHTML = '<p class="no-results">Result not found. Please try again.</p>';
     }
 }
@@ -67,9 +71,17 @@ function displaySortedResults(sortType) {
 
     // Helper function to format answers with line breaks
     const formatAnswer = (answer, type) => {
+        if (!answer) return 'No answer';
+        
+        if (typeof answer === 'object') {
+            // If it's an object with text property, use that
+            return answer.text || JSON.stringify(answer);
+        }
+        
         if (type === 'truefalse') {
             return answer.split('\n').map(line => line.trim()).join('<br>');
         }
+        
         return answer;
     };
 
@@ -90,8 +102,8 @@ function displaySortedResults(sortType) {
                     <p class="question-text">${question.question}</p>
                     <button class="explain-btn" 
                         data-question="${encodeURIComponent(question.question)}"
-                        data-user-answer="${encodeURIComponent(question.userAnswer)}"
-                        data-correct-answer="${encodeURIComponent(question.correctAnswer)}">
+                        data-user-answer="${encodeURIComponent(formatAnswer(question.userAnswer, question.type))}"
+                        data-correct-answer="${encodeURIComponent(formatAnswer(question.correctAnswer, question.type))}">
                         <i class="fas fa-lightbulb"></i>
                         <span>Xem giải thích (AI)</span>
                     </button>
