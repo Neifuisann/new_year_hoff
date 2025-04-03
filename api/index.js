@@ -43,18 +43,23 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 app.use(express.static('public', { charset: 'utf-8' }));
+
+// Configure express-session
+app.set('trust proxy', 1); // Trust first proxy, crucial for Vercel/Heroku/etc.
+
 app.use(session({
-    secret: 'your-secret-key',
+    secret: 'your-secret-key', // Replace with a strong secret in production
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Don't save sessions until something is stored
     cookie: { 
-        // Allow non-secure cookies during development but secure in production
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 24 * 60 * 60 * 1000,
-        // Set domain if needed for cross-domain issues
+        secure: process.env.NODE_ENV === 'production', // Ensure cookies are sent only over HTTPS in production
+        httpOnly: true, // Prevent client-side JS from accessing the cookie
+        sameSite: 'lax', // Recommended for most cases to prevent CSRF
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        // Consider setting domain explicitly if needed
         // domain: process.env.NODE_ENV === 'production' ? '.yourdomain.com' : undefined
-    }
+    },
+    proxy: true // Trust the reverse proxy when setting secure cookies (Vercel/Heroku)
 }));
 
 // Admin credentials
