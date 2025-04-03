@@ -46,7 +46,11 @@ app.use(express.static('public', { charset: 'utf-8' }));
 app.use(session({
     secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 
 // Admin credentials
@@ -65,6 +69,19 @@ const requireAuth = (req, res, next) => {
     }
 };
 
+// Middleware to protect student routes
+const requireStudentAuth = (req, res, next) => {
+    if (req.session.isAuthenticated || req.session.studentId) {
+        next();
+    } else {
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            res.status(401).json({ error: 'Authentication required' });
+        } else {
+            res.redirect('/student/login?redirect=' + encodeURIComponent(req.originalUrl));
+        }
+    }
+};
+
 // Add this middleware
 function requireStudentInfo(req, res, next) {
     const path = req.path;
@@ -76,36 +93,41 @@ function requireStudentInfo(req, res, next) {
     next();
 }
 
-// Add the middleware to the app
-app.use(requireStudentInfo);
+// Apply student authentication middleware to relevant routes
+app.use('/lythuyet', requireStudentAuth);
+app.use('/multiplechoice', requireStudentAuth);
+app.use('/quizgame', requireStudentAuth);
+app.use('/truefalse', requireStudentAuth);
+app.use('/lesson/:id', requireStudentAuth);
+app.use('/result', requireStudentAuth);
+app.use('/result/:id', requireStudentAuth);
+app.use('/api/results', requireStudentAuth);
+app.use('/api/explain', requireStudentAuth);
 
 // Routes
 app.get('/', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'landing.html')));
+app.get('/student/login', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'student-login.html')));
+app.get('/student/register', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'student-register.html')));
 app.get('/lythuyet', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'gallery.html')));
 app.get('/multiplechoice', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'index.html')));
 app.get('/quizgame', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'quizgame.html')));
-app.get('/truefalse', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'index.html'))); // Reusing index.html for now
+app.get('/truefalse', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'index.html')));
+app.get('/lesson/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'lesson.html')));
+app.get('/result', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
+app.get('/result/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
 app.get('/admin', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-list.html')));
 app.get('/admin/new', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-edit.html')));
 app.get('/admin/edit/:id', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-edit.html')));
 app.get('/admin/configure', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-configure.html')));
 app.get('/admin/configure/:id', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-configure.html')));
 app.get('/admin/login', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'login.html')));
-app.get('/lesson/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'lesson.html')));
-app.get('/result', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
-app.get('/result/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
-
-// Add new route for statistics page
+app.get('/admin/students', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-students.html')));
 app.get('/admin/statistics/:id', requireAuth, (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views', 'lesson-statistics.html'));
 });
-
-// New route added for activity log /history
 app.get('/history', requireAuth, (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views', 'history.html'));
 });
-
-// Add these routes for quiz management
 app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-quiz-edit.html')));
 
 // API Endpoints
@@ -115,6 +137,8 @@ app.post('/api/login', async (req, res) => {
     if (username === adminCredentials.username &&
         await bcrypt.compare(password, adminCredentials.password)) {
         req.session.isAuthenticated = true;
+        delete req.session.studentId;
+        delete req.session.studentName;
         res.json({ success: true });
     } else {
         res.status(401).json({ success: false, message: 'Invalid credentials' });
@@ -374,15 +398,21 @@ app.post('/api/lessons/reorder', requireAuth, async (req, res) => {
     }
 });
 
-app.post('/api/results', async (req, res) => {
+app.post('/api/results', requireStudentAuth, async (req, res) => {
+    const now = new Date().toISOString();
+    const studentIdFromSession = req.session.studentId;
+    if (!studentIdFromSession) {
+        return res.status(401).json({ error: 'Unauthorized: No student session found.' });
+    }
+
     const newResultData = {
         id: Date.now().toString(),
         lessonId: req.body.lessonId,
-        timestamp: new Date().toISOString(),
+        timestamp: now,
         questions: req.body.questions,
         score: req.body.score,
         totalPoints: req.body.totalPoints,
-        studentInfo: req.body.studentInfo,
+        student_id: studentIdFromSession,
         ipAddress: req.body.ipAddress
     };
 
@@ -428,10 +458,13 @@ app.get('/api/history', requireAuth, async (req, res) => {
         const { data: historyData, error } = await supabase
             .from('results')
             .select(`
-                studentInfo, 
-                lessonId, 
+                id, 
+                student_id, 
                 timestamp, 
                 score,
+                totalPoints,
+                lessonId, 
+                students ( full_name ), 
                 lessons ( title ) 
             `)
              .order('timestamp', { ascending: false });
@@ -439,10 +472,13 @@ app.get('/api/history', requireAuth, async (req, res) => {
         if (error) throw error;
         
         const history = historyData.map(result => ({
-            studentName: result.studentInfo?.name || 'Anonymous',
-            lessonTitle: result.lessons?.title || 'Chinh phục', 
+            resultId: result.id,
+            studentName: result.students?.full_name || 'Unknown Student',
+            lessonTitle: result.lessons?.title || (result.lessonId === 'quiz_game' ? 'Trò chơi chinh phục' : 'Unknown Lesson'),
             submittedAt: result.timestamp,
-            score: result.score
+            score: result.score,
+            totalPoints: result.totalPoints,
+            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A'
         }));
         
         res.json(history);
@@ -452,205 +488,29 @@ app.get('/api/history', requireAuth, async (req, res) => {
     }
 });
 
-app.post('/api/explain', async (req, res) => {
-    const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc";
-    const { question, userAnswer, correctAnswer } = req.body;
-    const timeoutMs = 15000; // 15 second timeout for the API call
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
+app.delete('/api/history/:resultId', requireAuth, async (req, res) => {
+    const resultId = req.params.resultId;
     try {
-        console.log('Sending request to Gemini API with:', { question, userAnswer, correctAnswer });
+        const { error } = await supabase
+            .from('results')
+            .delete()
+            .eq('id', resultId);
 
-        const response = await fetch(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-01-21:generateContent?key=' + API_KEY,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:
-Question: ${question}
-User's answer: ${userAnswer}
-Correct answer: ${correctAnswer}`
-                        }]
-                    }],
-                    generationConfig: {
-                        temperature: 0.7,
-                        topK: 64,
-                        topP: 0.95,
-                        maxOutputTokens: 8192
-                    }
-                }, null, 2),
-                signal: controller.signal // Add abort signal
-            }
-        );
-
-        clearTimeout(timeoutId); // Clear the timeout if fetch completes
-
-        if (!response.ok) {
-            let errorBody = 'Could not read error body';
-            try {
-                errorBody = await response.text(); // Try to get error details from Gemini API
-            } catch (readError) {
-                console.error('Failed to read error body from Gemini API:', readError);
-            }
-            console.error('Gemini API request failed:', {
-                status: response.status,
-                statusText: response.statusText,
-                body: errorBody
-            });
-            // Send a more specific error back to the client
-            return res.status(response.status || 500).json({ 
-                error: 'Gemini API request failed', 
-                details: `API responded with status: ${response.status}`,
-                apiErrorBody: errorBody // Include API error body if available
-            });
-        }
-
-        const data = await response.json();
-        // It's good practice to log less in production, but keep detailed logs for debugging
-        // console.log('Received response from Gemini API:', JSON.stringify(data, null, 2));
-
-        const explanationText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!explanationText) {
-            console.error('Invalid API response format:', data);
-             // Log the full invalid response for debugging
-            return res.status(500).json({ 
-                error: 'Invalid response format from API', 
-                details: 'Expected text explanation was not found in the response.',
-                apiResponse: data // Include the problematic API response
-            });
-        }
-        
-        // Ensure UTF-8 encoding - This buffer step might be redundant if headers are set correctly, 
-        // but kept for safety. res.json should handle encoding.
-        // const buffer = Buffer.from(explanationText, 'utf8');
-        // const utf8Text = buffer.toString('utf8');
-
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
-        res.json({ explanation: explanationText }); // Send the text directly
-
+        if (error) throw error;
+        res.json({ success: true, message: 'History entry deleted.' });
     } catch (error) {
-        clearTimeout(timeoutId); // Ensure timeout is cleared in case of error
-        
-        let errorDetails = error.message;
-        let statusCode = 500;
-
-        if (error.name === 'AbortError') {
-            console.error('Gemini API call timed out after', timeoutMs, 'ms');
-            errorDetails = `Gemini API request timed out after ${timeoutMs / 1000} seconds.`;
-            statusCode = 504; // Gateway Timeout
-        } else {
-             console.error('Error in /api/explain endpoint:', error);
-        }
-
-        // Ensure a JSON response is always sent on error
-        res.status(statusCode).json({
-            error: 'Failed to get explanation',
-            details: errorDetails,
-            // Avoid sending full stack in production for security reasons
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
+        console.error(`Error deleting history entry ${resultId}:`, error);
+        res.status(500).json({ error: 'Failed to delete history entry', details: error.message });
     }
 });
 
-app.post('/api/ocr', upload.single('image'), async (req, res) => {
-    const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc";
-    
+app.delete('/api/history/all', requireAuth, async (req, res) => {
+    console.warn("Attempting to delete ALL history entries!");
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No image file provided' });
-        }
-
-        console.log('Processing image:', req.file.mimetype, req.file.size, 'bytes');
-        const base64Image = req.file.buffer.toString('base64');
-        console.log('Base64 length:', base64Image.length);
-        
-        const requestBody = {
-            contents: [{
-                parts: [
-                    {
-                        text: `Extract questions from this image. 
-                        Format the response exactly like example example. 
-                        You can choose from abcd, truefalse, or number type questions. 
-                        Follow the Response example and do not say anything else.
-                        Keep the original language of the question content and choices.
-                        User Input: 
-                        [Image]
-
-                        Response:
-                        Question 1: 1 Newton + 1 Newton = ?
-                        Type: number
-                        Points: 1
-                        Answer: 2
-
-                        Question 2: Is it true that we can time travel?
-                        Type: truefalse
-                        Points: 1
-                        A. Nah~ [False]
-                        B. In Doraemon only [False]
-                        C. Doctor Who only [False]
-                        D. Ya boi why not [True]
-
-                        Question 3: Why the apple fall?
-                        Type: abcd
-                        Points: 1
-                        A. Because it want
-                        B. Because mother nature want
-                        *C. Because Newton
-                        D. Because someone knock it down
-                        `
-                    },
-                    {
-                        inline_data: {
-                            mime_type: req.file.mimetype,
-                            data: base64Image
-                        }
-                    }
-                ]
-            }]
-        };
-        
-        console.log('Sending request to Gemini API...');
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody)
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Gemini API error:', response.status, errorText);
-            throw new Error(`Gemini API error: ${response.status} ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('Gemini API Response:', JSON.stringify(data, null, 2));
-        
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-            console.error('Invalid Gemini response structure:', data);
-            throw new Error('Invalid response from Gemini API');
-        }
-
-        const text = data.candidates[0].content.parts[0].text;
-        console.log('Extracted Text:', text);
-        
-        res.json({ text });
+        return res.status(501).json({ success: false, message: 'Bulk delete not safely implemented via this API route. Consider using Supabase dashboard or RPC.' });
     } catch (error) {
-        console.error('Error in /api/ocr:', error);
-        res.status(500).json({ 
-            error: 'Failed to process image',
-            details: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
+        console.error('Error deleting all history entries:', error);
+        res.status(500).json({ error: 'Failed to delete all history entries', details: error.message });
     }
 });
 
@@ -660,7 +520,10 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
     try {
         const { data: lessonResults, error: resultsError } = await supabase
             .from('results')
-            .select('*')
+            .select(`
+                *, 
+                students ( full_name ) 
+            `)
             .eq('lessonId', lessonId);
             
         if (resultsError) throw resultsError;
@@ -678,13 +541,12 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
             });
         }
 
-        const uniqueStudents = new Set(lessonResults.map(r => 
-            r.studentInfo?.studentId || r.studentInfo?.name || r.ipAddress
-        )).size;
+        const uniqueStudents = new Set(lessonResults.map(r => r.student_id)).size;
         
         const scores = lessonResults.map(r => {
              const totalPoints = r.totalPoints || 1;
-             return (r.score / totalPoints) * 100;
+             const studentScore = typeof r.score === 'number' ? r.score : 0;
+             return totalPoints > 0 ? (studentScore / totalPoints) * 100 : 0;
         });
         const averageScore = scores.length ? 
             (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
@@ -694,19 +556,25 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
         
         lessonResults.forEach((result) => {
             const totalPoints = result.totalPoints || 1;
-            const scorePercent = (result.score / totalPoints) * 100;
+            const studentScore = typeof result.score === 'number' ? result.score : 0;
+            const scorePercent = totalPoints > 0 ? (studentScore / totalPoints) * 100 : 0;
             const normalizedScore = Math.max(0, Math.min(100, scorePercent));
-            const rangeIndex = Math.min(Math.floor(normalizedScore / 10), 9);
-            distribution[rangeIndex]++;
+            const rangeIndex = normalizedScore === 100 ? 9 : Math.floor(normalizedScore / 10);
+            if (rangeIndex >= 0 && rangeIndex < distribution.length) {
+                 distribution[rangeIndex]++;
+            } else {
+                console.warn(`Calculated invalid range index ${rangeIndex} for score ${normalizedScore}`);
+            }
         });
 
         const questionStats = {};
         lessonResults.forEach(result => {
             if (Array.isArray(result.questions)) {
                  result.questions.forEach(q => {
-                    const questionKey = q.question || `question_${Date.now()}`;
+                    const questionKey = q.question || `question_${q.originalIndex || Date.now()}`;
                     if (!questionStats[questionKey]) {
                         questionStats[questionKey] = {
+                            questionText: q.question,
                             total: 0,
                             completed: 0,
                             correct: 0,
@@ -722,25 +590,26 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
                     }
                 });
             } else {
-                console.warn(`Result ${result.id} has invalid questions format:`, result.questions);
+                console.warn(`Result ${result.id || 'N/A'} has invalid questions format:`, result.questions);
             }
         });
         
-        const formattedQuestionStats = Object.entries(questionStats).map(([question, stats]) => ({
-            question,
+        const formattedQuestionStats = Object.values(questionStats).map((stats) => ({
+            question: stats.questionText,
             totalStudents: stats.total,
             completed: stats.completed,
             notCompleted: 0,
             correct: stats.correct,
-            incorrect: stats.incorrect
+            incorrect: stats.incorrect,
+            accuracy: stats.completed > 0 ? ((stats.correct / stats.completed) * 100).toFixed(1) + '%' : 'N/A'
         }));
 
         const transcripts = lessonResults.map(r => {
              const totalPoints = r.totalPoints || 1;
+             const studentScore = typeof r.score === 'number' ? r.score : 0;
              return {
-                name: r.studentInfo?.name || 'Anonymous',
-                dob: r.studentInfo?.dob || 'N/A',
-                score: ((r.score / totalPoints) * 100).toFixed(2) + '%',
+                name: r.students?.full_name || 'Unknown Student',
+                score: totalPoints > 0 ? ((studentScore / totalPoints) * 100).toFixed(1) + '%' : '0.0%',
                 timestamp: r.timestamp,
                 ip: r.ipAddress || 'N/A'
             };
@@ -749,7 +618,7 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
         res.json({
             uniqueStudents,
             totalAttempts: lessonResults.length,
-            averageScore,
+            averageScore: averageScore.toFixed(1),
             lowScores: scores.filter(s => s < 50).length,
             highScores: scores.filter(s => s >= 50).length,
             scoreDistribution: {
@@ -773,8 +642,18 @@ app.post('/api/student-info', (req, res) => {
     res.json({ success: true });
 });
 
-app.get('/api/check-auth', (req, res) => {
-    res.json({ isAuthenticated: !!req.session.isAuthenticated });
+app.get('/api/check-student-auth', (req, res) => {
+    if (req.session.studentId) {
+        res.json({ 
+            isAuthenticated: true, 
+            student: { 
+                id: req.session.studentId, 
+                name: req.session.studentName 
+            } 
+        });
+    } else {
+        res.json({ isAuthenticated: false });
+    }
 });
 
 app.get('/api/gallery-images', (req, res) => {
@@ -793,7 +672,7 @@ app.get('/api/gallery-images', (req, res) => {
     }
 });
 
-app.get('/api/quiz', async (req, res) => {
+app.get('/api/quiz', requireStudentAuth, async (req, res) => {
     try {
         const { data: quizConfig, error } = await supabase
             .from('quizzes')
@@ -814,16 +693,22 @@ app.get('/api/quiz', async (req, res) => {
     }
 });
 
-app.post('/api/quiz/submit', async (req, res) => {
+app.post('/api/quiz/submit', requireStudentAuth, async (req, res) => {
      const resultId = Date.now().toString();
+     const studentIdFromSession = req.session.studentId;
+     if (!studentIdFromSession) {
+         return res.status(401).json({ error: 'Unauthorized: No student session found.' });
+     }
+     
      const newResult = {
          id: resultId,
          timestamp: new Date().toISOString(),
-         studentName: req.body.studentName,
+         student_id: studentIdFromSession,
+         lessonId: 'quiz_game',
          score: req.body.score,
-         totalQuestions: req.body.totalQuestions,
-         userId: req.body.userId,
-         answers: req.body.answers
+         totalPoints: req.body.totalPoints,
+         questions: req.body.answers,
+         ipAddress: req.body.ipAddress
      };
 
     try {
@@ -857,24 +742,20 @@ app.post('/api/quiz/save', requireAuth, async (req, res) => {
     }
 });
 
-// --- NEW: /api/tags Endpoint ---
 app.get('/api/tags', async (req, res) => {
     try {
-        // Fetch only the 'tags' column from all lessons
         const { data, error } = await supabase
             .from('lessons')
             .select('tags');
 
         if (error) throw error;
 
-        // Process the tags data to get a unique, flat list
         const allTags = new Set();
         if (data) {
             data.forEach(lesson => {
-                // Ensure lesson.tags is an array and add each tag to the Set
                 if (Array.isArray(lesson.tags)) {
                     lesson.tags.forEach(tag => {
-                        if (tag && typeof tag === 'string') { // Basic validation
+                        if (tag && typeof tag === 'string') {
                            allTags.add(tag.trim());
                         }
                     });
@@ -882,7 +763,6 @@ app.get('/api/tags', async (req, res) => {
             });
         }
 
-        // Convert Set to a sorted array
         const uniqueSortedTags = Array.from(allTags).sort();
 
         res.json(uniqueSortedTags);
@@ -892,7 +772,85 @@ app.get('/api/tags', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch tags', details: error.message });
     }
 });
-// --- END NEW: /api/tags Endpoint ---
 
-// Export the app for Vercel
+app.get('/api/admin/unapproved-students', requireAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('students')
+            .select('id, full_name, phone_number, date_of_birth, created_at')
+            .eq('is_approved', false)
+            .order('created_at', { ascending: true });
+
+        if (error) throw error;
+        res.json(data || []);
+    } catch (error) {
+        console.error('Error fetching unapproved students:', error);
+        res.status(500).json({ error: 'Failed to fetch unapproved students', details: error.message });
+    }
+});
+
+// New endpoint for fetching approved students
+app.get('/api/admin/approved-students', requireAuth, async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('students')
+            .select('id, full_name, phone_number, date_of_birth, created_at, approved_device_fingerprint')
+            .eq('is_approved', true)
+            .order('full_name', { ascending: true });
+
+        if (error) throw error;
+        res.json(data || []);
+    } catch (error) {
+        console.error('Error fetching approved students:', error);
+        res.status(500).json({ error: 'Failed to fetch approved students', details: error.message });
+    }
+});
+
+app.post('/api/admin/approve-student/:studentId', requireAuth, async (req, res) => {
+    const studentId = req.params.studentId;
+    try {
+        const { data, error } = await supabase
+            .from('students')
+            .update({ is_approved: true })
+            .eq('id', studentId)
+            .select('id')
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') { 
+                return res.status(404).json({ success: false, message: 'Student not found.' });
+            }
+            throw error;
+        }
+
+        if (!data) {
+             return res.status(404).json({ success: false, message: 'Student not found (post-update check).' });
+        }
+
+        console.log(`Student ${studentId} approved by admin.`);
+        res.json({ success: true, message: 'Student approved successfully.' });
+    } catch (error) {
+        console.error(`Error approving student ${studentId}:`, error);
+        res.status(500).json({ error: 'Failed to approve student', details: error.message });
+    }
+});
+
+app.delete('/api/admin/reject-student/:studentId', requireAuth, async (req, res) => {
+    const studentId = req.params.studentId;
+    try {
+        const { error } = await supabase
+            .from('students')
+            .delete()
+            .eq('id', studentId);
+
+        if (error) throw error;
+        
+        console.log(`Student registration ${studentId} rejected (deleted) by admin.`);
+        res.json({ success: true, message: 'Student registration rejected.' });
+    } catch (error) {
+        console.error(`Error rejecting student ${studentId}:`, error);
+        res.status(500).json({ error: 'Failed to reject student', details: error.message });
+    }
+});
+
 module.exports = app;

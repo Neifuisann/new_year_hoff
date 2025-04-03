@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Đăng ký Học sinh</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+
+    <div class="login-container">
+        <div class="login-form">
+            <h1>Đăng ký Học sinh</h1>
+            <form id="student-register-form" onsubmit="handleStudentRegister(event)">
+                <div id="register-message" class="message" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="full_name">Họ và tên *</label>
+                    <input type="text" id="full_name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Ngày sinh</label>
+                    <input type="date" id="date_of_birth" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Số điện thoại *</label>
+                    <input type="tel" id="phone_number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu (ít nhất 6 ký tự) *</label>
+                    <input type="password" id="password" class="form-control" required minlength="6">
+                </div>
+                 <div class="form-group">
+                    <label for="confirm_password">Xác nhận mật khẩu *</label>
+                    <input type="password" id="confirm_password" class="form-control" required minlength="6">
+                </div>
+                <button type="submit" id="register-button" class="btn-login">Đăng ký</button>
+            </form>
+            <p class="form-note">Đã có tài khoản? <a href="/student/login">Đăng nhập</a></p>
+        </div>
+    </div>
+
+    <script>
+        async function handleStudentRegister(event) {
+            event.preventDefault();
+            const registerButton = document.getElementById('register-button');
+            const messageDiv = document.getElementById('register-message');
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'message'; // Reset class
+            registerButton.disabled = true;
+            registerButton.textContent = 'Đang đăng ký...';
+
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                messageDiv.textContent = 'Mật khẩu xác nhận không khớp.';
+                messageDiv.className = 'message error-message'; // Add error class
+                messageDiv.style.display = 'block';
+                registerButton.disabled = false;
+                registerButton.textContent = 'Đăng ký';
+                return;
+            }
+            
+            if (password.length < 6) {
+                messageDiv.textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
+                messageDiv.className = 'message error-message';
+                messageDiv.style.display = 'block';
+                registerButton.disabled = false;
+                registerButton.textContent = 'Đăng ký';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: document.getElementById('full_name').value,
+                        date_of_birth: document.getElementById('date_of_birth').value || null,
+                        phone_number: document.getElementById('phone_number').value,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    messageDiv.textContent = 'Đăng ký thành công! Vui lòng chờ giáo viên duyệt tài khoản.';
+                    messageDiv.className = 'message success-message'; // Add success class
+                    messageDiv.style.display = 'block';
+                    document.getElementById('student-register-form').reset(); // Clear the form
+                    // Optional: Redirect to login after a delay
+                    // setTimeout(() => { window.location.href = '/student/login'; }, 3000);
+                } else {
+                    messageDiv.textContent = result.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+                    messageDiv.className = 'message error-message'; // Add error class
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                messageDiv.textContent = 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.';
+                messageDiv.className = 'message error-message'; // Add error class
+                messageDiv.style.display = 'block';
+            } finally {
+                 registerButton.disabled = false;
+                 registerButton.textContent = 'Đăng ký';
+            }
+        }
+    </script>
+</body>
+</html> 

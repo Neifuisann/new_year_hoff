@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Đăng nhập Học sinh</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Include FingerprintJS - Consider downloading or using npm -->
+    <script async src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
+</head>
+<body>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+
+    <div class="login-container">
+        <div class="login-form">
+            <h1>Đăng nhập Học sinh</h1>
+            <form id="student-login-form" onsubmit="handleStudentLogin(event)">
+                <div id="login-error" class="error-message" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="phone_number">Số điện thoại:</label>
+                    <input type="tel" id="phone_number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" id="login-button" class="btn-login">Đăng nhập</button>
+            </form>
+            <p class="form-note">Chưa có tài khoản? <a href="/student/register">Đăng ký ngay</a></p>
+            <p class="form-note"><a href="/admin/login">Đăng nhập Giáo viên</a></p>
+        </div>
+    </div>
+
+    <script>
+        let visitorId = null;
+
+        // Initialize FingerprintJS
+        async function getVisitorId() {
+            if (!visitorId) {
+                try {
+                    const fpPromise = FingerprintJS.load();
+                    const fp = await fpPromise;
+                    const result = await fp.get();
+                    visitorId = result.visitorId;
+                    console.log('Device Fingerprint:', visitorId);
+                } catch (error) {
+                    console.error('FingerprintJS error:', error);
+                    // Handle error - maybe disable login or proceed without fingerprint
+                    document.getElementById('login-error').textContent = 'Không thể lấy thông tin thiết bị. Vui lòng thử lại.';
+                    document.getElementById('login-error').style.display = 'block';
+                    return null; // Indicate failure
+                }
+            }
+            return visitorId;
+        }
+        
+        // Call it once on load to start the process
+        getVisitorId();
+
+        async function handleStudentLogin(event) {
+            event.preventDefault();
+            const loginButton = document.getElementById('login-button');
+            const errorMessageDiv = document.getElementById('login-error');
+            errorMessageDiv.style.display = 'none'; // Hide previous errors
+            loginButton.disabled = true;
+            loginButton.textContent = 'Đang đăng nhập...';
+
+            const currentVisitorId = await getVisitorId();
+            if (!currentVisitorId && FingerprintJS) { // Check if fingerprinting failed but library exists
+                 loginButton.disabled = false;
+                 loginButton.textContent = 'Đăng nhập';
+                 errorMessageDiv.textContent = 'Lỗi lấy thông tin thiết bị. Không thể đăng nhập.';
+                 errorMessageDiv.style.display = 'block';
+                 return; // Stop login if fingerprint is essential and failed
+            }
+
+
+            try {
+                const response = await fetch('/api/student/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phone_number: document.getElementById('phone_number').value,
+                        password: document.getElementById('password').value,
+                        // Send the fingerprint ID
+                        device_fingerprint: currentVisitorId 
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Check for redirect query parameter
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirectUrl = urlParams.get('redirect');
+                    // Redirect to intended page or home
+                    window.location.href = redirectUrl || '/multiplechoice'; // Or '/' or '/dashboard'
+                } else {
+                    errorMessageDiv.textContent = result.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
+                    errorMessageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessageDiv.textContent = 'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại.';
+                errorMessageDiv.style.display = 'block';
+            } finally {
+                 loginButton.disabled = false;
+                 loginButton.textContent = 'Đăng nhập';
+            }
+        }
+    </script>
+</body>
+</html> 

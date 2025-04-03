@@ -1,4 +1,51 @@
 let currentResult = null;
+let resultData = null;
+let sortedQuestions = [];
+
+// --- Student Authentication Functions ---
+async function checkStudentAuthentication() {
+    try {
+        const response = await fetch('/api/check-student-auth');
+        if (!response.ok) {
+            throw new Error('Auth check failed');
+        }
+        const authData = await response.json();
+
+        if (authData.isAuthenticated && authData.student) {
+            console.log('Student authenticated:', authData.student.name);
+            document.getElementById('student-name-display').textContent = `Chào, ${authData.student.name}!`;
+            document.getElementById('student-info-area').style.display = 'flex';
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            return true;
+        } else {
+            console.log('Student not authenticated, redirecting...');
+            const currentUrl = window.location.pathname + window.location.search;
+            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error checking student authentication:', error);
+        window.location.href = '/student/login';
+        return false;
+    }
+}
+
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/student/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            console.log('Logout successful');
+            window.location.href = '/student/login';
+        } else {
+            alert('Đăng xuất thất bại: ' + (result.message || 'Lỗi không xác định'));
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Đã xảy ra lỗi trong quá trình đăng xuất.');
+    }
+}
+// --- End Authentication Functions ---
 
 // Function to show/hide loader
 function showLoader(show) {
@@ -9,6 +56,12 @@ function showLoader(show) {
 }
 
 async function displayResults() {
+    // Check student authentication first
+    const isAuthenticated = await checkStudentAuthentication();
+    if (!isAuthenticated) {
+        return; // Stop execution if not authenticated
+    }
+    
     showLoader(true);
     const resultData = JSON.parse(localStorage.getItem('quizResults'));
     if (!resultData) {

@@ -12,11 +12,63 @@ const MAX_POINTS = 50;
 const CELEBRATION_TIME = 5000; // 5 seconds for celebration
 const backgroundMusics = ['background-music-1', 'background-music-2', 'background-music-3'];
 const celebrationMusics = ['celebration-music-1', 'celebration-music-2', 'celebration-music-3'];
+const CORRECT_SPRITES = 15;
+const fireworksContainer = document.querySelector('.fireworks-container');
+let backgroundMusicIndex = 0;
+let correctSoundIndex = 1;
 
 // Handle tab visibility change
 document.addEventListener('visibilitychange', () => {
     isTabActive = !document.hidden;
 });
+
+// --- Student Authentication Functions ---
+async function checkStudentAuthentication() {
+    try {
+        const response = await fetch('/api/check-student-auth');
+        if (!response.ok) {
+            throw new Error('Auth check failed');
+        }
+        const authData = await response.json();
+
+        if (authData.isAuthenticated && authData.student) {
+            console.log('Student authenticated:', authData.student.name);
+            document.getElementById('student-name-display').textContent = `Chào, ${authData.student.name}!`;
+            document.getElementById('student-info-area').style.display = 'flex';
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            return true;
+        } else {
+            console.log('Student not authenticated, redirecting...');
+            const currentUrl = window.location.pathname + window.location.search;
+            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error checking student authentication:', error);
+        window.location.href = '/student/login';
+        return false;
+    }
+}
+
+async function handleLogout() {
+    try {
+        // Stop music and sounds before logging out
+        stopAllMusic();
+        
+        const response = await fetch('/api/student/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            console.log('Logout successful');
+            window.location.href = '/student/login';
+        } else {
+            alert('Đăng xuất thất bại: ' + (result.message || 'Lỗi không xác định'));
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Đã xảy ra lỗi trong quá trình đăng xuất.');
+    }
+}
+// --- End Authentication Functions ---
 
 function pauseQuiz() {
     if (timer) {
@@ -79,6 +131,14 @@ function updateQuestionCounter() {
 }
 
 async function initQuiz() {
+    // Check student authentication first
+    const isAuthenticated = await checkStudentAuthentication();
+    if (!isAuthenticated) {
+        return; // Stop execution if not authenticated
+    }
+    
+    // Check if student info is already provided in a session or storage
+    // If no student info modal, initialize the questions directly
     try {
         const response = await fetch('/api/quiz');
         const data = await response.json();
@@ -96,7 +156,7 @@ async function initQuiz() {
         showQuestion();
         updateProgress();
     } catch (error) {
-        console.error('Failed to load quiz:', error);
+        console.error('Error initializing quiz:', error);
     }
 }
 

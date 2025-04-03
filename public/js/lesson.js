@@ -1,11 +1,56 @@
 // Store shuffled options mapping globally
 window.questionMappings = {};
 
+// --- Student Authentication Functions ---
+async function checkStudentAuthentication() {
+    try {
+        const response = await fetch('/api/check-student-auth');
+        if (!response.ok) {
+            throw new Error('Auth check failed');
+        }
+        const authData = await response.json();
+
+        if (authData.isAuthenticated && authData.student) {
+            console.log('Student authenticated:', authData.student.name);
+            document.getElementById('student-name-display').textContent = `Chào, ${authData.student.name}!`;
+            document.getElementById('student-info-area').style.display = 'flex';
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            return true;
+        } else {
+            console.log('Student not authenticated, redirecting...');
+            const currentUrl = window.location.pathname + window.location.search;
+            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error checking student authentication:', error);
+        window.location.href = '/student/login';
+        return false;
+    }
+}
+
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/student/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            console.log('Logout successful');
+            window.location.href = '/student/login';
+        } else {
+            alert('Đăng xuất thất bại: ' + (result.message || 'Lỗi không xác định'));
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Đã xảy ra lỗi trong quá trình đăng xuất.');
+    }
+}
+// --- End Authentication Functions ---
+
 // Function to show/hide loader
 function showLoader(show) {
     const loader = document.getElementById('loading-indicator');
     if (loader) {
-        loader.classList.toggle('hidden', !show);
+        loader.style.display = show ? 'flex' : 'none';
     }
 }
 
@@ -211,6 +256,12 @@ async function renderQuestions(lesson) {
 }
 
 async function initializeLesson() {
+    // Check student authentication first
+    const isAuthenticated = await checkStudentAuthentication();
+    if (!isAuthenticated) {
+        return; // Stop execution if not authenticated
+    }
+    
     showLoader(true);
     const lessonId = window.location.pathname.split('/')[2];
     document.title = 'Loading lesson...';

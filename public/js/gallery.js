@@ -1,4 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- NEW: Perform authentication check first ---
+    const isAuthenticated = await checkStudentAuthentication();
+    if (!isAuthenticated) {
+        // Stop further execution if not authenticated (redirect already happened)
+        return; 
+    }
+    // --- END NEW ---
+
     let currentImageIndex = 0;
     let images = [];
     let isTransitioning = false;
@@ -220,4 +228,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     loadImages();
-}); 
+});
+
+// --- NEW: Check student authentication ---
+async function checkStudentAuthentication() {
+    try {
+        const response = await fetch('/api/check-student-auth');
+        if (!response.ok) {
+            // If API fails, assume not logged in for safety
+            throw new Error('Auth check failed');
+        }
+        const authData = await response.json();
+
+        if (authData.isAuthenticated && authData.student) {
+            console.log('Student authenticated:', authData.student.name);
+            // Display student name and logout button
+            document.getElementById('student-name-display').textContent = `Chào, ${authData.student.name}!`;
+            document.getElementById('student-info-area').style.display = 'flex'; // Use flex for better alignment
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            return true; // Authenticated
+        } else {
+            // Not authenticated, redirect to login
+            console.log('Student not authenticated, redirecting...');
+            const currentUrl = window.location.pathname + window.location.search;
+            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            return false; // Not authenticated
+        }
+    } catch (error) {
+        console.error('Error checking student authentication:', error);
+        // Redirect to login on error
+        window.location.href = '/student/login'; 
+        return false; // Treat error as not authenticated
+    }
+}
+
+// --- NEW: Handle logout ---
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/student/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            console.log('Logout successful');
+            window.location.href = '/student/login'; // Redirect to login page after logout
+        } else {
+            alert('Logout failed: ' + (result.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('An error occurred during logout.');
+    }
+} 

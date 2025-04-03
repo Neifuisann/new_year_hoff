@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quản lý học sinh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+    </div>  
+
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+    <div class="admin-container">
+        <h1>Quản lý học sinh</h1>
+        
+        <div class="admin-controls">
+            <a href="/admin" class="button secondary">Quay lại danh sách bài học</a>
+            <a href="/history" class="button secondary">Lịch sử hoạt động</a>
+        </div>
+
+        <div class="student-management-container">
+            <div class="pending-approvals-section">
+                <h2>Yêu cầu đăng ký học sinh mới</h2>
+                <div id="pending-students-container">
+                    <!-- Pending students will be displayed here -->
+                    <p class="empty-state" id="empty-pending-state" style="display: none;">Không có yêu cầu đăng ký mới nào.</p>
+                </div>
+            </div>
+            
+            <div class="approved-students-section">
+                <h2>Học sinh đã duyệt</h2>
+                <div class="header-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="student-filter-input" placeholder="Tìm kiếm tên học sinh..." class="modern-input" />
+                        <button id="clear-filter-btn" class="clear-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="statistics-table" id="students-table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ tên</th>
+                                <th>Số điện thoại</th>
+                                <th>Ngày sinh</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Thiết bị</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approved-students-list">
+                            <!-- Approved students will be displayed here -->
+                        </tbody>
+                    </table>
+                    <p class="empty-state" id="empty-approved-state" style="display: none;">Chưa có học sinh nào được duyệt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Functions to handle student approval/rejection and display
+    let pendingStudents = [];
+    let approvedStudents = [];
+    
+    function showLoader(show) {
+        const loader = document.getElementById('loading-indicator');
+        if (loader) {
+            loader.style.display = show ? 'flex' : 'none';
+        }
+    }
+    
+    async function fetchPendingStudents() {
+        try {
+            const response = await fetch('/api/admin/unapproved-students');
+            if (!response.ok) {
+                throw new Error('Failed to fetch pending students');
+            }
+            pendingStudents = await response.json();
+            return pendingStudents;
+        } catch (error) {
+            console.error('Error fetching pending students:', error);
+            alert('Lỗi khi tải dữ liệu học sinh chờ duyệt.');
+            return [];
+        }
+    }
+    
+    async function fetchApprovedStudents() {
+        try {
+            const response = await fetch('/api/admin/approved-students');
+            if (!response.ok) {
+                throw new Error('Failed to fetch approved students');
+            }
+            approvedStudents = await response.json();
+            return approvedStudents;
+        } catch (error) {
+            console.error('Error fetching approved students:', error);
+            alert('Lỗi khi tải dữ liệu học sinh đã duyệt.');
+            return [];
+        }
+    }
+    
+    function renderPendingStudents(students) {
+        const container = document.getElementById('pending-students-container');
+        const emptyState = document.getElementById('empty-pending-state');
+        
+        if (!students || students.length === 0) {
+            emptyState.style.display = 'block';
+            container.innerHTML = '';
+            return;
+        }
+        
+        emptyState.style.display = 'none';
+        container.innerHTML = '';
+        
+        students.forEach(student => {
+            const studentCard = document.createElement('div');
+            studentCard.className = 'student-approval-card';
+            
+            const dateOfBirth = student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('vi-VN') : 'Không có';
+            const registeredAt = new Date(student.created_at).toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            studentCard.innerHTML = `
+                <div class="student-info">
+                    <h3>${student.full_name}</h3>
+                    <p><strong>Số điện thoại:</strong> ${student.phone_number}</p>
+                    <p><strong>Ngày sinh:</strong> ${dateOfBirth}</p>
+                    <p><strong>Đăng ký lúc:</strong> ${registeredAt}</p>
+                </div>
+                <div class="approval-actions">
+                    <button class="approve-btn" onclick="approveStudent('${student.id}')">
+                        <i class="fas fa-check"></i> Chấp nhận
+                    </button>
+                    <button class="reject-btn" onclick="rejectStudent('${student.id}')">
+                        <i class="fas fa-times"></i> Từ chối
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(studentCard);
+        });
+    }
+    
+    function renderApprovedStudents(students) {
+        const tableBody = document.getElementById('approved-students-list');
+        const emptyState = document.getElementById('empty-approved-state');
+        
+        if (!students || students.length === 0) {
+            emptyState.style.display = 'block';
+            tableBody.innerHTML = '';
+            return;
+        }
+        
+        emptyState.style.display = 'none';
+        tableBody.innerHTML = '';
+        
+        students.forEach((student, index) => {
+            const row = document.createElement('tr');
+            
+            const dateOfBirth = student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('vi-VN') : 'Không có';
+            const approvedAt = new Date(student.approved_at || student.created_at).toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${student.full_name}</td>
+                <td>${student.phone_number}</td>
+                <td>${dateOfBirth}</td>
+                <td>${approvedAt}</td>
+                <td>${student.approved_device_fingerprint ? 'Đã đăng nhập' : 'Chưa đăng nhập'}</td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
+    }
+    
+    async function approveStudent(studentId) {
+        if (!confirm('Xác nhận chấp nhận học sinh này?')) {
+            return;
+        }
+        
+        showLoader(true);
+        try {
+            const response = await fetch(`/api/admin/approve-student/${studentId}`, {
+                method: 'POST'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to approve student');
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Đã duyệt học sinh thành công.');
+                // Reload data
+                loadData();
+            } else {
+                alert('Lỗi khi duyệt học sinh: ' + (result.message || 'Không rõ lỗi.'));
+            }
+        } catch (error) {
+            console.error('Error approving student:', error);
+            alert('Lỗi khi duyệt học sinh.');
+        } finally {
+            showLoader(false);
+        }
+    }
+    
+    async function rejectStudent(studentId) {
+        if (!confirm('Bạn có chắc chắn muốn từ chối yêu cầu đăng ký này không?')) {
+            return;
+        }
+        
+        showLoader(true);
+        try {
+            const response = await fetch(`/api/admin/reject-student/${studentId}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to reject student');
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Đã từ chối yêu cầu đăng ký.');
+                // Reload data
+                loadData();
+            } else {
+                alert('Lỗi khi từ chối yêu cầu: ' + (result.message || 'Không rõ lỗi.'));
+            }
+        } catch (error) {
+            console.error('Error rejecting student:', error);
+            alert('Lỗi khi từ chối yêu cầu đăng ký.');
+        } finally {
+            showLoader(false);
+        }
+    }
+    
+    // Search function for approved students
+    function setupSearch() {
+        const searchInput = document.getElementById('student-filter-input');
+        const clearButton = document.getElementById('clear-filter-btn');
+        
+        searchInput.addEventListener('input', filterStudents);
+        
+        clearButton.addEventListener('click', () => {
+            searchInput.value = '';
+            filterStudents();
+        });
+    }
+    
+    function filterStudents() {
+        const searchTerm = document.getElementById('student-filter-input').value.toLowerCase();
+        
+        if (!searchTerm) {
+            renderApprovedStudents(approvedStudents);
+            return;
+        }
+        
+        const filtered = approvedStudents.filter(student => 
+            student.full_name.toLowerCase().includes(searchTerm) ||
+            student.phone_number.includes(searchTerm)
+        );
+        
+        renderApprovedStudents(filtered);
+    }
+    
+    // Load all data
+    async function loadData() {
+        showLoader(true);
+        try {
+            // Fetch both types of students
+            const pendingPromise = fetchPendingStudents();
+            const approvedPromise = fetchApprovedStudents();
+            
+            // Wait for both API calls to complete
+            const [pending, approved] = await Promise.all([pendingPromise, approvedPromise]);
+            
+            // Render the results
+            renderPendingStudents(pending);
+            renderApprovedStudents(approved);
+        } catch (error) {
+            console.error('Error loading data:', error);
+            alert('Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.');
+        } finally {
+            showLoader(false);
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        setupSearch();
+    });
+    </script>
+</body>
+</html> 

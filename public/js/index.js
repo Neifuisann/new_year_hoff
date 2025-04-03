@@ -6,6 +6,7 @@ let totalLessons = 0;
 let currentSearch = '';
 let currentSort = 'newest';
 let isLoading = false;
+let currentStudent = null; // Store student info
 
 // Function to show/hide loader
 function showLoader(show) {
@@ -113,44 +114,62 @@ function closeModal() {
     modal.classList.remove('show');
 }
 
-function startLesson(lessonId) {
-    const modal = document.getElementById('user-info-modal');
-    modal.classList.add('show');
-    
-    const form = document.getElementById('user-info-form');
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        const studentInfo = {
-            name: document.getElementById('student-name').value,
-            dob: document.getElementById('student-dob').value || null,
-            studentId: document.getElementById('student-id').value || null
-        };
-        
-        try {
-            // Store student info in session first
-            const response = await fetch('/api/student-info', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(studentInfo)
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to store student info');
-            }
-
-            // Store in localStorage for client-side use
-            localStorage.setItem('studentInfo', JSON.stringify(studentInfo));
-            
-            // Navigate to lesson
-            window.location.href = `/lesson/${lessonId}`;
-        } catch (error) {
-            console.error('Error storing student info:', error);
-            alert('Error starting lesson. Please try again.');
+// --- NEW: Check student authentication ---
+async function checkStudentAuthentication() {
+    try {
+        const response = await fetch('/api/check-student-auth');
+        if (!response.ok) {
+            // If API fails, assume not logged in for safety
+            throw new Error('Auth check failed');
         }
-    };
+        const authData = await response.json();
+
+        if (authData.isAuthenticated && authData.student) {
+            currentStudent = authData.student;
+            console.log('Student authenticated:', currentStudent.name);
+            // Display student name and logout button
+            document.getElementById('student-name-display').textContent = `Chào, ${currentStudent.name}!`;
+            document.getElementById('student-info-area').style.display = 'block';
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            return true; // Authenticated
+        } else {
+            // Not authenticated, redirect to login
+            console.log('Student not authenticated, redirecting...');
+            // Include current page as redirect target
+            const currentUrl = window.location.pathname + window.location.search;
+            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            return false; // Not authenticated
+        }
+    } catch (error) {
+        console.error('Error checking student authentication:', error);
+        // Redirect to login on error
+        window.location.href = '/student/login'; 
+        return false; // Treat error as not authenticated
+    }
+}
+
+// --- NEW: Handle logout ---
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/student/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            console.log('Logout successful');
+            window.location.href = '/student/login'; // Redirect to login page after logout
+        } else {
+            alert('Logout failed: ' + (result.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('An error occurred during logout.');
+    }
+}
+
+// --- MODIFIED: Start Lesson - Remove modal, rely on session ---
+function startLesson(lessonId) {
+    // No modal needed, authentication is checked on page load
+    // Simply navigate to the lesson page
+    window.location.href = `/lesson/${lessonId}`;
 }
 
 // Modified function: Renders only the lessons passed to it
@@ -280,6 +299,14 @@ async function checkAdminAuth() {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', async () => {
+    // --- NEW: Perform authentication check first ---
+    const isAuthenticated = await checkStudentAuthentication();
+    if (!isAuthenticated) {
+        // Stop further execution if not authenticated (redirect already happened)
+        return; 
+    }
+    // --- END NEW ---
+
     ensurePaginationContainer(); // Make sure the pagination div exists
     // Show loader immediately while data loads
     showLoader(true); 
