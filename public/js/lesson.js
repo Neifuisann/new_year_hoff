@@ -187,6 +187,23 @@ async function renderQuestions(lesson) {
             section.element.style.display = 'none';
         }
     });
+    
+    // Initialize KaTeX rendering after all questions are loaded
+    if (typeof renderMathInElement === 'function') {
+        // Target all sections that might contain math
+        const mathContainers = document.querySelectorAll('#abcd-questions, #truefalse-questions, #number-questions');
+        mathContainers.forEach(container => {
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+        });
+    }
 }
 
 async function initializeLesson() {
