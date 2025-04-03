@@ -348,6 +348,7 @@ function endQuiz() {
             const quizResults = {
                 studentInfo: studentInfo,
                 ipAddress: ipData.ip,
+                lessonId: 'quiz_game',
                 submittedAt: new Date().toISOString(),
                 totalPoints: MAX_POINTS * 20, // 20 questions * 50 points each = 1000 total possible points
                 score: score,
