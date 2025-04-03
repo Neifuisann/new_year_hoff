@@ -15,6 +15,51 @@
         .katex-html {
             display: none !important;
         }
+        
+        /* Enhanced styling for submit button */
+        #submit-quiz-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        #submit-quiz-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        
+        #submit-quiz-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Add space at the bottom of the page to prevent button from overlapping content */
+        body {
+            padding-bottom: 80px;
+        }
+        
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            #submit-quiz-btn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
