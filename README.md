@@ -107,7 +107,7 @@ To view analytics data:
 
 For those who wish to contribute:
 
-1. Fork the repository.
+1. Fork the repository
 2. Create a new branch for your feature or bug fix.
 3. Develop your changes and submit a pull request.
 4. Follow our contribution guidelines outlined in [CONTRIBUTING.md](CONTRIBUTING.md).
