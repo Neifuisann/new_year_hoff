@@ -42,18 +42,27 @@ function generateInitialText(questions) {
         if (q.type === 'abcd') {
             (q.options || []).forEach((opt, optIndex) => {
                 const letter = String.fromCharCode(65 + optIndex);
-                const isCorrect = String(q.correct).toLowerCase() === letter.toLowerCase();
+                const isCorrect = String(q.correct || '').toLowerCase() === letter.toLowerCase();
                 const prefix = isCorrect ? '*' : '';
                 text += `${prefix}${letter}. ${opt.text || ''}\n`;
             });
         } else if (q.type === 'number') {
             text += `Answer: ${q.correct || ''}\n`;
         } else if (q.type === 'truefalse') {
-            (q.options || []).forEach((opt, optIndex) => {
-                const letter = String.fromCharCode(65 + optIndex);
-                const isCorrect = Array.isArray(q.correct) ? q.correct[optIndex] : false;
-                text += `${letter}. ${opt.text || ''} [${isCorrect ? 'True' : 'False'}]\n`;
-            });
+            if (Array.isArray(q.correct)) {
+                (q.options || []).forEach((opt, optIndex) => {
+                    const letter = String.fromCharCode(97 + optIndex);
+                    const isCorrect = q.correct[optIndex] === true;
+                    const prefix = isCorrect ? '*' : '';
+                    text += `${prefix}${letter}) ${opt.text || ''}\n`;
+                });
+            } else {
+                 console.warn(`Question ${index+1} is true/false but 'correct' is not an array. Outputting basic options.`);
+                 (q.options || []).forEach((opt, optIndex) => {
+                    const letter = String.fromCharCode(97 + optIndex);
+                    text += `${letter}) ${opt.text || ''}\n`;
+                 });
+            }
         }
         text += '\n';
     });
@@ -167,12 +176,13 @@ function parseQuizText(text) {
     const lines = text.split('\n');
     let currentQ = null;
     let currentLineIndex = -1;
+    let questionTypeDetermined = false;
 
     const questionRegex = /^Câu\s*(\d+)\s*:\s*(.*)/i;
-    const optionRegex = /^([A-Z])\.\s*(.*)/i;
-    const answerRegex = /^\*([A-Z])\./i;
-    const numberAnswerRegex = /^Answer:\s*(.*)/i;
     const pointsRegex = /^\[(\s*(\d+)\s*pts?\s*)\]$/i;
+    const numberAnswerRegex = /^Answer:\s*(.*)/i;
+    const abcdOptionRegex = /^(\*?)([A-Z])\.\s*(.*)/i;
+    const trueFalseOptionRegex = /^(\*?)([a-z])\)\s*(.*)/i;
 
     lines.forEach((line, index) => {
         currentLineIndex = index;
@@ -184,11 +194,12 @@ function parseQuizText(text) {
             currentQ = {
                 question: match[2].trim(),
                 options: [],
-                correct: '',
+                correct: null,
                 points: 1,
-                type: 'abcd',
+                type: null,
                 startLine: currentLineIndex
             };
+            questionTypeDetermined = false;
             return;
         }
 
@@ -200,32 +211,75 @@ function parseQuizText(text) {
             return;
         }
 
-        match = line.match(answerRegex);
+        match = trimmedLine.match(numberAnswerRegex);
         if (match) {
-            currentQ.correct = match[1].toLowerCase();
-            line = line.substring(1);
-        }
-
-        match = line.match(optionRegex);
-        if (match) {
-            if (currentQ.type === 'abcd' || currentQ.type === 'truefalse') {
-                 currentQ.options.push({ text: match[2].trim(), line: currentLineIndex });
+            if (!questionTypeDetermined) {
+                currentQ.type = 'number';
+                currentQ.correct = match[1].trim();
+                currentQ.options = [];
+                questionTypeDetermined = true;
+            } else if (currentQ.type !== 'number') {
+                 console.warn(`Line ${index + 1}: Found 'Answer:' in a non-number question. Ignoring.`);
             }
             return;
         }
-        
-        match = trimmedLine.match(numberAnswerRegex);
+
+        match = line.match(abcdOptionRegex);
         if (match) {
-            currentQ.type = 'number';
-            currentQ.correct = match[1].trim();
-            currentQ.options = [];
+            const isCorrectMarker = match[1] === '*';
+            const letter = match[2];
+            const optionText = match[3].trim();
+
+            if (!questionTypeDetermined) {
+                currentQ.type = 'abcd';
+                currentQ.correct = '';
+                questionTypeDetermined = true;
+            }
+
+            if (currentQ.type === 'abcd') {
+                 currentQ.options.push({ text: optionText, line: currentLineIndex });
+                 if (isCorrectMarker) {
+                     if (currentQ.correct) {
+                         console.warn(`Line ${index + 1}: Multiple correct answers marked for ABCD question. Using first: '${currentQ.correct}'. Ignoring '${letter}'.`);
+                     } else {
+                        currentQ.correct = letter;
+                     }
+                 }
+            } else {
+                 console.warn(`Line ${index + 1}: Found ABCD option format 'A.' in a non-ABCD question. Ignoring.`);
+            }
             return;
         }
 
-        if (!trimmedLine.match(questionRegex) && !trimmedLine.match(pointsRegex) && !trimmedLine.match(optionRegex) && !trimmedLine.match(numberAnswerRegex)) {
-            if (currentQ.options.length > 0) {
-                const lastOption = currentQ.options[currentQ.options.length - 1];
-                lastOption.text += '\n' + line;
+        match = line.match(trueFalseOptionRegex);
+        if (match) {
+            const isCorrectMarker = match[1] === '*';
+            const letter = match[2];
+            const optionText = match[3].trim();
+
+            if (!questionTypeDetermined) {
+                 currentQ.type = 'truefalse';
+                 currentQ.correct = [];
+                 questionTypeDetermined = true;
+            }
+
+            if (currentQ.type === 'truefalse') {
+                 currentQ.options.push({ text: optionText, line: currentLineIndex });
+                 if (!Array.isArray(currentQ.correct)) {
+                     console.error(`Line ${index + 1}: Internal error - correct should be an array for true/false. Resetting.`);
+                     currentQ.correct = [];
+                 }
+                 currentQ.correct[currentQ.options.length - 1] = isCorrectMarker;
+            } else {
+                 console.warn(`Line ${index + 1}: Found true/false option format 'a)' in a non-true/false question. Ignoring.`);
+            }
+            return;
+        }
+
+        if (currentQ && questionTypeDetermined && trimmedLine && !line.match(questionRegex) && !trimmedLine.match(pointsRegex) && !line.match(abcdOptionRegex) && !line.match(trueFalseOptionRegex) && !trimmedLine.match(numberAnswerRegex)) {
+             if (currentQ.options.length > 0) {
+                 const lastOption = currentQ.options[currentQ.options.length - 1];
+                 lastOption.text += '\n' + line;
             } else if (currentQ.question) {
                  currentQ.question += '\n' + line;
             }
@@ -236,8 +290,36 @@ function parseQuizText(text) {
 
     questions.forEach((q, index) => {
         q.id = `q_${index + 1}`;
-        q.options = q.options.map(opt => opt.text ? opt : { text: opt, line: -1 });
+        q.options = q.options.map(opt => (typeof opt === 'string' ? { text: opt, line: -1 } : opt));
         
+        if (q.type === null && q.options.length === 0 && q.correct === null) {
+             console.warn(`Question ${index + 1} could not be parsed (no type, options, or answer detected). Marking as invalid.`);
+             q.type = 'invalid';
+        } else if (q.type === 'abcd') {
+             if (!q.correct) {
+                 console.warn(`Question ${index + 1} (ABCD) has no correct answer marked with '*'.`);
+             }
+             q.correct = q.correct ? String(q.correct).toUpperCase() : '';
+        } else if (q.type === 'truefalse') {
+             if (!Array.isArray(q.correct)) {
+                  console.warn(`Question ${index + 1} (True/False) has invalid 'correct' property (not an array). Resetting.`);
+                  q.correct = new Array(q.options.length).fill(false);
+             } else if (q.correct.length !== q.options.length) {
+                 console.warn(`Question ${index + 1} (True/False) has mismatch between options (${q.options.length}) and correct answers (${q.correct.length}). Padding/truncating 'correct' array.`);
+                 const correctedArray = new Array(q.options.length).fill(false);
+                 for(let i = 0; i < Math.min(q.options.length, q.correct.length); i++) {
+                     correctedArray[i] = q.correct[i];
+                 }
+                 q.correct = correctedArray;
+             }
+             q.correct = q.correct.map(c => !!c);
+        } else if (q.type === 'number') {
+             if (q.correct === null || q.correct === '') {
+                 console.warn(`Question ${index + 1} (Number) is missing its answer.`);
+             }
+             q.correct = String(q.correct || '');
+        }
+
         if (q.options.length === 0 && q.type !== 'number') {
              console.warn(`Question ${index + 1} has no options and is not type 'number'. Marking as invalid.`);
              q.type = 'invalid';
@@ -245,8 +327,6 @@ function parseQuizText(text) {
              console.warn(`Question ${index + 1} is type 'abcd' but has ${q.options.length} options. Padding/cropping to 4.`);
              while (q.options.length < 4) q.options.push({ text: '', line: -1 });
              q.options = q.options.slice(0, 4);
-        } else if (q.type === 'abcd' && !q.correct) {
-            console.warn(`Question ${index + 1} is type 'abcd' but missing correct answer marker '*'`);
         }
     });
     
@@ -326,33 +406,52 @@ function applySyntaxHighlighting(cm) {
             marks.forEach(mark => mark.clear());
 
             const lineText = cm.getLine(i);
+            const trimmedLine = lineText.trim();
 
             let match = lineText.match(/^(Câu\s*\d+)(:)/i);
             if (match) {
                 cm.markText({ line: i, ch: 0 }, { line: i, ch: match[1].length }, { className: 'cm-question-number' });
                 cm.markText({ line: i, ch: match[1].length }, { line: i, ch: match[1].length + 1 }, { className: 'cm-question-colon' });
+                continue;
             }
 
-            match = lineText.match(/^(\*?)([A-Z])(\.)/i);
+            match = lineText.match(/^(\s*)(\*?)([A-Z])(\.)/i);
              if (match) {
-                  let start = 0;
-                  if (match[1]) {
-                      cm.markText({ line: i, ch: 0 }, { line: i, ch: 1 }, { className: 'cm-correct-marker' });
-                      start = 1;
+                  const leadingSpace = match[1].length;
+                  let start = leadingSpace;
+                  if (match[2]) {
+                      cm.markText({ line: i, ch: start }, { line: i, ch: start + 1 }, { className: 'cm-correct-marker' });
+                      start += 1;
                   }
                  cm.markText({ line: i, ch: start }, { line: i, ch: start + 1 }, { className: 'cm-option-letter' });
                  cm.markText({ line: i, ch: start + 1 }, { line: i, ch: start + 2 }, { className: 'cm-option-dot' });
+                 continue;
+             }
+
+             match = lineText.match(/^(\s*)(\*?)([a-z])(\))/i);
+             if (match) {
+                  const leadingSpace = match[1].length;
+                  let start = leadingSpace;
+                  if (match[2]) {
+                      cm.markText({ line: i, ch: start }, { line: i, ch: start + 1 }, { className: 'cm-correct-marker' });
+                      start += 1;
+                  }
+                 cm.markText({ line: i, ch: start }, { line: i, ch: start + 1 }, { className: 'cm-tf-option-letter' });
+                 cm.markText({ line: i, ch: start + 1 }, { line: i, ch: start + 2 }, { className: 'cm-tf-option-paren' });
+                 continue;
              }
 
              match = lineText.match(/(\[\s*\d+\s*pts?\s*\])/i);
-             if (match) {
-                 const startIndex = lineText.indexOf(match[1]);
-                 cm.markText({ line: i, ch: startIndex }, { line: i, ch: startIndex + match[1].length }, { className: 'cm-points-marker' });
+             if (match && trimmedLine.match(/^\[\s*\d+\s*pts?\s*\]$/i)) {
+                 const leadingSpace = match[1].length;
+                 cm.markText({ line: i, ch: leadingSpace }, { line: i, ch: leadingSpace + match[2].length }, { className: 'cm-points-marker' });
+                 continue;
              }
 
-             match = lineText.match(/^(Answer:)/i);
+             match = lineText.match(/^(\s*)(Answer:)/i);
              if (match) {
-                 cm.markText({ line: i, ch: 0 }, { line: i, ch: match[1].length }, { className: 'cm-answer-prefix' });
+                 const leadingSpace = match[1].length;
+                 cm.markText({ line: i, ch: leadingSpace }, { line: i, ch: leadingSpace + match[2].length }, { className: 'cm-answer-prefix' });
              }
         }
     });
