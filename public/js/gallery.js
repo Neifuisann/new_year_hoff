@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadImages() {
         try {
             galleryContent.classList.add('loading');
-            galleryContent.innerHTML = '<div class="loading-indicator">Loading images...</div>';
+            
+            // Clear any existing content and add loading indicator
+            galleryContent.innerHTML = '<div class="loading-indicator">Đang tải ảnh...</div>';
             
             const response = await fetch('/api/gallery-images');
             
@@ -35,16 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Filter out any undefined or invalid image paths
             images = images.filter(img => img && typeof img === 'string');
             
+            // Clear loading indicator
+            galleryContent.innerHTML = '';
+            
             if (images.length > 0) {
                 showImage(currentImageIndex);
                 createPreviewStrip();
             } else {
-                galleryContent.innerHTML = '<div class="error-message">No images available</div>';
+                galleryContent.innerHTML = '<div class="error-message">Không có ảnh nào</div>';
             }
             updateCounter();
         } catch (error) {
-            console.error('Error loading images:', error);
-            galleryContent.innerHTML = `<div class="error-message">Error loading images: ${error.message}</div>`;
+            console.error('Lỗi tải ảnh:', error);
+            galleryContent.innerHTML = `<div class="error-message">Lỗi tải ảnh: ${error.message}</div>`;
         } finally {
             galleryContent.classList.remove('loading');
         }
@@ -103,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('No image found at index:', index);
             return;
         }
+        
+        // Clear any loading or error messages first
+        const loadingIndicator = galleryContent.querySelector('.loading-indicator');
+        const errorMessage = galleryContent.querySelector('.error-message');
+        if (loadingIndicator) loadingIndicator.remove();
+        if (errorMessage) errorMessage.remove();
         
         isTransitioning = true;
         const oldImg = galleryContent.querySelector('img');
