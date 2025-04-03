@@ -48,8 +48,12 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { 
+        // Allow non-secure cookies during development but secure in production
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+        // Set domain if needed for cross-domain issues
+        // domain: process.env.NODE_ENV === 'production' ? '.yourdomain.com' : undefined
     }
 }));
 
@@ -62,9 +66,22 @@ const adminCredentials = {
 
 // Middleware to protect admin routes
 const requireAuth = (req, res, next) => {
+    console.log('Auth check - Session:', { 
+        isAuthenticated: req.session.isAuthenticated,
+        hasSession: !!req.session,
+        sessionID: req.sessionID
+    });
+    
     if (req.session.isAuthenticated) {
+        console.log('Admin authenticated, proceeding to route');
         next();
     } else {
+        console.log('Admin authentication failed, redirecting to login');
+        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+            // For API requests, return JSON response
+            return res.status(401).json({ error: 'Authentication required' });
+        }
+        // For browser requests, redirect to login
         res.redirect('/admin/login');
     }
 };
@@ -134,14 +151,214 @@ app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(path.join(process
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     
-    if (username === adminCredentials.username &&
-        await bcrypt.compare(password, adminCredentials.password)) {
-        req.session.isAuthenticated = true;
+    console.log('Admin login attempt:', { username });
+    
+    try {
+        if (!username || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Missing username or password' 
+            });
+        }
+        
+        const credentialsMatch = username === adminCredentials.username &&
+            await bcrypt.compare(password, adminCredentials.password);
+            
+        if (credentialsMatch) {
+            // Set authentication in session
+            req.session.isAuthenticated = true;
+            
+            // Clear any student-related session data
+            delete req.session.studentId;
+            delete req.session.studentName;
+            
+            // Save session explicitly to ensure it's stored
+            req.session.save(err => {
+                if (err) {
+                    console.error('Session save error:', err);
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Session error' 
+                    });
+                }
+                
+                console.log('Admin login successful');
+                return res.json({ 
+                    success: true,
+                    message: 'Login successful'
+                });
+            });
+        } else {
+            console.log('Admin login failed: invalid credentials');
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Invalid credentials'
+            });
+        }
+    } catch (error) {
+        console.error('Admin login error:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Internal server error'
+        });
+    }
+});
+
+// Student registration endpoint
+app.post('/api/register', async (req, res) => {
+    const { full_name, date_of_birth, phone_number, password } = req.body;
+    
+    if (!full_name || !phone_number || !password) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+    
+    try {
+        // Check if phone number is already registered
+        const { data: existingUser, error: checkError } = await supabase
+            .from('students')
+            .select('id')
+            .eq('phone_number', phone_number)
+            .maybeSingle();
+            
+        if (checkError) {
+            console.error('Error checking for existing user:', checkError);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+        
+        if (existingUser) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Số điện thoại này đã được đăng ký. Vui lòng sử dụng số điện thoại khác.' 
+            });
+        }
+        
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Create new student record
+        const { data: newStudent, error: insertError } = await supabase
+            .from('students')
+            .insert({
+                full_name,
+                phone_number,
+                date_of_birth,
+                password: hashedPassword,
+                is_approved: false,
+                created_at: new Date().toISOString()
+            })
+            .select('id')
+            .single();
+        
+        if (insertError) {
+            console.error('Error inserting new student:', insertError);
+            return res.status(500).json({ success: false, message: 'Failed to create account' });
+        }
+        
+        res.json({ 
+            success: true, 
+            message: 'Registration successful! Please wait for admin approval.'
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Student login endpoint
+app.post('/api/student/login', async (req, res) => {
+    const { phone_number, password, device_fingerprint } = req.body;
+    
+    if (!phone_number || !password) {
+        return res.status(400).json({ success: false, message: 'Missing phone number or password' });
+    }
+    
+    try {
+        // Check if student exists and is approved
+        const { data: student, error: fetchError } = await supabase
+            .from('students')
+            .select('id, full_name, password, is_approved, approved_device_fingerprint')
+            .eq('phone_number', phone_number)
+            .maybeSingle();
+            
+        if (fetchError) {
+            console.error('Error fetching student:', fetchError);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+        
+        if (!student) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Tài khoản không tồn tại.' 
+            });
+        }
+        
+        if (!student.is_approved) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Tài khoản của bạn đang chờ được giáo viên phê duyệt.' 
+            });
+        }
+        
+        // Verify password
+        const passwordMatch = await bcrypt.compare(password, student.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Mật khẩu không chính xác.' 
+            });
+        }
+        
+        // Check device fingerprint if already set
+        if (student.approved_device_fingerprint && 
+            student.approved_device_fingerprint !== device_fingerprint) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Bạn chỉ có thể đăng nhập từ thiết bị đã đăng ký trước đó.' 
+            });
+        }
+        
+        // If first login, store the device fingerprint
+        if (device_fingerprint && !student.approved_device_fingerprint) {
+            const { error: updateError } = await supabase
+                .from('students')
+                .update({ approved_device_fingerprint: device_fingerprint })
+                .eq('id', student.id);
+                
+            if (updateError) {
+                console.error('Error updating device fingerprint:', updateError);
+                // Continue anyway - this is not fatal
+            }
+        }
+        
+        // Set session
+        req.session.studentId = student.id;
+        req.session.studentName = student.full_name;
+        
+        res.json({ 
+            success: true, 
+            message: 'Đăng nhập thành công!',
+            student: { 
+                id: student.id, 
+                name: student.full_name 
+            }
+        });
+    } catch (error) {
+        console.error('Student login error:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Student logout endpoint
+app.post('/api/student/logout', (req, res) => {
+    try {
+        // Clear student session
         delete req.session.studentId;
         delete req.session.studentName;
-        res.json({ success: true });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid credentials' });
+        
+        res.json({ success: true, message: 'Đăng xuất thành công' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
 
