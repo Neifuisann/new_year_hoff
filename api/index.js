@@ -51,10 +51,12 @@ app.use(session({
     secret: 'your-secret-key', // Replace with a strong secret in production
     resave: false,
     saveUninitialized: false, // Don't save sessions until something is stored
+    name: 'connect.sid', // Explicitly set the default session cookie name
     cookie: { 
         secure: process.env.NODE_ENV === 'production', // Ensure cookies are sent only over HTTPS in production
         httpOnly: true, // Prevent client-side JS from accessing the cookie
         sameSite: 'lax', // Recommended for most cases to prevent CSRF
+        path: '/', // Ensure cookie is valid for all paths
         maxAge: 24 * 60 * 60 * 1000 // 1 day
         // Consider setting domain explicitly if needed
         // domain: process.env.NODE_ENV === 'production' ? '.yourdomain.com' : undefined
