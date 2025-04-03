@@ -410,15 +410,25 @@ function updatePreview(parsedQuestions) {
     });
 
     if (typeof renderMathInElement === 'function') {
-        renderMathInElement(previewContainer, {
-            delimiters: [
-                {left: "$$", right: "$$", display: true},
-                {left: "$", right: "$", display: false},
-                {left: "\\(", right: "\\)", display: false},
-                {left: "\\[", right: "\\]", display: true}
-            ],
-            throwOnError: false
-        });
+        try {
+             renderMathInElement(previewContainer, {
+                 delimiters: [
+                     {left: "$$", right: "$$", display: true},
+                     {left: "$", right: "$", display: false},
+                     {left: "\\(", right: "\\)", display: false},
+                     {left: "\\[", right: "\\]", display: true}
+                 ],
+                 throwOnError: false,
+             });
+             
+             const sourceScripts = previewContainer.querySelectorAll('script[type^="math/tex"]');
+             sourceScripts.forEach(script => {
+                 script.style.display = 'none';
+             });
+             
+         } catch (error) {
+             console.error("KaTeX rendering failed:", error);
+         }
     }
 }
 
