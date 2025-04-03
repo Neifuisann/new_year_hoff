@@ -344,88 +344,112 @@ function parseQuizText(text) {
     return questions;
 }
 
+// Helper function to manually render LaTeX within an HTML string
+function renderLatexManually(htmlString) {
+    if (typeof katex === 'undefined') {
+        console.warn('KaTeX library not loaded, skipping manual rendering.');
+        return htmlString;
+    }
+
+    // Process block math ($$ ... $$)
+    htmlString = htmlString.replace(/\$\$(.*?)\$\$/gs, (match, latex) => {
+        try {
+            return katex.renderToString(latex.trim(), {
+                displayMode: true,
+                throwOnError: false
+            });
+        } catch (e) {
+            console.error("KaTeX block rendering error:", e);
+            return `<span style="color: red;" title="KaTeX Error: ${e.message}">[Block Math Error]</span>`;
+        }
+    });
+
+    // Process inline math ($ ... $)
+    // Need to be careful not to match across HTML tags or within attributes
+    // This regex is basic and might need refinement for complex HTML
+    htmlString = htmlString.replace(/\$(?!\$)(.*?)(?!\$)\$/g, (match, latex) => {
+        // Avoid rendering if latex seems empty or part of an HTML tag/attribute
+        if (!latex.trim() || latex.includes('<') || latex.includes('>')) {
+            return match; // Return original match if likely invalid
+        }
+        try {
+            return katex.renderToString(latex.trim(), {
+                displayMode: false,
+                throwOnError: false
+            });
+        } catch (e) {
+            console.error("KaTeX inline rendering error:", e);
+            return `<span style="color: red;" title="KaTeX Error: ${e.message}">[Inline Math Error]</span>`;
+        }
+    });
+
+    return htmlString;
+}
+
 function updatePreview(parsedQuestions) {
     const previewContainer = document.getElementById('realtime-preview');
     if (!previewContainer) return;
 
-    previewContainer.innerHTML = '';
+    let generatedHtml = ''; // Build HTML in a string first
 
     if (!parsedQuestions || parsedQuestions.length === 0) {
-        previewContainer.innerHTML = '<p data-i18n="previewPlaceholder">Enter questions in the editor...</p>';
-        return;
+        generatedHtml = '<p data-i18n="previewPlaceholder">Enter questions in the editor...</p>';
+    } else {
+        parsedQuestions.forEach((q, index) => {
+            const questionIndex = index;
+            let questionHtmlContent = ''; // Build content for this question
+
+            if (q.type === 'invalid') {
+                questionHtmlContent = '<div class="preview-question invalid">Invalid Question Format</div>';
+            } else {
+                // Start question container
+                questionHtmlContent += `<div class="preview-question" onclick="scrollToQuestion(${questionIndex})" style="cursor: pointer;">`;
+                
+                const questionTextHtml = q.question.replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Question Image" class="preview-image">').replace(/\n/g, '<br>');
+                questionHtmlContent += `<div class="preview-question-header"><span class="q-number">Câu ${index + 1}:</span><span class="q-text">${questionTextHtml}</span></div>`;
+
+                if (q.type === 'abcd' && q.options.length > 0) {
+                    questionHtmlContent += `<ul class="preview-options abcd">`;
+                    q.options.forEach((opt, optIndex) => {
+                        const letter = String.fromCharCode(65 + optIndex);
+                        const isCorrect = String(q.correct).toUpperCase() === letter.toUpperCase();
+                        const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
+                        questionHtmlContent += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markAnswerCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to mark as correct">\n                                            <span class="option-letter">${letter}.</span> \n                                            <span class="option-text">${optionTextHtml}</span>\n                                         </li>`;
+                    });
+                    questionHtmlContent += `</ul>`;
+                } else if (q.type === 'number') {
+                     questionHtmlContent += `<div class="preview-answer">Answer: <span>${q.correct}</span></div>`;
+                } else if (q.type === 'truefalse') {
+                     questionHtmlContent += `<ul class="preview-options truefalse">`;
+                     if (Array.isArray(q.correct) && q.options.length === q.correct.length) {
+                         q.options.forEach((opt, optIndex) => {
+                             const letter = String.fromCharCode(97 + optIndex);
+                             const isCorrect = q.correct[optIndex] === true;
+                             const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
+                             questionHtmlContent += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markTrueFalseCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to toggle correctness">\n                                                <span class="option-letter">${letter})</span> \n                                                <span class="option-text">${optionTextHtml}</span>\n                                             </li>`;
+                         });
+                     } else {
+                          questionHtmlContent += `<li>Error: Options and correct answers mismatch.</li>`;
+                          console.error(`Preview Error: Question ${index+1} (True/False) options/correct mismatch`, q);
+                     }
+                     questionHtmlContent += `</ul>`;
+                }
+                
+                if (q.points > 1) {
+                     questionHtmlContent += `<div class="preview-points">[${q.points} pts]</div>`;
+                }
+
+                questionHtmlContent += `</div>`; // End question container
+            }
+             generatedHtml += questionHtmlContent; // Add this question's HTML to the total
+        });
     }
 
-    parsedQuestions.forEach((q, index) => {
-        const questionIndex = index;
-        const questionElement = document.createElement('div');
-        questionElement.className = `preview-question ${q.type === 'invalid' ? 'invalid' : ''}`;
-        questionElement.onclick = () => scrollToQuestion(questionIndex);
-        questionElement.style.cursor = 'pointer';
+    // Manually render LaTeX within the generated HTML string
+    const finalHtml = renderLatexManually(generatedHtml);
 
-        if (q.type === 'invalid') {
-            questionElement.textContent = 'Invalid Question Format';
-            previewContainer.appendChild(questionElement);
-            return;
-        };
-
-        const questionHtml = q.question.replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Question Image" class="preview-image">');
-
-        let contentHTML = `<div class="preview-question-header"><span class="q-number">Câu ${index + 1}:</span><span class="q-text">${questionHtml.replace(/\n/g, '<br>')}</span></div>`;
-
-        if (q.type === 'abcd' && q.options.length > 0) {
-            contentHTML += `<ul class="preview-options abcd">`;
-            q.options.forEach((opt, optIndex) => {
-                const letter = String.fromCharCode(65 + optIndex);
-                const isCorrect = String(q.correct).toUpperCase() === letter.toUpperCase();
-                const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
-
-                contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markAnswerCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to mark as correct">\n                                    <span class="option-letter">${letter}.</span> \n                                    <span class="option-text">${optionTextHtml}</span>\n                                </li>`;
-            });
-            contentHTML += `</ul>`;
-        } else if (q.type === 'number') {
-             contentHTML += `<div class="preview-answer">Answer: <span>${q.correct}</span></div>`;
-        } else if (q.type === 'truefalse') {
-             contentHTML += `<ul class="preview-options truefalse">`;
-             if (Array.isArray(q.correct) && q.options.length === q.correct.length) {
-                 q.options.forEach((opt, optIndex) => {
-                     const letter = String.fromCharCode(97 + optIndex);
-                     const isCorrect = q.correct[optIndex] === true;
-                     const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
-
-                     contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markTrueFalseCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to toggle correctness">\n                                        <span class="option-letter">${letter})</span> \n                                        <span class="option-text">${optionTextHtml}</span>\n                                     </li>`;
-                 });
-             } else {
-                  contentHTML += `<li>Error: Options and correct answers mismatch.</li>`;
-                  console.error(`Preview Error: Question ${index+1} (True/False) options/correct mismatch`, q);
-             }
-             contentHTML += `</ul>`;
-        }
-        
-        if (q.points > 1) {
-             contentHTML += `<div class="preview-points">[${q.points} pts]</div>`;
-        }
-
-        questionElement.innerHTML = contentHTML;
-        previewContainer.appendChild(questionElement);
-    });
-
-    // Render Math using KaTeX
-    if (typeof renderMathInElement === 'function') {
-        try {
-             renderMathInElement(previewContainer, {
-                 delimiters: [
-                     {left: "$$", right: "$$", display: true},
-                     {left: "$", right: "$", display: false},
-                     {left: "\\(", right: "\\)", display: false},
-                     {left: "\\[", right: "\\]", display: true}
-                 ],
-                 throwOnError: false,
-             });
-             
-         } catch (error) {
-             console.error("KaTeX rendering failed:", error);
-         }
-    }
+    // Set the final HTML to the container
+    previewContainer.innerHTML = finalHtml;
 }
 
 function applySyntaxHighlighting(cm) {
