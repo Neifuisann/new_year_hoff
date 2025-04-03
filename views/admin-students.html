@@ -80,9 +80,16 @@
     
     async function fetchPendingStudents() {
         try {
-            const response = await fetch('/api/admin/unapproved-students');
+            const response = await fetch('/api/admin/unapproved-students', {
+                credentials: 'include'
+            });
             if (!response.ok) {
-                throw new Error('Failed to fetch pending students');
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return [];
+                }
+                throw new Error(`Server responded with ${response.status}`);
             }
             pendingStudents = await response.json();
             return pendingStudents;
@@ -95,9 +102,16 @@
     
     async function fetchApprovedStudents() {
         try {
-            const response = await fetch('/api/admin/approved-students');
+            const response = await fetch('/api/admin/approved-students', {
+                credentials: 'include'
+            });
             if (!response.ok) {
-                throw new Error('Failed to fetch approved students');
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return [];
+                }
+                throw new Error(`Server responded with ${response.status}`);
             }
             approvedStudents = await response.json();
             return approvedStudents;
@@ -199,10 +213,16 @@
         showLoader(true);
         try {
             const response = await fetch(`/api/admin/approve-student/${studentId}`, {
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include'
             });
             
             if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return;
+                }
                 throw new Error('Failed to approve student');
             }
             
@@ -210,7 +230,6 @@
             
             if (result.success) {
                 alert('Đã duyệt học sinh thành công.');
-                // Reload data
                 loadData();
             } else {
                 alert('Lỗi khi duyệt học sinh: ' + (result.message || 'Không rõ lỗi.'));
@@ -231,10 +250,16 @@
         showLoader(true);
         try {
             const response = await fetch(`/api/admin/reject-student/${studentId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             });
             
             if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return;
+                }
                 throw new Error('Failed to reject student');
             }
             
@@ -242,7 +267,6 @@
             
             if (result.success) {
                 alert('Đã từ chối yêu cầu đăng ký.');
-                // Reload data
                 loadData();
             } else {
                 alert('Lỗi khi từ chối yêu cầu: ' + (result.message || 'Không rõ lỗi.'));

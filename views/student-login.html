@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Đăng nhập Học sinh</title>
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Include FingerprintJS - Consider downloading or using npm -->
-    <script async src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
+    <!-- Include locally hosted FingerprintJS -->
+    <script async src="/js/fp.min.js"></script>
 </head>
 <body>
     <a href="/" class="home-button">
@@ -39,6 +39,12 @@
         // Initialize FingerprintJS
         async function getVisitorId() {
             if (!visitorId) {
+                if (typeof FingerprintJS === 'undefined') {
+                    console.error('FingerprintJS library not loaded. Possible browser extension block.');
+                    document.getElementById('login-error').textContent = 'Lỗi tải thư viện định danh thiết bị. Vui lòng kiểm tra tiện ích chặn quảng cáo/theo dõi và thử lại.';
+                    document.getElementById('login-error').style.display = 'block';
+                    return null; // Indicate critical failure
+                }
                 try {
                     const fpPromise = FingerprintJS.load();
                     const fp = await fpPromise;
@@ -57,7 +63,7 @@
         }
         
         // Call it once on load to start the process
-        getVisitorId();
+        // getVisitorId(); 
 
         async function handleStudentLogin(event) {
             event.preventDefault();
@@ -67,12 +73,16 @@
             loginButton.disabled = true;
             loginButton.textContent = 'Đang đăng nhập...';
 
-            const currentVisitorId = await getVisitorId();
-            if (!currentVisitorId && FingerprintJS) { // Check if fingerprinting failed but library exists
+            const currentVisitorId = await getVisitorId(); // Now it's called here
+            
+            if (!currentVisitorId) { 
                  loginButton.disabled = false;
                  loginButton.textContent = 'Đăng nhập';
-                 errorMessageDiv.textContent = 'Lỗi lấy thông tin thiết bị. Không thể đăng nhập.';
-                 errorMessageDiv.style.display = 'block';
+                 // Error message is already set by getVisitorId if FingerprintJS is missing or errored
+                 if (!errorMessageDiv.textContent) { // Set a generic message if not already set
+                    errorMessageDiv.textContent = 'Lỗi lấy thông tin thiết bị. Không thể đăng nhập.';
+                    errorMessageDiv.style.display = 'block';
+                 }
                  return; // Stop login if fingerprint is essential and failed
             }
 

@@ -82,11 +82,17 @@ const requireAuth = (req, res, next) => {
         next();
     } else {
         console.log('Admin authentication failed, redirecting to login');
-        if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        // Check if the request likely originated from a fetch() call
+        const isApiRequest = req.headers.accept && req.headers.accept.includes('application/json') 
+                           || req.headers['x-requested-with'] === 'XMLHttpRequest';
+                           
+        if (isApiRequest) {
             // For API requests, return JSON response
+            console.log('Auth failed for API request, sending 401 JSON');
             return res.status(401).json({ error: 'Authentication required' });
         }
         // For browser requests, redirect to login
+        console.log('Auth failed for browser request, redirecting to /admin/login');
         res.redirect('/admin/login');
     }
 };
