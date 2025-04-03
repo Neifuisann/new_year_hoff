@@ -127,13 +127,30 @@ async function renderQuestions(lesson) {
             let questionHtml = `
                 <div class="question" data-question-index="${questionIndex}">
                     <p><strong>Câu ${index + 1}.</strong></p>
-                    <p>${q.question}</p>
             `;
 
-            if (q.image) {
+            // --- START IMAGE PARSING ---
+            let imageUrl = null;
+            const imgRegex = /\[img\s+src="([^"]+)"\]/i;
+            const match = q.question.match(imgRegex);
+
+            if (match && match[1]) {
+                imageUrl = match[1];
+                // Remove the placeholder from the question text
+                q.question = q.question.replace(imgRegex, '').trim();
+            } else if (q.image) {
+                // Fallback to existing q.image if no placeholder found
+                imageUrl = q.image;
+            }
+
+            // Add question text *after* potentially modifying it
+            questionHtml += `<p>${q.question}</p>`;
+            // --- END IMAGE PARSING ---
+
+            if (imageUrl) { // Check if we have an image URL from either source
                 questionHtml += `
                     <div class="question-image-container">
-                        <img src="${q.image}" alt="Question Image" style="max-width: 100%; margin: 10px 0;">
+                        <img src="${imageUrl}" alt="Question Image" style="max-width: 100%; margin: 10px 0;">
                     </div>
                 `;
             }
