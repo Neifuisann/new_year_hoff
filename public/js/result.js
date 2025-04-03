@@ -160,34 +160,58 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
     button.disabled = true;
     
     try {
-        const response = await fetch('/api/explain', {
+        // Decode the URL-encoded parameters
+        const decodedQuestion = decodeURIComponent(button.dataset.question);
+        const decodedUserAnswer = decodeURIComponent(button.dataset.userAnswer);
+        const decodedCorrectAnswer = decodeURIComponent(button.dataset.correctAnswer);
+        
+        // Direct API call to Google Gemini API
+        const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc"; // This is the same key from server-side
+        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent";
+        
+        const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json; charset=utf-8',
+            headers: {
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ 
-                question: decodeURIComponent(button.dataset.question), 
-                userAnswer: decodeURIComponent(button.dataset.userAnswer), 
-                correctAnswer: decodeURIComponent(button.dataset.correctAnswer) 
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:
+Question: ${decodedQuestion}
+User's answer: ${decodedUserAnswer}
+Correct answer: ${decodedCorrectAnswer}`
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 64,
+                    topP: 0.95,
+                    maxOutputTokens: 8192
+                }
             })
         });
         
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('Gemini API error:', {
+                status: response.status,
+                statusText: response.statusText,
+                body: errorData
+            });
+            throw new Error(`API responded with status: ${response.status} - ${response.statusText}`);
+        }
+        
         const data = await response.json();
         
-        if (!response.ok) {
-            throw new Error(data.details || data.error || 'Failed to get explanation');
+        if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+            console.error('Invalid Gemini API response format:', data);
+            throw new Error('Invalid response format from Gemini API');
         }
         
-        if (!data.explanation) {
-            throw new Error('Invalid response format');
-        }
-
-        const decoder = new TextDecoder('utf-8');
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(data.explanation);
-        const decodedExplanation = decoder.decode(bytes);
-
-        const htmlContent = marked.parse(decodedExplanation);
+        const explanationText = data.candidates[0].content.parts[0].text;
+        const htmlContent = marked.parse(explanationText);
+        
         explanationContent.innerHTML = htmlContent;
         explanationContent.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightBlock(block);
@@ -195,7 +219,7 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
         explanationContent.dataset.loaded = 'true';
         button.innerHTML = '<i class="fas fa-times"></i><span>Ẩn giải thích</span>';
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error getting explanation:', error);
         explanationContent.innerHTML = `
             <div class="error-message">
                 <i class="fas fa-exclamation-circle"></i>
