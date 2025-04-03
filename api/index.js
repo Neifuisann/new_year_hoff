@@ -23,6 +23,22 @@ app.use((req, res, next) => {
     next();
 });
 
+// Middleware to inject Vercel Analytics
+app.use((req, res, next) => {
+    const originalSend = res.send;
+    
+    res.send = function(body) {
+        // Only inject analytics into HTML responses
+        if (typeof body === 'string' && body.includes('</html>')) {
+            // Inject the Vercel Analytics script right before the closing body tag
+            body = body.replace('</body>', `<script defer src="/_vercel/insights/script.js"></script></body>`);
+        }
+        return originalSend.call(this, body);
+    };
+    
+    next();
+});
+
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
@@ -119,7 +135,7 @@ app.get('/api/lessons', async (req, res) => {
         // --- Build Supabase Query ---
         let query = supabase
             .from('lessons')
-            .select('*', { count: 'exact' }); // Get total count matching filters
+            .select('id, title, color, created, lastUpdated, views, order, subject, grade, tags, description, purpose, pricing, lessonImage, randomQuestions', { count: 'exact' }); // Explicitly select fields, excluding 'questions'
 
         // Apply Search Filter (if provided)
         if (search) {

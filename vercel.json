@@ -2,6 +2,10 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/_vercel/insights/(.*)",
+      "destination": "/_vercel/insights/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/api"
     }

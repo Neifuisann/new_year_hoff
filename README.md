@@ -84,6 +84,25 @@ After setting up the dependencies and configuration, start the application using
   docker-compose up
   ```
 
+## Analytics
+
+This project uses Vercel Web Analytics to provide insights about website visitors and page interactions. The analytics script is automatically injected into all HTML responses by a middleware in the Express application.
+
+### Features
+- Page view tracking
+- Visitor insights
+- Performance monitoring
+- Privacy-focused (no cookies needed)
+
+### How It Works
+The Express middleware automatically injects the Vercel Analytics script before the closing `</body>` tag in all HTML responses. This script is loaded from `/_vercel/insights/script.js`, which is provided by Vercel's infrastructure.
+
+### Viewing Analytics Data
+To view analytics data:
+1. Go to your Vercel dashboard
+2. Select your project
+3. Click on the Analytics tab
+
 ## Development Workflow
 
 For those who wish to contribute:
