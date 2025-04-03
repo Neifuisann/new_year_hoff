@@ -242,10 +242,6 @@ async function checkStudentAuthentication() {
 
         if (authData.isAuthenticated && authData.student) {
             console.log('Student authenticated:', authData.student.name);
-            // Display student name and logout button
-            document.getElementById('student-name-display').textContent = `Chào, ${authData.student.name}!`;
-            document.getElementById('student-info-area').style.display = 'flex'; // Use flex for better alignment
-            document.getElementById('logout-button').addEventListener('click', handleLogout);
             return true; // Authenticated
         } else {
             // Not authenticated, redirect to login
