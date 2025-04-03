@@ -296,7 +296,7 @@ app.post('/api/student/login', async (req, res) => {
         // Check if student exists and is approved
         const { data: student, error: fetchError } = await supabase
             .from('students')
-            .select('id, full_name, password, is_approved, approved_device_fingerprint')
+            .select('id, full_name, password_hash, is_approved, approved_device_fingerprint')
             .eq('phone_number', phone_number)
             .maybeSingle();
             
@@ -319,8 +319,8 @@ app.post('/api/student/login', async (req, res) => {
             });
         }
         
-        // Verify password
-        const passwordMatch = await bcrypt.compare(password, student.password);
+        // Verify password using the correct hash field
+        const passwordMatch = await bcrypt.compare(password, student.password_hash);
         if (!passwordMatch) {
             return res.status(401).json({ 
                 success: false, 
