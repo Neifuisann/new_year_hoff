@@ -778,7 +778,7 @@ app.get('/api/check-auth', (req, res) => {
 });
 
 app.get('/api/gallery-images', (req, res) => {
-    const imagesDir = path.join(__dirname, 'public', 'lesson_images');
+    const imagesDir = path.join(__dirname, '..', 'public', 'lesson_images');
     try {
         if (!fs.existsSync(imagesDir)) {
             fs.mkdirSync(imagesDir, { recursive: true });

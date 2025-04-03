@@ -17,16 +17,34 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadImages() {
         try {
             galleryContent.classList.add('loading');
+            galleryContent.innerHTML = '<div class="loading-indicator">Loading images...</div>';
+            
             const response = await fetch('/api/gallery-images');
+            
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            }
+            
             images = await response.json();
+            
+            if (!Array.isArray(images)) {
+                console.error('Server returned non-array data:', images);
+                throw new Error('Invalid data format received from server');
+            }
+            
+            // Filter out any undefined or invalid image paths
+            images = images.filter(img => img && typeof img === 'string');
+            
             if (images.length > 0) {
                 showImage(currentImageIndex);
                 createPreviewStrip();
+            } else {
+                galleryContent.innerHTML = '<div class="error-message">No images available</div>';
             }
             updateCounter();
         } catch (error) {
             console.error('Error loading images:', error);
-            galleryContent.innerHTML = '<div style="color: red;">Error loading images</div>';
+            galleryContent.innerHTML = `<div class="error-message">Error loading images: ${error.message}</div>`;
         } finally {
             galleryContent.classList.remove('loading');
         }
@@ -74,6 +92,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function showImage(index, direction = 'next') {
         if (images.length === 0 || isTransitioning) return;
         
+        // Validate index is within bounds
+        if (index < 0 || index >= images.length) {
+            console.error('Invalid image index:', index);
+            return;
+        }
+        
+        // Ensure image exists at this index
+        if (!images[index]) {
+            console.error('No image found at index:', index);
+            return;
+        }
+        
         isTransitioning = true;
         const oldImg = galleryContent.querySelector('img');
         const img = document.createElement('img');
@@ -81,6 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
         img.alt = `Gallery image ${index + 1}`;
         img.style.opacity = '0';
         img.style.transform = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
+        
+        // Add error handling for image loading
+        img.onerror = function() {
+            console.error('Failed to load image:', images[index]);
+            img.src = '/images/lesson1.jpg'; // Fallback to an existing image
+            img.alt = 'Image not available';
+        };
         
         if (oldImg) {
             oldImg.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
@@ -97,9 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         img.style.opacity = '1';
         
         img.addEventListener('click', () => {
-            modalImage.src = images[index];
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            if (modalImage && images[index]) {
+                modalImage.src = images[index];
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         });
         
         // Remove old image after transition

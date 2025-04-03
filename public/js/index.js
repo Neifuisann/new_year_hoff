@@ -88,7 +88,7 @@ function renderTagsList() {
     
     // Add heading
     const heading = document.createElement('h3');
-    heading.textContent = 'Popular Tags';
+    heading.textContent = 'Tags phổ biến';
     tagsContainer.appendChild(heading);
     
     const tagsList = document.createElement('div');
