@@ -180,7 +180,7 @@ app.post('/api/login', async (req, res) => {
             
         if (credentialsMatch) {
             // Set authentication in session
-            req.session.isAuthenticated = true;
+        req.session.isAuthenticated = true;
             
             // Clear any student-related session data
             delete req.session.studentId;
@@ -202,7 +202,7 @@ app.post('/api/login', async (req, res) => {
                     message: 'Login successful'
                 });
             });
-        } else {
+    } else {
             console.log('Admin login failed: invalid credentials');
             return res.status(401).json({ 
                 success: false, 
@@ -256,7 +256,7 @@ app.post('/api/register', async (req, res) => {
                 full_name,
                 phone_number,
                 date_of_birth,
-                password: hashedPassword,
+                password_hash: hashedPassword,
                 is_approved: false,
                 created_at: new Date().toISOString()
             })
@@ -811,7 +811,7 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
             const normalizedScore = Math.max(0, Math.min(100, scorePercent));
             const rangeIndex = normalizedScore === 100 ? 9 : Math.floor(normalizedScore / 10);
             if (rangeIndex >= 0 && rangeIndex < distribution.length) {
-                 distribution[rangeIndex]++;
+            distribution[rangeIndex]++;
             } else {
                 console.warn(`Calculated invalid range index ${rangeIndex} for score ${normalizedScore}`);
             }

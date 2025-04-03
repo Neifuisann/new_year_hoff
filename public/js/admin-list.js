@@ -326,13 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize event listener for the review lesson form
     const form = document.getElementById('review-lesson-form');
     if (form) {
-        form.addEventListener('submit', handleReviewLessonSubmit);
-    }
-
-    // Add event listener for the admin logout button
-    const logoutButton = document.getElementById('admin-logout-button');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', adminLogout);
+        // form.addEventListener('submit', handleReviewLessonSubmit); // Commented out as function is not defined yet
     }
 });
 
@@ -373,19 +367,3 @@ function removeReviewRow(button) {
     // Implementation of removeReviewRow
 }
 
-// Logout function
-async function adminLogout() {
-    try {
-        const response = await fetch('/api/admin/logout', { method: 'POST' });
-        const result = await response.json();
-        if (result.success) {
-            console.log('Admin logout successful');
-            window.location.href = '/admin/login'; // Redirect to admin login page
-        } else {
-            alert('Logout failed: ' + (result.message || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Admin logout error:', error);
-        alert('An error occurred during logout.');
-    }
-}
