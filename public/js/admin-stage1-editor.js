@@ -97,34 +97,45 @@ function initializeEditor(initialContent) {
                     const lineContent = cm.getLine(cursor.line);
                     const trimmedLine = lineContent.trim();
 
-                    const optionMatch = trimmedLine.match(/^(\*?)([A-Z])(\.)/i);
+                    const abcdOptionMatch = trimmedLine.match(/^(\*?)([A-Z])(\.)/i);
+                    const trueFalseOptionMatch = trimmedLine.match(/^(\*?)([a-z])(\))/i);
                     const questionMatch = trimmedLine.match(/^Câu\s*\d+\s*:/i);
 
                     let nextLinePrefix = '';
 
-                    if (optionMatch) {
-                        const currentLetter = optionMatch[2].toUpperCase();
+                    if (abcdOptionMatch) {
+                        const currentLetter = abcdOptionMatch[2].toUpperCase();
                         if (currentLetter < 'D') {
                             nextLinePrefix = String.fromCharCode(currentLetter.charCodeAt(0) + 1) + '. ';
                         } else {
                             nextLinePrefix = '\n';
                         }
+                    } else if (trueFalseOptionMatch) {
+                        const currentLetter = trueFalseOptionMatch[2].toLowerCase();
+                        nextLinePrefix = String.fromCharCode(currentLetter.charCodeAt(0) + 1) + ') ';
                     } else if (questionMatch) {
                         nextLinePrefix = 'A. ';
                     } else if (cursor.line > 0) {
                          const prevLineContent = cm.getLine(cursor.line - 1)?.trim();
-                         if (prevLineContent?.match(/^(\*?)[A-D]\.\s*/i)) {
-                              const prevOptionMatch = prevLineContent.match(/^(\*?)([A-Z])\.\s*/i);
-                              if (prevOptionMatch) {
-                                  const prevLetter = prevOptionMatch[2].toUpperCase();
-                                   if (prevLetter < 'D') {
-                                       nextLinePrefix = String.fromCharCode(prevLetter.charCodeAt(0) + 1) + '. ';
-                                   } else {
-                                        nextLinePrefix = '\n';
-                                   }
-                              }
-                         } else if (prevLineContent?.match(/^Câu\s*\d+\s*:/i) || prevLineContent?.match(/^\[\d+\s*pts?\s*\]$/i)) {
-                             nextLinePrefix = 'A. ';
+                         if (prevLineContent) {
+                             const prevAbcdMatch = prevLineContent.match(/^(\*?)([A-Z])\.\s*/i);
+                             const prevTrueFalseMatch = prevLineContent.match(/^(\*?)([a-z])\)\s*/i);
+                             const prevQuestionMatch = prevLineContent.match(/^Câu\s*\d+\s*:/i);
+                             const prevPointsMatch = prevLineContent.match(/^\[\d+\s*pts?\s*\]$/i);
+
+                             if (prevAbcdMatch) {
+                                 const prevLetter = prevAbcdMatch[2].toUpperCase();
+                                 if (prevLetter < 'D') {
+                                     nextLinePrefix = String.fromCharCode(prevLetter.charCodeAt(0) + 1) + '. ';
+                                 } else {
+                                     nextLinePrefix = '\n';
+                                 }
+                             } else if (prevTrueFalseMatch) {
+                                 const prevLetter = prevTrueFalseMatch[2].toLowerCase();
+                                 nextLinePrefix = String.fromCharCode(prevLetter.charCodeAt(0) + 1) + ') ';
+                             } else if (prevQuestionMatch || prevPointsMatch) {
+                                 nextLinePrefix = 'A. ';
+                             }
                          }
                     }
 
@@ -362,19 +373,32 @@ function updatePreview(parsedQuestions) {
         let contentHTML = `<div class="preview-question-header"><span class="q-number">Câu ${index + 1}:</span><span class="q-text">${questionHtml.replace(/\n/g, '<br>')}</span></div>`;
 
         if (q.type === 'abcd' && q.options.length > 0) {
-            contentHTML += `<ul class="preview-options">`;
+            contentHTML += `<ul class="preview-options abcd">`;
             q.options.forEach((opt, optIndex) => {
                 const letter = String.fromCharCode(65 + optIndex);
-                const isCorrect = String(q.correct).toLowerCase() === letter.toLowerCase();
+                const isCorrect = String(q.correct).toUpperCase() === letter.toUpperCase();
                 const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
-                
+
                 contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markAnswerCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to mark as correct">\n                                    <span class="option-letter">${letter}.</span> \n                                    <span class="option-text">${optionTextHtml}</span>\n                                </li>`;
             });
             contentHTML += `</ul>`;
         } else if (q.type === 'number') {
              contentHTML += `<div class="preview-answer">Answer: <span>${q.correct}</span></div>`;
         } else if (q.type === 'truefalse') {
-             contentHTML += `<p>(True/False preview not yet implemented)</p>`;
+             contentHTML += `<ul class="preview-options truefalse">`;
+             if (Array.isArray(q.correct) && q.options.length === q.correct.length) {
+                 q.options.forEach((opt, optIndex) => {
+                     const letter = String.fromCharCode(97 + optIndex);
+                     const isCorrect = q.correct[optIndex] === true;
+                     const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
+
+                     contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markTrueFalseCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to toggle correctness">\n                                        <span class="option-letter">${letter})</span> \n                                        <span class="option-text">${optionTextHtml}</span>\n                                     </li>`;
+                 });
+             } else {
+                  contentHTML += `<li>Error: Options and correct answers mismatch.</li>`;
+                  console.error(`Preview Error: Question ${index+1} (True/False) options/correct mismatch`, q);
+             }
+             contentHTML += `</ul>`;
         }
         
         if (q.points > 1) {
@@ -530,26 +554,71 @@ function markAnswerCorrect(questionIndex, optionIndex) {
     const targetOptionLineNum = question.options[optionIndex].line;
 
     if (targetOptionLineNum === -1 || targetOptionLineNum === undefined) {
-        console.error("Could not find line number for the selected option.");
-        return; 
+        console.error("Could not find line number for the selected ABCD option.");
+        return;
     }
 
     editor.operation(() => {
         question.options.forEach((opt, idx) => {
-             if (opt.line !== -1) {
+             if (opt.line !== -1 && opt.line !== undefined) {
                  const lineContent = editor.getLine(opt.line);
-                 if (lineContent?.startsWith('*')) {
-                     editor.replaceRange("", { line: opt.line, ch: 0 }, { line: opt.line, ch: 1 });
+                 if (lineContent?.trim().startsWith('*')) {
+                     const starPos = lineContent.indexOf('*');
+                     if (starPos !== -1) {
+                         editor.replaceRange("", { line: opt.line, ch: starPos }, { line: opt.line, ch: starPos + 1 });
+                     }
                  }
              }
         });
 
         const currentLine = editor.getLine(targetOptionLineNum);
-        if (currentLine && !currentLine.startsWith('*')) {
-             editor.replaceRange("*", { line: targetOptionLineNum, ch: 0 });
+        if (currentLine && !currentLine.trim().startsWith('*')) {
+            const insertPos = currentLine.search(/\S|$/);
+             editor.replaceRange("*", { line: targetOptionLineNum, ch: insertPos });
         }
     });
     
+    const updatedText = editor.getValue();
+    const updatedParsed = parseQuizText(updatedText);
+    updatePreview(updatedParsed);
+    applySyntaxHighlighting(editor);
+}
+
+function markTrueFalseCorrect(questionIndex, optionIndex) {
+    if (!editor) return;
+    const text = editor.getValue();
+    const lines = text.split('\n');
+    const parsedQuestions = parseQuizText(text);
+
+    if (questionIndex < 0 || questionIndex >= parsedQuestions.length) return;
+
+    const question = parsedQuestions[questionIndex];
+    if (question.type !== 'truefalse' || optionIndex < 0 || optionIndex >= question.options.length) return;
+
+    const targetOptionLineNum = question.options[optionIndex].line;
+
+    if (targetOptionLineNum === -1 || targetOptionLineNum === undefined) {
+        console.error("Could not find line number for the selected True/False option.");
+        return;
+    }
+
+    editor.operation(() => {
+        const currentLine = editor.getLine(targetOptionLineNum);
+        if (!currentLine) return;
+
+        const trimmedLine = currentLine.trim();
+        const insertPos = currentLine.search(/\S|$/);
+
+        if (trimmedLine.startsWith('*')) {
+            const starPos = currentLine.indexOf('*');
+             if (starPos !== -1) {
+                 editor.replaceRange("", { line: targetOptionLineNum, ch: starPos }, { line: targetOptionLineNum, ch: starPos + 1 });
+             }
+        } else {
+            editor.replaceRange("*", { line: targetOptionLineNum, ch: insertPos });
+        }
+    });
+
     const updatedText = editor.getValue();
     const updatedParsed = parseQuizText(updatedText);
     updatePreview(updatedParsed);
