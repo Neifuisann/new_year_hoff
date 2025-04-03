@@ -409,6 +409,7 @@ function updatePreview(parsedQuestions) {
         previewContainer.appendChild(questionElement);
     });
 
+    // Render Math using KaTeX
     if (typeof renderMathInElement === 'function') {
         try {
              renderMathInElement(previewContainer, {
@@ -419,11 +420,6 @@ function updatePreview(parsedQuestions) {
                      {left: "\\[", right: "\\]", display: true}
                  ],
                  throwOnError: false,
-             });
-             
-             const sourceScripts = previewContainer.querySelectorAll('script[type^="math/tex"]');
-             sourceScripts.forEach(script => {
-                 script.style.display = 'none';
              });
              
          } catch (error) {
