@@ -368,21 +368,28 @@ app.get('/api/history', requireAuth, async (req, res) => {
 app.post('/api/explain', async (req, res) => {
     const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc";
     const { question, userAnswer, correctAnswer } = req.body;
-    
+    const timeoutMs = 15000; // 15 second timeout for the API call
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
     try {
         console.log('Sending request to Gemini API with:', { question, userAnswer, correctAnswer });
-        
+
         const response = await fetch(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-01-21:generateContent?key=' + API_KEY,
             {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                 },
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:\nQuestion: ${question}\nUser's answer: ${userAnswer}\nCorrect answer: ${correctAnswer}`
+                            text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:
+Question: ${question}
+User's answer: ${userAnswer}
+Correct answer: ${correctAnswer}`
                         }]
                     }],
                     generationConfig: {
@@ -391,39 +398,76 @@ app.post('/api/explain', async (req, res) => {
                         topP: 0.95,
                         maxOutputTokens: 8192
                     }
-                }, null, 2)
+                }, null, 2),
+                signal: controller.signal // Add abort signal
             }
         );
 
+        clearTimeout(timeoutId); // Clear the timeout if fetch completes
+
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Gemini API error:', {
+            let errorBody = 'Could not read error body';
+            try {
+                errorBody = await response.text(); // Try to get error details from Gemini API
+            } catch (readError) {
+                console.error('Failed to read error body from Gemini API:', readError);
+            }
+            console.error('Gemini API request failed:', {
                 status: response.status,
                 statusText: response.statusText,
-                body: errorText
+                body: errorBody
             });
-            throw new Error(`API responded with status: ${response.status} - ${errorText}`);
+            // Send a more specific error back to the client
+            return res.status(response.status || 500).json({ 
+                error: 'Gemini API request failed', 
+                details: `API responded with status: ${response.status}`,
+                apiErrorBody: errorBody // Include API error body if available
+            });
         }
 
         const data = await response.json();
-        console.log('Received response from Gemini API:', data);
-        
-        if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
-            console.error('Invalid API response format:', data);
-            throw new Error('Invalid response format from API');
-        }
+        // It's good practice to log less in production, but keep detailed logs for debugging
+        // console.log('Received response from Gemini API:', JSON.stringify(data, null, 2));
 
-        const explanation = data.candidates[0].content.parts[0].text;
-        const buffer = Buffer.from(explanation, 'utf8');
-        const utf8Text = buffer.toString('utf8');
+        const explanationText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!explanationText) {
+            console.error('Invalid API response format:', data);
+             // Log the full invalid response for debugging
+            return res.status(500).json({ 
+                error: 'Invalid response format from API', 
+                details: 'Expected text explanation was not found in the response.',
+                apiResponse: data // Include the problematic API response
+            });
+        }
+        
+        // Ensure UTF-8 encoding - This buffer step might be redundant if headers are set correctly, 
+        // but kept for safety. res.json should handle encoding.
+        // const buffer = Buffer.from(explanationText, 'utf8');
+        // const utf8Text = buffer.toString('utf8');
 
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
-        res.json({ explanation: utf8Text });
+        res.json({ explanation: explanationText }); // Send the text directly
+
     } catch (error) {
-        console.error('Error in /api/explain:', error);
-        res.status(500).json({ 
+        clearTimeout(timeoutId); // Ensure timeout is cleared in case of error
+        
+        let errorDetails = error.message;
+        let statusCode = 500;
+
+        if (error.name === 'AbortError') {
+            console.error('Gemini API call timed out after', timeoutMs, 'ms');
+            errorDetails = `Gemini API request timed out after ${timeoutMs / 1000} seconds.`;
+            statusCode = 504; // Gateway Timeout
+        } else {
+             console.error('Error in /api/explain endpoint:', error);
+        }
+
+        // Ensure a JSON response is always sent on error
+        res.status(statusCode).json({
             error: 'Failed to get explanation',
-            details: error.message,
+            details: errorDetails,
+            // Avoid sending full stack in production for security reasons
             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
