@@ -64,33 +64,33 @@ function requireStudentInfo(req, res, next) {
 app.use(requireStudentInfo);
 
 // Routes
-app.get('/', (req, res) => res.sendFile(__dirname + '/views/landing.html'));
-app.get('/lythuyet', (req, res) => res.sendFile(__dirname + '/views/gallery.html'));
-app.get('/multiplechoice', (req, res) => res.sendFile(__dirname + '/views/index.html'));
-app.get('/quizgame', (req, res) => res.sendFile(__dirname + '/views/quizgame.html'));
-app.get('/truefalse', (req, res) => res.sendFile(__dirname + '/views/index.html')); // Reusing index.html for now
-app.get('/admin', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-list.html'));
-app.get('/admin/new', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
-app.get('/admin/edit/:id', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-edit.html'));
-app.get('/admin/configure', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-configure.html'));
-app.get('/admin/configure/:id', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-configure.html'));
-app.get('/admin/login', (req, res) => res.sendFile(__dirname + '/views/login.html'));
-app.get('/lesson/:id', (req, res) => res.sendFile(__dirname + '/views/lesson.html'));
-app.get('/result', (req, res) => res.sendFile(__dirname + '/views/result.html'));
-app.get('/result/:id', (req, res) => res.sendFile(__dirname + '/views/result.html'));
+app.get('/', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'landing.html')));
+app.get('/lythuyet', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'gallery.html')));
+app.get('/multiplechoice', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'index.html')));
+app.get('/quizgame', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'quizgame.html')));
+app.get('/truefalse', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'index.html'))); // Reusing index.html for now
+app.get('/admin', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-list.html')));
+app.get('/admin/new', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-edit.html')));
+app.get('/admin/edit/:id', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-edit.html')));
+app.get('/admin/configure', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-configure.html')));
+app.get('/admin/configure/:id', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-configure.html')));
+app.get('/admin/login', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'login.html')));
+app.get('/lesson/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'lesson.html')));
+app.get('/result', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
+app.get('/result/:id', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'result.html')));
 
 // Add new route for statistics page
 app.get('/admin/statistics/:id', requireAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'lesson-statistics.html'));
+    res.sendFile(path.join(process.cwd(), 'views', 'lesson-statistics.html'));
 });
 
 // New route added for activity log /history
 app.get('/history', requireAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'history.html'));
+    res.sendFile(path.join(process.cwd(), 'views', 'history.html'));
 });
 
 // Add these routes for quiz management
-app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(__dirname + '/views/admin-quiz-edit.html'));
+app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-quiz-edit.html')));
 
 // API Endpoints
 app.post('/api/login', async (req, res) => {
@@ -726,13 +726,5 @@ app.post('/api/quiz/save', requireAuth, async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-}).on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-        console.error(`Port ${PORT} is already in use. Please try another port or kill the process using this port.`);
-    } else {
-        console.error('Server error:', err);
-    }
-    process.exit(1);
-});
+// Export the app for Vercel
+module.exports = app;
