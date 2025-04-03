@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="lessonTitlePage">Lesson</title>
+    <title>Bài học</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -63,6 +63,12 @@
     </style>
 </head>
 <body>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Đang tải bài học...</p>
+    </div>
+
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
@@ -73,24 +79,23 @@
     </div>
     
     <div id="abcd-questions">
-        <h3 data-i18n="multipleChoiceQuestions">Multiple Choice Questions</h3>
+        <h3>Câu hỏi trắc nghiệm</h3>
     </div>
     
     <div id="truefalse-questions">
-        <h3 data-i18n="trueFalseQuestions">True/False Questions</h3>
+        <h3>Câu hỏi đúng/sai</h3>
     </div>
     
     <div id="number-questions">
-        <h3 data-i18n="numericalQuestions">Numerical Answer Questions</h3>
+        <h3>Câu hỏi trả lời ngắn</h3>
     </div>
 
-    <button id="submit-quiz-btn" data-i18n="submitQuiz">Submit</button>
+    <button id="submit-quiz-btn">Nộp bài</button>
     <div id="result"></div>
     <!-- KaTeX JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
     <!-- Optional: KaTeX auto-render extension -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script src="/js/lesson.js"></script>
-    <script src="/js/i18n.js"></script>
 </body>
 </html>

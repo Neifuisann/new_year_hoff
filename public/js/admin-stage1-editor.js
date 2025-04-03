@@ -351,7 +351,7 @@ function updatePreview(parsedQuestions) {
     previewContainer.innerHTML = '';
 
     if (!parsedQuestions || parsedQuestions.length === 0) {
-        previewContainer.innerHTML = '<p data-i18n="previewPlaceholder">Enter questions in the editor...</p>';
+        previewContainer.innerHTML = '<p>Enter questions in the editor...</p>';
         return;
     }
 

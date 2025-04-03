@@ -107,13 +107,84 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/lessons', async (req, res) => {
     try {
-        const { data: lessons, error } = await supabase
+        // --- Pagination, Sorting, Searching Parameters ---
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+        const search = req.query.search || '';
+        const sort = req.query.sort || 'order'; // Default sort by 'order' (was newest)
+        
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit - 1;
+
+        // --- Build Supabase Query ---
+        let query = supabase
             .from('lessons')
-            .select('*')
-            .order('order', { ascending: true });
+            .select('*', { count: 'exact' }); // Get total count matching filters
+
+        // Apply Search Filter (if provided)
+        if (search) {
+            // Search in title OR tags array
+            // Using .or() with ilike for title and contains for tags array
+            // Adjust column names ('title', 'tags') if they are different in your DB
+            query = query.or(`title.ilike.%${search}%,tags.cs.{${search}}`); 
+            // Note: `tags.cs.{${search}}` checks if the tags array contains the search term.
+            // This assumes tags are stored as a text array e.g., {'math', 'easy'}
+            // If tags are stored differently (e.g., JSONB), the query needs adjustment.
+        }
+        
+        // Apply Sorting
+        let orderAscending = true;
+        let orderColumn = 'order'; // Default to manual order
+
+        switch (sort) {
+            case 'newest':
+                orderColumn = 'created'; // Assuming you have a 'created' timestamp
+                orderAscending = false;
+                break;
+            case 'oldest':
+                orderColumn = 'created'; 
+                orderAscending = true;
+                break;
+            case 'az':
+                orderColumn = 'title';
+                orderAscending = true;
+                break;
+            case 'za':
+                orderColumn = 'title';
+                orderAscending = false;
+                break;
+            case 'newest-changed':
+                orderColumn = 'lastUpdated'; // Assuming you have 'lastUpdated'
+                orderAscending = false;
+                break;
+            case 'popular':
+                orderColumn = 'views'; // Assuming you have 'views'
+                orderAscending = false;
+                break;
+             case 'order': // Explicitly handle the default order
+                 orderColumn = 'order';
+                 orderAscending = true;
+                 break;
+            // Add other sort cases if needed
+        }
+        query = query.order(orderColumn, { ascending: orderAscending });
+
+        // Apply Pagination
+        query = query.range(startIndex, endIndex);
+
+        // --- Execute Query ---
+        const { data: lessons, error, count } = await query;
 
         if (error) throw error;
-        res.json(lessons || []);
+
+        // --- Return Paginated Response ---
+        res.json({
+            lessons: lessons || [],
+            total: count || 0,
+            page: page,
+            limit: limit
+        });
+
     } catch (error) {
         console.error('Error fetching lessons:', error);
         res.status(500).json({ error: 'Failed to fetch lessons', details: error.message });
@@ -769,6 +840,43 @@ app.post('/api/quiz/save', requireAuth, async (req, res) => {
         res.status(500).json({ error: 'Failed to save quiz', details: error.message });
     }
 });
+
+// --- NEW: /api/tags Endpoint ---
+app.get('/api/tags', async (req, res) => {
+    try {
+        // Fetch only the 'tags' column from all lessons
+        const { data, error } = await supabase
+            .from('lessons')
+            .select('tags');
+
+        if (error) throw error;
+
+        // Process the tags data to get a unique, flat list
+        const allTags = new Set();
+        if (data) {
+            data.forEach(lesson => {
+                // Ensure lesson.tags is an array and add each tag to the Set
+                if (Array.isArray(lesson.tags)) {
+                    lesson.tags.forEach(tag => {
+                        if (tag && typeof tag === 'string') { // Basic validation
+                           allTags.add(tag.trim());
+                        }
+                    });
+                }
+            });
+        }
+
+        // Convert Set to a sorted array
+        const uniqueSortedTags = Array.from(allTags).sort();
+
+        res.json(uniqueSortedTags);
+
+    } catch (error) {
+        console.error('Error fetching tags:', error);
+        res.status(500).json({ error: 'Failed to fetch tags', details: error.message });
+    }
+});
+// --- END NEW: /api/tags Endpoint ---
 
 // Export the app for Vercel
 module.exports = app;

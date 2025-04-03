@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    <title data-i18n="title">Quiz Application</title>
+    <title>Ôn luyện vật lí</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Đang tải bài học...</p>
+    </div>
+
     <!-- Background Animation -->
     <canvas id="network-canvas"></canvas>
     
@@ -19,25 +25,25 @@
             </a>
             <div class="home-dropdown">
                 <div class="dropdown-item">
-                    <a href="/admin/login" class="editor-link" data-i18n="editorMode">Entering editor mode</a>
+                    <a href="/admin/login" class="editor-link">Vào chế độ chỉnh sửa</a>
                 </div>
             </div>
         </div>
-        <h1 data-i18n="chooseLesson">Choose a Lesson</h1>
+        <h1>Chọn bài học</h1>
         
         <div class="search-sort-container">
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="Search lessons or tags..." data-i18n-placeholder="searchPlaceholder">
+                <input type="text" id="search-input" placeholder="Tìm kiếm bài học hoặc tag...">
                 <div class="tags-container"></div>
             </div>
             <div class="sort-box">
                 <select id="sort-select">
-                    <option value="newest" data-i18n="sortNewest">Newest First</option>
-                    <option value="oldest" data-i18n="sortOldest">Oldest First</option>
-                    <option value="az" data-i18n="sortAZ">Name A-Z</option>
-                    <option value="za" data-i18n="sortZA">Name Z-A</option>
-                    <option value="newest-changed" data-i18n="sortNewestChanged">Newest Changed</option>
-                    <option value="popular" data-i18n="sortPopular">Popular</option>
+                    <option value="newest">Mới nhất</option>
+                    <option value="oldest">Cũ nhất</option>
+                    <option value="az">Tên A-Z</option>
+                    <option value="za">Tên Z-A</option>
+                    <option value="newest-changed">Mới nhất</option>
+                    <option value="popular">Phổ biến</option>
                 </select>
             </div>
         </div>
@@ -45,23 +51,23 @@
 
         <div id="user-info-modal" class="modal">
             <div class="modal-content">
-                <h2 data-i18n="studentInfo">Student Information</h2>
+                <h2>Thông tin học sinh</h2>
                 <form id="user-info-form" autocomplete="off">
                     <div class="form-group">
-                        <label data-i18n="fullName">Full Name *</label>
+                        <label>Họ và tên *</label>
                         <input type="text" id="student-name" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="dateOfBirth">Date of Birth</label>
+                        <label>Ngày sinh</label>
                         <input type="date" id="student-dob">
                     </div>
                     <div class="form-group">
-                        <label data-i18n="studentId">Student ID</label>
+                        <label>Mã số học sinh</label>
                         <input type="text" id="student-id">
                     </div>
                     <div class="modal-buttons">
-                        <button type="submit" data-i18n="startLesson">Làm bài</button>
-                        <button type="button" onclick="closeModal()" data-i18n="cancel">Cancel</button>
+                        <button type="submit">Làm bài</button>
+                        <button type="button" onclick="closeModal()">Hủy</button>
                     </div>
                 </form>
             </div>
@@ -70,6 +76,5 @@
 
     <script src="/js/network-animation.js"></script>
     <script src="/js/index.js"></script>
-    <script src="/js/i18n.js"></script>
 </body>
 </html>

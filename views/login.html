@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="adminLoginTitle">Admin Login</title>
+    <title>Đăng nhập</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -9,26 +9,25 @@
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
-    <div class="login-container">
-        <h1 data-i18n="adminLoginTitle">Admin Login</h1>
-        <form id="login-form" onsubmit="handleLogin(event)" autocomplete="off">
-            <div class="form-group">
-                <label data-i18n="usernameLabel">Username:</label>
-                <input type="text" id="username" class="modern-input" required autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label data-i18n="passwordLabel">Password:</label>
-                <input type="password" id="password" class="modern-input" required autocomplete="off">
-            </div>
-            <button type="submit" class="button primary" data-i18n="loginBtn">Login</button>
-        </form>
-    </div>
-    
-    <script>
-        function currentLang() {
-            return localStorage.getItem('language') || 'vi';
-        }
 
+    <div class="login-container">
+        <div class="login-form">
+            <h1>Đăng nhập</h1>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập:</label>
+                    <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn-login">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -45,17 +44,9 @@
             if (result.success) {
                 window.location.href = '/admin';
             } else {
-                const errorMsg = translations[currentLang()].invalidCredentials || 'Invalid credentials';
-                alert(errorMsg);
+                alert('Tên đăng nhập hoặc mật khẩu không đúng');
             }
         }
-
-        // Initialize translations when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('language') || 'vi';
-            updateTexts(savedLang);
-        });
     </script>
-    <script src="/js/i18n.js"></script>
 </body>
 </html>

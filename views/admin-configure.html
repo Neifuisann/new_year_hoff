@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="adminConfigureTitle">Admin Panel - Configure Lesson</title>
+    <title>Màn hình giáo viên - Tạo bài học</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Add any specific CSS if needed -->
 </head>
 <body>
     <a href="/" class="home-button">
@@ -13,7 +12,7 @@
 
     <div class="lesson-editor stage-2">
         <div class="editor-header">
-            <h1 data-i18n="configureLesson">Configure Lesson</h1>
+            <h1>Tạo bài học</h1>
             <div class="header-actions">
                 <button onclick="saveLessonConfiguration()" class="save-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -21,14 +20,14 @@
                         <polyline points="17 21 17 13 7 13 7 21"/>
                         <polyline points="7 3 7 8 15 8"/>
                     </svg>
-                    <span data-i18n="saveLesson">Save Lesson</span>
+                    <span>Lưu bài học</span>
                 </button>
                 <!-- Optional: Add a Back button to return to Stage 1? -->
                  <a href="/admin" class="back-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
-                    <span data-i18n="backToList">Back to List</span>
+                    <span>Trở về danh sách</span>
                 </a>
             </div>
         </div>
@@ -39,13 +38,13 @@
             <h2>Thông tin chung</h2>
             
             <div class="form-group">
-                <label for="lesson-title" data-i18n="lessonTitleLabel">Tên</label>
-                <input type="text" id="lesson-title" class="modern-input full-width-input" data-i18n-placeholder="enterLessonTitle">
+                <label for="lesson-title">Tên</label>
+                <input type="text" id="lesson-title" class="modern-input full-width-input">
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="lesson-grade" data-i18n="gradeLabel">Khối lớp</label>
+                    <label for="lesson-grade">Khối lớp</label>
                     <select id="lesson-grade" class="modern-select">
                         <option value="">-- Chọn khối --</option>
                         <!-- Add grade options dynamically or statically -->
@@ -56,7 +55,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="lesson-subject" data-i18n="subjectLabel">Môn học</label>
+                    <label for="lesson-subject">Môn học</label>
                     <select id="lesson-subject" class="modern-select">
                         <option value="">-- Chọn môn --</option>
                          <!-- Add subject options dynamically or statically -->
@@ -70,7 +69,7 @@
             </div>
 
             <div class="form-group">
-                <label for="lesson-purpose" data-i18n="purposeLabel">Mục đích tạo đề</label>
+                <label for="lesson-purpose">Mục đích tạo đề</label>
                 <select id="lesson-purpose" class="modern-select">
                      <option value="">-- Chọn mục đích --</option>
                      <option value="practice">Luyện tập</option>
@@ -81,13 +80,13 @@
 
             <h2>Cài đặt khác</h2>
             <div class="form-group">
-                <label for="lesson-description" data-i18n="descriptionLabel">Mô tả</label>
-                <textarea id="lesson-description" class="modern-textarea" rows="4" data-i18n-placeholder="enterDescription"></textarea>
+                <label for="lesson-description">Mô tả</label>
+                <textarea id="lesson-description" class="modern-textarea" rows="4"></textarea>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label data-i18n="lessonImage">Ảnh minh hoạ:</label>
+                    <label>Ảnh minh hoạ:</label>
                     <div class="image-upload-container">
                         <input type="file" id="lesson-image" accept="image/*">
                         <button type="button" class="remove-image-btn" style="display: none;">X</button>
@@ -96,22 +95,22 @@
                 </div>
 
                  <div class="form-group">
-                    <label for="lesson-color" data-i18n="themeColor">Theme Color</label>
+                    <label for="lesson-color">Màu chủ đề</label>
                     <input type="color" id="lesson-color" value="#a4aeff">
                 </div>
             </div>
 
             <div class="form-row">
                  <div class="form-group">
-                    <label for="random-questions" data-i18n="randomQuestions">Random Questions</label>
+                    <label for="random-questions">Tạo đề con</label>
                     <input type="number" id="random-questions" class="modern-input" min="0" placeholder="0 = Use all questions">
-                    <span class="help-text">(0 = use all)</span>
+                    <span class="help-text">(0 = tất cả)</span>
                 </div>
 
                 <div class="form-group tags-group-inline">
-                    <label for="tag-input" data-i18n="tagsLabel">Tags</label>
+                    <label for="tag-input">Tags</label>
                     <div class="tags-input-container">
-                        <input type="text" id="tag-input" class="modern-input" data-i18n-placeholder="addTags">
+                        <input type="text" id="tag-input" class="modern-input">
                         <div id="tags-list" class="tags-list"></div>
                     </div>
                 </div>
@@ -122,6 +121,5 @@
     </div>
 
     <script src="/js/admin-stage2-configure.js"></script>
-    <script src="/js/i18n.js"></script>
 </body>
 </html> 

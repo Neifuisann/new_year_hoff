@@ -1,111 +1,106 @@
-let allLessons = [];
-let translations = {};
+let displayedLessons = []; // Renamed from allLessons
+let allTags = []; // To store tags fetched from API
+let currentPage = 1;
+const lessonsPerPage = 10; // Adjust as needed
+let totalLessons = 0;
+let currentSearch = '';
+let currentSort = 'newest';
+let isLoading = false;
 
-// Import translations
-async function loadTranslations() {
+// Function to show/hide loader
+function showLoader(show) {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) {
+        loader.classList.toggle('hidden', !show);
+    }
+}
+
+// Fetch all unique tags
+async function loadTags() {
     try {
-        const response = await fetch('/api/translations');
-        translations = await response.json();
+        const response = await fetch('/api/tags');
+        if (!response.ok) throw new Error('Failed to fetch tags');
+        allTags = await response.json();
+        renderTagsList(); // Render tags once fetched
     } catch (error) {
-        console.error('Error loading translations:', error);
-        // Fallback translations for critical text
-        translations = {
-            en: {
-                questions: 'questions',
-                noResults: 'No results found',
-                accountSoon: 'Account feature coming soon',
-                logoutSoon: 'Logout feature coming soon'
-            }
-        };
+        console.error('Error loading tags:', error);
     }
 }
 
 async function loadLessons() {
+    if (isLoading) return; // Prevent concurrent loads
+    isLoading = true;
+    showLoader(true);
     try {
-        const response = await fetch('/api/lessons');
-        const lessons = await response.json();
-        console.log('Loaded lessons:', lessons);
-        allLessons = lessons;
-        renderLessons(allLessons);
-        // Update tags list immediately after loading lessons
-        updateTagsList();
+        // Construct API URL with parameters
+        const params = new URLSearchParams({
+            page: currentPage,
+            limit: lessonsPerPage,
+            sort: currentSort
+        });
+        if (currentSearch) {
+            params.append('search', currentSearch);
+        }
+        
+        const response = await fetch(`/api/lessons?${params.toString()}`);
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Failed to fetch lessons: ${response.status} ${errorData}`);
+        }
+        
+        const data = await response.json();
+        console.log('Loaded lessons page:', data);
+        
+        displayedLessons = data.lessons || [];
+        totalLessons = data.total || 0;
+        
+        renderLessons(displayedLessons); // Render only the current page's lessons
+        updatePaginationControls();
+
+        // Do NOT update tags here, tags are loaded separately
+
     } catch (error) {
         console.error('Error loading lessons:', error);
-    }
-}
-
-function filterAndRenderLessons() {
-    console.log('Filtering lessons. Current allLessons:', allLessons); // Debug log
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const sortMethod = document.getElementById('sort-select').value;
-    console.log('Search term:', searchTerm, 'Sort method:', sortMethod); // Debug log
-    
-    let filteredLessons = [...allLessons]; // Create a copy of allLessons
-    
-    if (searchTerm) {
-        filteredLessons = filteredLessons.filter(lesson => {
-            const matchesTitle = lesson.title.toLowerCase().includes(searchTerm);
-            const matchesTags = lesson.tags && lesson.tags.some(tag => 
-                tag.toLowerCase().includes(searchTerm)
-            );
-            return matchesTitle || matchesTags;
-        });
-    }
-    
-    console.log('Filtered lessons before sort:', filteredLessons); // Debug log
-    filteredLessons = sortLessons(filteredLessons, sortMethod);
-    console.log('Filtered lessons after sort:', filteredLessons); // Debug log
-    
-    renderLessons(filteredLessons);
-}
-
-function sortLessons(lessons, method) {
-    switch (method) {
-        case 'newest':
-            return [...lessons].sort((a, b) => b.id - a.id);
-        case 'oldest':
-            return [...lessons].sort((a, b) => a.id - b.id);
-        case 'az':
-            return [...lessons].sort((a, b) => a.title.localeCompare(b.title));
-        case 'za':
-            return [...lessons].sort((a, b) => b.title.localeCompare(a.title));
-        case 'newest-changed':
-            return [...lessons].sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
-        case 'popular':
-            return [...lessons].sort((a, b) => b.views - a.views);
-        default:
-            return lessons;
-    }
-}
-
-function updateTagsList() {
-    const allTags = new Set();
-    allLessons.forEach(lesson => {
-        if (lesson.tags) {
-            lesson.tags.forEach(tag => allTags.add(tag));
+        const lessonsContainer = document.getElementById('lessons');
+        if (lessonsContainer) {
+            lessonsContainer.innerHTML = `<p class="error-message">Error loading lessons: ${error.message}. Please try again later.</p>`;
         }
-    });
-    
+    } finally {
+        showLoader(false);
+        isLoading = false;
+    }
+}
+
+// Modified function: Now just triggers a reload by resetting page and calling loadLessons
+function filterAndRenderLessons() {
+    currentSearch = document.getElementById('search-input').value.toLowerCase();
+    currentSort = document.getElementById('sort-select').value;
+    currentPage = 1; // Reset to first page for new search/sort
+    loadLessons(); // Fetch data from backend with new filters
+}
+
+// Modified function: Renders tags fetched from /api/tags
+function renderTagsList() {
     const tagsContainer = document.querySelector('.tags-container');
     if (!tagsContainer) return;
     
-    tagsContainer.innerHTML = '';
+    tagsContainer.innerHTML = ''; // Clear previous tags
     
+    // Add heading
     const heading = document.createElement('h3');
-    heading.setAttribute('data-i18n', 'popularTags');
-    heading.textContent = translations[currentLang()].popularTags;
+    heading.textContent = 'Popular Tags';
     tagsContainer.appendChild(heading);
     
     const tagsList = document.createElement('div');
     tagsList.className = 'tags-list';
     
-    Array.from(allTags).sort().forEach(tag => {
+    allTags.forEach(tag => {
         const tagButton = document.createElement('button');
         tagButton.className = 'tag-filter';
         tagButton.textContent = tag;
         tagButton.onclick = () => {
-            document.getElementById('search-input').value = tag;
-            filterAndRenderLessons();
+            document.getElementById('search-input').value = tag; 
+            filterAndRenderLessons(); // Trigger search with this tag
         };
         tagsList.appendChild(tagButton);
     });
@@ -116,7 +111,6 @@ function updateTagsList() {
 function closeModal() {
     const modal = document.getElementById('user-info-modal');
     modal.classList.remove('show');
-    // No need for setTimeout since we're using CSS transitions
 }
 
 function startLesson(lessonId) {
@@ -159,32 +153,25 @@ function startLesson(lessonId) {
     };
 }
 
-function renderLessons(lessons) {
+// Modified function: Renders only the lessons passed to it
+function renderLessons(lessonsToRender) {
     const lessonsContainer = document.getElementById('lessons');
-    const currentLanguage = currentLang();
     
-    // Ensure translations exist for current language
-    if (!translations[currentLanguage]) {
-        translations[currentLanguage] = {
-            questions: 'questions',
-            startLesson: 'Làm bài',
-            noResults: 'No results found'
-        };
+    // **Important**: Clear container ONLY when loading page 1
+    if (currentPage === 1) {
+         lessonsContainer.innerHTML = '';
     }
     
-    if (lessons.length === 0) {
+    if (lessonsToRender.length === 0 && currentPage === 1) {
         const noResults = document.createElement('p');
         noResults.className = 'no-results';
-        noResults.setAttribute('data-i18n', 'noResults');
-        noResults.textContent = translations[currentLanguage].noResults;
+        noResults.textContent = 'No results found';
         lessonsContainer.innerHTML = '';
         lessonsContainer.appendChild(noResults);
         return;
     }
 
-    lessonsContainer.innerHTML = '';
-    
-    lessons.forEach(lesson => {
+    lessonsToRender.forEach(lesson => {
         const lessonDiv = document.createElement('div');
         lessonDiv.className = 'lesson-card';
         lessonDiv.style.setProperty('--lesson-bg', lesson.color || '#a4aeff');
@@ -206,8 +193,8 @@ function renderLessons(lessons) {
         lessonDiv.innerHTML = `
             <div class="lesson-content">
                 <h3>${lesson.title}</h3>
-                <button onclick="startLesson('${lesson.id}')" class="start-btn" data-i18n="startLesson">
-                    ${translations[currentLanguage].startLesson}
+                <button onclick="startLesson('${lesson.id}')" class="start-btn">
+                    Làm bài
                 </button>
             </div>
             ${imageHtml}
@@ -215,12 +202,69 @@ function renderLessons(lessons) {
         `;
         lessonsContainer.appendChild(lessonDiv);
     });
-    
-    // Update any new elements with translations
-    if (typeof updateTexts === 'function') {
-        updateTexts(currentLanguage);
+}
+
+// --- PAGINATION FUNCTIONS ---
+function updatePaginationControls() {
+    const paginationContainer = document.getElementById('pagination-controls');
+    if (!paginationContainer) return; // Exit if container doesn't exist
+
+    paginationContainer.innerHTML = ''; // Clear existing controls
+    const totalPages = Math.ceil(totalLessons / lessonsPerPage);
+
+    if (totalPages <= 1) return; // No controls needed for 0 or 1 page
+
+    // Previous Button
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Previous';
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadLessons();
+        }
+    };
+    paginationContainer.appendChild(prevButton);
+
+    // Page Number Indicator (Simple version)
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = ` Page ${currentPage} of ${totalPages} `;
+    pageInfo.style.margin = '0 10px'; // Add some spacing
+    paginationContainer.appendChild(pageInfo);
+
+    // Next Button
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            loadLessons();
+        }
+    };
+    paginationContainer.appendChild(nextButton);
+}
+
+// Create pagination container dynamically if it doesn't exist
+function ensurePaginationContainer() {
+    let container = document.getElementById('pagination-controls');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'pagination-controls';
+        container.style.textAlign = 'center'; // Center the controls
+        container.style.marginTop = '20px'; // Add space above
+        // Insert it after the lessons container
+        const lessonsDiv = document.getElementById('lessons');
+        if (lessonsDiv && lessonsDiv.parentNode) {
+            lessonsDiv.parentNode.insertBefore(container, lessonsDiv.nextSibling);
+        } else {
+            // Fallback: append to main content
+            const mainContent = document.querySelector('.main-content');
+            mainContent?.appendChild(container);
+        }
     }
 }
+// --- END PAGINATION FUNCTIONS ---
 
 // Check admin authentication status
 async function checkAdminAuth() {
@@ -234,16 +278,14 @@ async function checkAdminAuth() {
     }
 }
 
-// Add helper function to get current language
-function currentLang() {
-    return localStorage.getItem('language') || 'vi';
-}
-
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load translations first
-    await loadTranslations();
-    // Then load lessons
+    ensurePaginationContainer(); // Make sure the pagination div exists
+    // Show loader immediately while data loads
+    showLoader(true); 
+    
+    // Load tags then lessons
+    await loadTags();
     await loadLessons();
     
     // Add event listener for search input with debounce
@@ -272,24 +314,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
         }
-    }
-
-    // Update account link handler
-    const accountLink = document.querySelector('.account-link');
-    if (accountLink) {
-        accountLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert(translations[currentLang()].accountSoon);
-        });
-    }
-
-    // Update logout link handler
-    const logoutLink = document.querySelector('.logout-link');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert(translations[currentLang()].logoutSoon);
-        });
     }
     
     // Editor mode link protection

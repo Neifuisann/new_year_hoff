@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="adminEditTextTitle">Admin Panel - Edit Lesson Content</title>
+    <title>Màn hình giáo viên - Chỉnh sửa nội dung bài học</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
     <!-- CodeMirror CSS -->
@@ -25,17 +25,17 @@
     
     <div class="lesson-editor stage-1">
         <div class="editor-header">
-            <h1 data-i18n="editLessonContent">Edit Lesson Content</h1>
+            <h1>Chỉnh sửa nội dung bài học</h1>
             <div class="header-actions">
                 <button onclick="proceedToConfiguration()" class="next-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
-                    <span data-i18n="nextConfigure">Next: Configure</span>
+                    <span>Tiếp tục: Cấu hình</span>
                 </button>
                 <a href="/admin" class="back-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
                     </svg>
-                    <span data-i18n="backToList">Back to List</span>
+                    <span>Trở về danh sách</span>
                 </a>
             </div>
         </div>
@@ -44,20 +44,20 @@
         <div class="editor-preview-container">
             <!-- Swapped Order: Preview Panel First -->
             <div class="preview-panel">
-                 <h2>Preview</h2>
+                 <h2>Xem trước</h2>
                  <div id="realtime-preview" class="azota-preview">
-                     <p data-i18n="previewPlaceholder">Preview will appear here...</p>
+                     <p>Xem trước sẽ xuất hiện ở đây...</p>
                  </div>
             </div>
             
             <!-- Swapped Order: Text Editor Panel Second -->
             <div class="text-editor-main-panel">
                 <div class="editor-toolbar">
-                     <h2 data-i18n="questionsTextInput">Questions (Text Input)</h2>
+                     <h2>Câu hỏi (Nhập văn bản)</h2>
                      <div class="toolbar-buttons">
-                         <button onclick="insertImagePlaceholder()" title="Add Image Placeholder"><i class="fas fa-image"></i> Image</button>
-                         <button onclick="insertLatexDelimiters('$$')" title="Add Block LaTeX ($$...$$)"><i class="fas fa-calculator"></i> Block LaTeX</button>
-                         <button onclick="insertLatexDelimiters('$')" title="Add Inline LaTeX ($...$)"><i class="fas fa-square-root-alt"></i> Inline LaTeX</button>
+                         <button onclick="insertImagePlaceholder()" title="Thêm hình ảnh"><i class="fas fa-image"></i> Hình ảnh</button>
+                         <button onclick="insertLatexDelimiters('$$')" title="Thêm LaTeX ($$...$$)"><i class="fas fa-calculator"></i> LaTeX</button>
+                         <button onclick="insertLatexDelimiters('$')" title="Thêm LaTeX ($...$)"><i class="fas fa-square-root-alt"></i> LaTeX</button>
                          <!-- Add other toolbar buttons if needed -->
                      </div>
                  </div>
@@ -81,7 +81,6 @@
     <script src="/js/admin-stage1-editor.js"></script>
     <!-- Keep drag utils if needed for other parts, otherwise remove -->
     <!-- <script src="/js/drag-utils.js"></script> --> 
-    <script src="/js/i18n.js"></script>
      <!-- Font Awesome for icons -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </body>

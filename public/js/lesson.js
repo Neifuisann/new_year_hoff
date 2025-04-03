@@ -1,8 +1,12 @@
 // Store shuffled options mapping globally
 window.questionMappings = {};
 
-function currentLang() {
-    return localStorage.getItem('language') || 'vi';
+// Function to show/hide loader
+function showLoader(show) {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) {
+        loader.classList.toggle('hidden', !show);
+    }
 }
 
 function shuffleArray(array) {
@@ -207,6 +211,7 @@ async function renderQuestions(lesson) {
 }
 
 async function initializeLesson() {
+    showLoader(true);
     const lessonId = window.location.pathname.split('/')[2];
     document.title = 'Loading lesson...';
     
@@ -248,11 +253,14 @@ async function initializeLesson() {
             <h1>Error loading lesson</h1>
             <p>Error details: ${error.message}</p>
         `;
+    } finally {
+        showLoader(false);
     }
 }
 
 // Remove the old submitQuiz function and replace with new event listener setup
 document.addEventListener('DOMContentLoaded', () => {
+    showLoader(true); // Show loader immediately
     const submitButton = document.getElementById('submit-quiz-btn');
     if (submitButton) {
         // Get student info from localStorage
@@ -264,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Rest of your initialization code...
-        initializeLesson();
+        initializeLesson(); // This will handle hiding the loader
 
         submitButton.addEventListener('click', async () => {
             // Disable the submit button to prevent multiple submissions
@@ -398,18 +406,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Initialize the lesson when the page loads
-
-// Add translation keys for lesson-specific content
-if (typeof translations !== 'undefined') {
-    Object.keys(translations).forEach(lang => {
-        translations[lang] = {
-            ...translations[lang],
-            true: lang === 'vi' ? 'Đúng' : 'True',
-            false: lang === 'vi' ? 'Sai' : 'False',
-            enterNumber: lang === 'vi' ? 'Nhập câu trả lời của bạn...' : 'Enter your answer...',
-            invalidCredentials: lang === 'vi' ? 'Thông tin không hợp lệ' : 'Invalid credentials'
-        };
-    });
-}

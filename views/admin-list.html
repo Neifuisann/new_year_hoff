@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title data-i18n="adminLessonsListTitle">Admin Panel - Lessons List</title>
+    <title>Màn hình giáo viên - Danh sách bài học</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Đang tải bài học...</p>
+    </div>  
+
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
     <div class="admin-container">
-        <h1 data-i18n="adminPanel">Admin Panel</h1>
+        <h1>Màn hình giáo viên</h1>
         <div class="admin-controls">
-            <a href="/admin/new" class="button primary" data-i18n="createNewLesson">Create New Lesson</a>
-            <a href="/history" class="button secondary" data-i18n="activityLog">Activity Log</a>
-            <button onclick="openReviewLessonModal()" class="button" data-i18n="reviewLesson">Tạo bài ôn tập</button>
+            <a href="/admin/new" class="button primary">Tạo bài học mới</a>
+            <a href="/history" class="button secondary">Lịch sử hoạt động</a>
+            <button onclick="openReviewLessonModal()" class="button">Tạo bài ôn tập</button>
         </div>
         <div class="admin-nav">
             <a href="/admin/quiz" class="nav-item">
@@ -23,7 +29,7 @@
             </a>
         </div>
         <div id="lesson-list">
-            <h2 data-i18n="existingLessons">Existing Lessons</h2>
+            <h2>Bài học đã tạo</h2>
             <div class="lesson-items">
                 <!-- Lessons will be dynamically added here -->
             </div>
@@ -48,6 +54,5 @@
     
     <script src="/js/admin-list.js"></script>
     <script src="/js/drag-utils.js"></script>
-    <script src="/js/i18n.js"></script>
 </body>
 </html>

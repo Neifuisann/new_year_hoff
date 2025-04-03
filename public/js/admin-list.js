@@ -1,28 +1,64 @@
-let lessons = [];
+let displayedLessons = []; // Renamed from lessons
 let dragBoundary = null;
+let currentPage = 1;
+const lessonsPerPage = 15; // More per page for admin?
+let totalLessons = 0;
+let isLoading = false;
+
+// Function to show/hide loader
+function showLoader(show) {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) {
+        loader.classList.toggle('hidden', !show);
+    }
+}
 
 async function loadLessonsForAdmin() {
+    if (isLoading) return;
+    isLoading = true;
+    showLoader(true);
     try {
-        const response = await fetch('/api/lessons');
+        // Add pagination parameters (add sort/search later if needed)
+        const params = new URLSearchParams({
+            page: currentPage,
+            limit: lessonsPerPage
+            // sort: currentSort // If sorting is added
+        });
+        
+        const response = await fetch(`/api/lessons?${params.toString()}`);
         if (!response.ok) {
             throw new Error('Failed to fetch lessons');
         }
         
-        lessons = await response.json();
-        const lessonList = document.getElementById('lesson-list');
+        const data = await response.json();
+        displayedLessons = data.lessons || [];
+        totalLessons = data.total || 0;
         
-        lessonList.innerHTML = '<h2>Danh sách bài:</h2>';
-        const container = document.createElement('div');
-        container.id = 'sortable-lessons';
-        container.className = 'sortable-container';
+        const lessonListContainer = document.getElementById('lesson-list');
         
-        lessons.forEach((lesson, index) => {
+        // Find or create the sortable container
+        let sortableContainer = document.getElementById('sortable-lessons');
+        if (!sortableContainer) {
+            lessonListContainer.innerHTML = '<h2>Danh sách bài:</h2>'; // Reset header
+            sortableContainer = document.createElement('div');
+            sortableContainer.id = 'sortable-lessons';
+            sortableContainer.className = 'sortable-container';
+            lessonListContainer.appendChild(sortableContainer);
+        } else {
+            // Clear only the items if container exists (for pagination)
+            sortableContainer.innerHTML = ''; 
+        }
+        
+        displayedLessons.forEach((lesson, index) => {
             const div = document.createElement('div');
             div.className = 'lesson-item';
             div.draggable = true;
             div.dataset.id = lesson.id;
-            div.dataset.index = index;
-            //{lesson.questions?.length || 0} câu hỏi | line 30
+            // Use a unique identifier for drag-drop if IDs aren't stable across pages
+            // Or consider disabling drag-drop if pagination is active
+            div.dataset.index = index; // Index within the *current* page
+            
+            // Keep the existing innerHTML structure
             div.innerHTML = `
                 <span class="drag-handle">☰</span>
                 <span class="lesson-title">${lesson.title}</span>
@@ -40,21 +76,27 @@ async function loadLessonsForAdmin() {
                 </div>
             `;
             
+            // Add event listeners (drag/drop might be unreliable with pagination)
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragover', handleDragOver);
             div.addEventListener('drop', handleDrop);
             div.addEventListener('dragend', handleDragEnd);
             
-            container.appendChild(div);
+            sortableContainer.appendChild(div);
         });
         
-        lessonList.appendChild(container);
+        // Add or update pagination controls
+        updateAdminPaginationControls();
+        
     } catch (error) {
         console.error('Error loading lessons:', error);
         document.getElementById('lesson-list').innerHTML = `
-            <h2>Existing Lessons</h2>
+            <h2>Danh sách bài:</h2>
             <p class="error-message">Error loading lessons. Please try again later.</p>
         `;
+    } finally {
+        showLoader(false);
+        isLoading = false;
     }
 }
 
@@ -130,33 +172,36 @@ function getDragAfterElement(container, y) {
 }
 
 async function saveNewOrder() {
-    const newOrder = Array.from(document.querySelectorAll('.lesson-item'))
-        // Send only the ID and original index to map back to the full lesson if needed
-        .map(item => ({ id: item.dataset.id, originalIndex: parseInt(item.dataset.index) })); 
-    
-    // If the backend only needs IDs in order, simplify further:
-    // const newOrderIds = Array.from(document.querySelectorAll('.lesson-item')).map(item => item.dataset.id);
+    // !! WARNING: This function is problematic with pagination !!
+    // It currently assumes all items are present in the DOM.
+    // It will only save the order of the items on the CURRENT page.
+    // Consider disabling reordering or implementing a different reordering strategy.
+    console.warn("saveNewOrder will only reorder items on the current page due to pagination.");
 
+    const itemsOnPage = Array.from(document.querySelectorAll('#sortable-lessons .lesson-item'));
+    const newOrderIds = itemsOnPage.map(item => item.dataset.id);
+    
+    // Option 1: Send only the IDs of the current page for partial reordering (backend needs adjustment)
+    // Option 2: Fetch ALL lesson IDs from backend first, merge the current page order, then send full list (complex)
+    // Option 3: Disable reordering when paginated.
+    
+    // For now, let's log what would be sent (likely incorrect for full reordering)
+    console.log("Attempting to save order for current page:", newOrderIds);
+
+    // If you proceed with sending just the page order, the backend /api/lessons/reorder
+    // needs to be significantly smarter to handle partial updates.
+    /* 
     try {
         const response = await fetch('/api/lessons/reorder', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // Send the array of objects with IDs (backend expects this based on current server.js)
-            body: JSON.stringify(newOrder.map(item => lessons[item.originalIndex])) 
+            body: JSON.stringify({ orderedIds: newOrderIds, page: currentPage, limit: lessonsPerPage }) // Example payload
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to save new order');
-        }
-
-        // Update the local lessons array to match the new order
-        lessons = newOrder.map(item => lessons[item.originalIndex]);
-    } catch (error) {
-        console.error('Error saving lesson order:', error);
-        alert('Failed to save the new order. Please try again.');
-        // Reload the list to restore the original order
-        loadLessonsForAdmin();
-    }
+        if (!response.ok) throw new Error('Failed to save new order');
+        // Maybe just reload current page after partial save?
+        // loadLessonsForAdmin(); 
+    } catch (error) { ... } 
+    */
 }
 
 async function deleteLesson(id) {
@@ -170,8 +215,9 @@ async function deleteLesson(id) {
             if (!response.ok) {
                 throw new Error('Failed to delete lesson');
             }
-
-            loadLessonsForAdmin();
+            
+            // Reload the current page after deletion
+            loadLessonsForAdmin(); 
         } catch (error) {
             console.error('Error deleting lesson:', error);
             alert('Failed to delete lesson. Please try again.');
@@ -181,34 +227,102 @@ async function deleteLesson(id) {
 
 async function updateLessonColor(id, color) {
     try {
-        const lesson = lessons.find(l => l.id == id);
-        if (!lesson) return;
+        // Find the lesson in the *currently displayed* list
+        const lesson = displayedLessons.find(l => l.id == id);
+        if (!lesson) {
+            console.warn('Lesson not found on current page for color update');
+            return; // Lesson might be on another page
+        }
         
         lesson.color = color;
         
         const response = await fetch(`/api/lessons/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(lesson)
+            body: JSON.stringify({ color: color }) // Send only the updated field
         });
 
         if (!response.ok) {
             throw new Error('Failed to update lesson color');
         }
         
-        // Update the lesson card background color
-        const lessonCard = document.querySelector(`[data-id="${id}"]`);
+        // Update the lesson card background color in the DOM
+        const lessonCard = document.querySelector(`#sortable-lessons .lesson-item[data-id="${id}"]`);
         if (lessonCard) {
+            // Assuming you have CSS variable --lesson-bg, otherwise update style directly
             lessonCard.style.setProperty('--lesson-bg', color);
-        }
+            // Also update the color picker value visually if it wasn't triggered by its own change event
+            const colorInput = lessonCard.querySelector('input[type="color"]');
+            if (colorInput && colorInput.value !== color) {
+                colorInput.value = color;
+            }
+        } 
     } catch (error) {
         console.error('Error updating lesson color:', error);
         alert('Failed to update lesson color. Please try again.');
+        // Optionally reload to ensure consistency
+        // loadLessonsForAdmin();
     }
 }
 
+// --- PAGINATION FUNCTIONS for Admin ---
+function updateAdminPaginationControls() {
+    const paginationContainer = document.getElementById('admin-pagination-controls');
+    if (!paginationContainer) return; 
+
+    paginationContainer.innerHTML = ''; 
+    const totalPages = Math.ceil(totalLessons / lessonsPerPage);
+
+    if (totalPages <= 1) return; 
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Previous';
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadLessonsForAdmin();
+        }
+    };
+    paginationContainer.appendChild(prevButton);
+
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = ` Page ${currentPage} of ${totalPages} `;
+    pageInfo.style.margin = '0 10px'; 
+    paginationContainer.appendChild(pageInfo);
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            loadLessonsForAdmin();
+        }
+    };
+    paginationContainer.appendChild(nextButton);
+}
+
+function ensureAdminPaginationContainer() {
+    let container = document.getElementById('admin-pagination-controls');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'admin-pagination-controls';
+        container.style.textAlign = 'center';
+        container.style.marginTop = '20px';
+        // Insert after the lesson-list div
+        const lessonListDiv = document.getElementById('lesson-list');
+        lessonListDiv?.parentNode?.insertBefore(container, lessonListDiv.nextSibling);
+    }
+}
+// --- END PAGINATION FUNCTIONS ---
+
 // Initialize the admin panel when the page loads
-document.addEventListener('DOMContentLoaded', loadLessonsForAdmin);
+document.addEventListener('DOMContentLoaded', () => {
+    ensureAdminPaginationContainer(); // Add pagination controls container
+    showLoader(true); // Show loader immediately
+    loadLessonsForAdmin(); // This will handle hiding the loader
+});
 
 // Functions for Review Lesson Modal
 function openReviewLessonModal() {
@@ -244,5 +358,5 @@ function addReviewRow() {
 }
 
 function removeReviewRow(button) {
-    // ... existing code ...
+    // Implementation of removeReviewRow
 }

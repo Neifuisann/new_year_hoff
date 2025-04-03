@@ -1,6 +1,15 @@
 let currentResult = null;
 
+// Function to show/hide loader
+function showLoader(show) {
+    const loader = document.getElementById('loading-indicator');
+    if (loader) {
+        loader.classList.toggle('hidden', !show);
+    }
+}
+
 async function displayResults() {
+    showLoader(true);
     const resultData = JSON.parse(localStorage.getItem('quizResults'));
     if (!resultData) {
         document.getElementById('result').innerHTML = '<p class="no-results">No results found. Please take a quiz first.</p>';
@@ -32,6 +41,8 @@ async function displayResults() {
     } catch (error) {
         console.error('Error loading results:', error);
         document.getElementById('result').innerHTML = '<p class="no-results">Result not found. Please try again.</p>';
+    } finally {
+        showLoader(false);
     }
 }
 
@@ -136,6 +147,19 @@ function displaySortedResults(sortType) {
 
     document.getElementById('result').innerHTML = resultHTML;
     attachExplanationListeners();
+    
+    // Render LaTeX in the results
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.getElementById('result'), {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+            ],
+            throwOnError: false
+        });
+    }
 }
 
 function sortResults(sortType) {
@@ -218,6 +242,19 @@ Correct answer: ${decodedCorrectAnswer}`
         });
         explanationContent.dataset.loaded = 'true';
         button.innerHTML = '<i class="fas fa-times"></i><span>Ẩn giải thích</span>';
+        
+        // Render LaTeX in the explanation
+        if (typeof renderMathInElement === 'function') {
+            renderMathInElement(explanationContent, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+        }
     } catch (error) {
         console.error('Error getting explanation:', error);
         explanationContent.innerHTML = `
@@ -252,4 +289,7 @@ function attachExplanationListeners() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', displayResults);
+document.addEventListener('DOMContentLoaded', () => {
+    showLoader(true); // Show loader immediately
+    displayResults(); // This will handle hiding the loader
+});
