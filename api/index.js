@@ -88,13 +88,22 @@ const requireAuth = (req, res, next) => {
 
 // Middleware to protect student routes
 const requireStudentAuth = (req, res, next) => {
-    if (req.session.isAuthenticated || req.session.studentId) {
+    console.log('Student Auth check - Session:', { 
+        studentId: req.session.studentId,
+        hasSession: !!req.session,
+        sessionID: req.sessionID
+    });
+
+    if (req.session.studentId) { // Check ONLY for studentId
+        console.log('Student authenticated, proceeding.');
         next();
     } else {
+        console.log('Student authentication failed.');
         if (req.headers.accept && req.headers.accept.includes('application/json')) {
-            res.status(401).json({ error: 'Authentication required' });
+            return res.status(401).json({ error: 'Student authentication required' });
         } else {
-            res.redirect('/student/login?redirect=' + encodeURIComponent(req.originalUrl));
+            // Redirect to student login, preserving intended URL
+            return res.redirect('/student/login?redirect=' + encodeURIComponent(req.originalUrl));
         }
     }
 };
@@ -359,6 +368,25 @@ app.post('/api/student/logout', (req, res) => {
     } catch (error) {
         console.error('Logout error:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Admin logout endpoint
+app.post('/api/admin/logout', (req, res) => {
+    try {
+        req.session.destroy(err => {
+            if (err) {
+                console.error('Admin logout error - session destroy failed:', err);
+                return res.status(500).json({ success: false, message: 'Logout failed' });
+            }
+            // Clear the cookie on the client side
+            res.clearCookie('connect.sid'); // Use your session cookie name if different
+            console.log('Admin logout successful');
+            return res.json({ success: true, message: 'Admin logout successful' });
+        });
+    } catch (error) {
+        console.error('Admin logout error:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
 
