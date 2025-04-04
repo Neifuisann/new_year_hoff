@@ -62,9 +62,9 @@ if (!connectionString) {
 const pgPool = new Pool({
   connectionString: connectionString,
   // Optional: Add SSL configuration if needed, Supabase typically requires it
-  // ssl: {
-  //   rejectUnauthorized: false // Adjust as per Supabase requirements or use proper CA certs
-  // }
+  ssl: {
+    rejectUnauthorized: false // Adjust as per Supabase requirements or use proper CA certs
+  }
 });
 
 pgPool.on('error', (err, client) => {
