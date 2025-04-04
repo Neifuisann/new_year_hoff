@@ -7,6 +7,8 @@ const fetch = require('node-fetch');
 const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
 const upload = multer({ storage: multer.memoryStorage() });
+const { Pool } = require('pg');
+const pgSession = require('connect-pg-simple')(session);
 const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
@@ -47,10 +49,41 @@ app.use(express.static('public', { charset: 'utf-8' }));
 // Configure express-session
 app.set('trust proxy', 1); // Trust first proxy, crucial for Vercel/Heroku/etc.
 
+// --- NEW: Setup PostgreSQL Pool for Sessions ---
+// Ensure you have DATABASE_URL environment variable set!
+// Example: postgres://postgres:your_password@db.abcdefghi.supabase.co:5432/postgres
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error('FATAL ERROR: DATABASE_URL environment variable is not set.');
+  process.exit(1); // Exit if the database connection string is missing
+}
+
+const pgPool = new Pool({
+  connectionString: connectionString,
+  // Optional: Add SSL configuration if needed, Supabase typically requires it
+  // ssl: {
+  //   rejectUnauthorized: false // Adjust as per Supabase requirements or use proper CA certs
+  // }
+});
+
+pgPool.on('error', (err, client) => {
+  console.error('Unexpected error on idle PostgreSQL client', err);
+  process.exit(-1); // Consider a more graceful shutdown strategy
+});
+
+// --- NEW: Create PostgreSQL Session Store ---
+const sessionStore = new pgSession({
+  pool: pgPool,                // Connection pool
+  tableName: 'session',        // Use the table created earlier
+  createTableIfMissing: false  // We created it manually
+});
+
 app.use(session({
-    secret: 'your-secret-key', // Replace with a strong secret in production
-    resave: false,
-    saveUninitialized: false, // Don't save sessions until something is stored
+    store: sessionStore, // Use the PostgreSQL store
+    secret: process.env.SESSION_SECRET || 'fallback-secret-replace-me!', // !! USE AN ENV VAR FOR SECRET !!
+    resave: false, // Recommended: Don't save session if unmodified
+    saveUninitialized: false, // Recommended: Don't create session until something stored
     name: 'connect.sid', // Explicitly set the default session cookie name
     cookie: { 
         secure: process.env.NODE_ENV === 'production', // Ensure cookies are sent only over HTTPS in production
@@ -73,6 +106,9 @@ const adminCredentials = {
 
 // Middleware to protect admin routes
 const requireAuth = (req, res, next) => {
+    // ADD THIS LOG: Log the entire session object as seen by this middleware
+    console.log('requireAuth - Full Session Object:', JSON.stringify(req.session)); 
+
     console.log('Auth check - Session:', { 
         isAuthenticated: req.session.isAuthenticated,
         hasSession: !!req.session,
