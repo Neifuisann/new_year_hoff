@@ -55,13 +55,16 @@
                 <div class="editor-toolbar">
                      <h2>Câu hỏi (Nhập văn bản)</h2>
                      <div class="toolbar-buttons">
-                         <button onclick="insertImagePlaceholder()" title="Thêm hình ảnh"><i class="fas fa-image"></i> Hình ảnh</button>
+                         <button onclick="triggerImageUpload()" title="Tải ảnh lên"><i class="fas fa-upload"></i> Tải ảnh</button> 
+                         <button onclick="addImageFromUrl()" title="Thêm ảnh từ URL"><i class="fas fa-link"></i> Ảnh URL</button>
                          <button onclick="insertLatexDelimiters('$$')" title="Thêm LaTeX ($$...$$)"><i class="fas fa-calculator"></i> LaTeX</button>
                          <button onclick="insertLatexDelimiters('$')" title="Thêm LaTeX ($...$)"><i class="fas fa-square-root-alt"></i> LaTeX</button>
                          <!-- Add other toolbar buttons if needed -->
                      </div>
                  </div>
                 <textarea id="text-editor" spellcheck="false"></textarea>
+                <!-- Add hidden file input for image uploads -->
+                <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
             </div>
         </div>
         

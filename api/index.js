@@ -7,7 +7,11 @@ const fetch = require('node-fetch');
 const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
 const { inject } = require('@vercel/analytics');
-const upload = multer({ storage: multer.memoryStorage() });
+const sharp = require('sharp');
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // Limit file size to 10MB
+});
 const { Pool } = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const app = express();
@@ -36,7 +40,23 @@ inject();
 // Initialize Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://miojaflixmncmhsgyabd.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pb2phZmxpeG1uY21oc2d5YWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2NTU0NTUsImV4cCI6MjA1OTIzMTQ1NX0.e3nU5sBvHsFHZP48jg1vjYsP-N2S4AgYuQgt8opHE_g';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+// Debug info about Supabase setup
+console.log(`Supabase URL: ${supabaseUrl}`);
+console.log(`Service Key present: ${!!supabaseServiceKey}`);
+if (!supabaseServiceKey) {
+  console.warn('WARNING: SUPABASE_SERVICE_KEY environment variable not set. Storage uploads might fail if RLS requires authenticated users or service role.');
+  // Depending on your RLS, you might need the service key for direct uploads.
+  // If RLS allows authenticated users to upload, you might not need it here, but it's safer.
+}
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Create a second client with the service role key for admin operations that need to bypass RLS
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey || supabaseAnonKey);
+
+const IMAGE_BUCKET = 'lesson-images';
+const MAX_IMAGE_DIMENSION = 480;
 
 // Set proper charset for all responses
 app.use((req, res, next) => {
@@ -1479,5 +1499,135 @@ app.get('/api/history', requireAuth, async (req, res) => {
         res.status(500).json({ error: 'Failed to load history', details: error.message });
     }
 });
+
+// --- Corrected Admin Image Upload Endpoint with Resizing ---
+app.post('/api/admin/upload-image', requireAuth, upload.single('imageFile'), async (req, res) => {
+    console.log('Received image upload/URL request.');
+    let imageBuffer;
+    let originalFilename = 'uploaded_image'; // Default filename
+
+    try {
+        // Check if file was uploaded or URL was provided
+        if (req.file) {
+            console.log('Processing uploaded file:', req.file.originalname);
+            if (!req.file.mimetype.startsWith('image/')) {
+                return res.status(400).json({ success: false, error: 'Invalid file type. Only images are allowed.' });
+            }
+            imageBuffer = req.file.buffer;
+            originalFilename = req.file.originalname;
+        } else if (req.body.imageUrl) {
+            const imageUrl = req.body.imageUrl;
+            console.log('Fetching image from URL:', imageUrl);
+            // Basic URL validation
+            if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                return res.status(400).json({ success: false, error: 'Invalid image URL provided. Must start with http:// or https://' });
+            }
+            const response = await fetch(imageUrl, { timeout: 10000 }); // Add timeout
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image from URL: ${response.status} ${response.statusText}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.startsWith('image/')) {
+                 throw new Error(`URL did not point to a valid image. Content-Type: ${contentType}`);
+            }
+            imageBuffer = await response.buffer();
+            // Try to get a filename from the URL path
+            try {
+                 const urlParts = new URL(imageUrl);
+                 const baseName = path.basename(urlParts.pathname);
+                 if (baseName) originalFilename = baseName;
+            } catch (urlError) {
+                 console.warn('Could not parse filename from URL:', urlError.message);
+                 // Keep default filename if parsing fails
+            }
+        } else {
+            console.log('No image file or URL provided in the request.');
+            return res.status(400).json({ success: false, error: 'No image file or image URL provided.' });
+        }
+
+        // Sanitize filename (remove extension, non-alphanumeric chars, add timestamp)
+        const safeFilenameBase = path.parse(originalFilename).name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        const timestamp = Date.now();
+        const uniqueFilename = `${safeFilenameBase}_${timestamp}.webp`; // Save as webp
+
+        // Resize image using sharp
+        console.log('Resizing image...');
+        const resizedBuffer = await sharp(imageBuffer)
+            .resize({
+                width: MAX_IMAGE_DIMENSION,
+                height: MAX_IMAGE_DIMENSION,
+                fit: 'inside', // Scale down to fit within dimensions, preserving aspect ratio
+                withoutEnlargement: true // Don't upscale if image is smaller
+            })
+            .webp({ quality: 80 }) // Convert to webp for efficiency (adjust quality as needed)
+            .toBuffer();
+        console.log('Image resized successfully.');
+
+        // Upload to Supabase Storage
+        console.log(`Uploading processed image to Supabase Storage bucket '${IMAGE_BUCKET}' as '${uniqueFilename}'...`);
+        // Use the ADMIN client with service role key to bypass RLS
+        const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+            .from(IMAGE_BUCKET)
+            .upload(uniqueFilename, resizedBuffer, {
+                contentType: 'image/webp', // Set correct content type
+                cacheControl: '3600', // Example: cache for 1 hour
+                upsert: false // Don't overwrite existing files
+            });
+
+        if (uploadError) {
+            console.error('Supabase storage upload error:', uploadError);
+            // Check for specific errors if possible (e.g., permissions)
+            if (uploadError.message && uploadError.message.includes('bucket not found')) {
+                 throw new Error(`Storage bucket '${IMAGE_BUCKET}' not found. Please create it in Supabase.`);
+            } else if (uploadError.message && uploadError.message.includes('policy')) {
+                 throw new Error(`Storage upload failed due to RLS policy. Check bucket permissions.`);
+            }
+            throw uploadError; // Re-throw generic error
+        }
+
+        if (!uploadData || !uploadData.path) {
+             console.error('Supabase storage upload seemed successful but no path was returned.');
+             // This scenario might warrant trying to delete the file if possible
+             await supabaseAdmin.storage.from(IMAGE_BUCKET).remove([uniqueFilename]).catch(e => console.error('Cleanup attempt failed:', e));
+             throw new Error('Supabase storage upload failed: No path returned.');
+        }
+
+        console.log('Image uploaded successfully. Path:', uploadData.path);
+
+        // Get public URL for the uploaded image
+        const { data: urlData } = supabaseAdmin.storage
+            .from(IMAGE_BUCKET)
+            .getPublicUrl(uploadData.path);
+
+        if (!urlData || !urlData.publicUrl) {
+            console.error('Failed to get public URL from Supabase even after successful upload.');
+            // Maybe the bucket isn't public? Or an issue with Supabase?
+            // Try to remove the uploaded file
+            await supabaseAdmin.storage.from(IMAGE_BUCKET).remove([uniqueFilename]).catch(e => console.error('Cleanup attempt failed:', e));
+            throw new Error('Could not get public URL for the uploaded image. File removed.');
+        }
+
+        const publicUrl = urlData.publicUrl;
+        console.log('Public URL:', publicUrl);
+
+        // Return the public URL
+        res.json({ success: true, imageUrl: publicUrl });
+
+    } catch (error) {
+        console.error('Error processing image upload/URL request:', error);
+        // Attempt to clean up only if uniqueFilename was generated
+        if (typeof uniqueFilename === 'string') {
+            try {
+                console.warn(`Upload failed. Attempting cleanup for: ${uniqueFilename}`);
+                await supabaseAdmin.storage.from(IMAGE_BUCKET).remove([uniqueFilename]);
+                console.log(`Cleanup successful for: ${uniqueFilename}`);
+            } catch (cleanupError) {
+                console.error('Error during upload cleanup attempt:', cleanupError);
+            }
+        }
+        res.status(500).json({ success: false, error: 'Failed to process image', details: error.message });
+    }
+});
+// --- END Corrected Endpoint ---
 
 module.exports = app;

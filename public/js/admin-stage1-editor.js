@@ -625,12 +625,108 @@ function markTrueFalseCorrect(questionIndex, optionIndex) {
     applySyntaxHighlighting(editor);
 }
 
-function insertImagePlaceholder() {
-    if (!editor) return;
-    const placeholder = '[img src="PASTE_IMAGE_URL_HERE"]';
-    editor.replaceSelection(placeholder);
-    editor.focus();
+// --- NEW: Image Upload/URL Handling ---
+
+// Function to trigger the hidden file input
+function triggerImageUpload() {
+    const fileInput = document.getElementById('image-upload-input');
+    if (fileInput) {
+        fileInput.click(); // Programmatically click the hidden file input
+    }
 }
+
+// Function to handle adding an image from a URL
+function addImageFromUrl() {
+    if (!editor) return;
+    const imageUrl = prompt("Nhập URL hình ảnh:");
+    if (imageUrl) {
+        uploadImage(null, imageUrl); // Call the upload function with the URL
+    }
+}
+
+// Function to handle the actual upload (file or URL) to the backend
+async function uploadImage(file, url) {
+    if (!editor) return;
+    const formData = new FormData();
+    let isUploadingFile = false;
+
+    if (file) {
+        formData.append('imageFile', file);
+        isUploadingFile = true;
+        console.log("Uploading file:", file.name);
+    } else if (url) {
+        formData.append('imageUrl', url);
+        console.log("Sending URL for processing:", url);
+    } else {
+        alert('Không có tệp hoặc URL nào được cung cấp.'); // No file or URL provided
+        return;
+    }
+
+    // Display some kind of loading indicator near the editor or button
+    showImageUploadIndicator(true);
+
+    try {
+        const response = await fetch('/api/admin/upload-image', {
+            method: 'POST',
+            body: formData,
+            // No 'Content-Type' header needed, browser sets it correctly for FormData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success && result.imageUrl) {
+            const imageTag = `[img src="${result.imageUrl}"]`;
+            editor.replaceSelection(imageTag);
+            editor.focus();
+            console.log("Image tag inserted:", imageTag);
+        } else {
+            throw new Error(result.error || 'Upload không thành công.'); // Upload failed
+        }
+    } catch (error) {
+        console.error("Image upload error:", error);
+        alert(`Lỗi tải lên hình ảnh: ${error.message}`); // Image upload error
+    } finally {
+         showImageUploadIndicator(false);
+         // Reset file input value if a file was uploaded to allow uploading the same file again
+         if (isUploadingFile) {
+             const fileInput = document.getElementById('image-upload-input');
+             if (fileInput) fileInput.value = null;
+         }
+    }
+}
+
+// Helper to show/hide a simple loading indicator (customize as needed)
+function showImageUploadIndicator(show) {
+     // Example: Add/remove a class to a button or display a message
+     const uploadButton = document.querySelector('.editor-toolbar button[onclick="triggerImageUpload()"]');
+     if (uploadButton) {
+         uploadButton.disabled = show;
+         uploadButton.textContent = show ? 'Đang tải...' : ' Tải ảnh'; // Update text
+         // Re-add icon if needed when not loading
+         if (!show) uploadButton.innerHTML = '<i class="fas fa-upload"></i> Tải ảnh';
+     }
+     const urlButton = document.querySelector('.editor-toolbar button[onclick="addImageFromUrl()"]');
+     if(urlButton) {
+         urlButton.disabled = show;
+     }
+     // You could also add a dedicated loading spinner element
+}
+
+// Event listener for the hidden file input
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('image-upload-input');
+    if (fileInput) {
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                uploadImage(file, null); // Call upload function with the selected file
+            }
+        });
+    }
+    // Existing DOMContentLoaded logic...
+});
+
+// --- END: Image Upload/URL Handling ---
 
 function insertLatexDelimiters(delimiter) {
     if (!editor) return;
