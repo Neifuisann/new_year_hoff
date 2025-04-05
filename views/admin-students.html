@@ -54,6 +54,7 @@
                                 <th>Ngày sinh</th>
                                 <th>Ngày đăng ký</th>
                                 <th>Thiết bị</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="approved-students-list">
@@ -126,6 +127,11 @@
         const container = document.getElementById('pending-students-container');
         const emptyState = document.getElementById('empty-pending-state');
         
+        if (!container || !emptyState) {
+            console.error('Error: Missing required elements for pending students display.');
+            return;
+        }
+        
         if (!students || students.length === 0) {
             emptyState.style.display = 'block';
             container.innerHTML = '';
@@ -173,6 +179,11 @@
         const tableBody = document.getElementById('approved-students-list');
         const emptyState = document.getElementById('empty-approved-state');
         
+        if (!tableBody || !emptyState) {
+            console.error('Error: Missing required elements for approved students display.');
+            return;
+        }
+        
         if (!students || students.length === 0) {
             emptyState.style.display = 'block';
             tableBody.innerHTML = '';
@@ -192,13 +203,26 @@
                 year: 'numeric'
             });
             
+            // Determine device status and add unbind button if needed
+            let deviceStatus = 'Chưa đăng nhập';
+            let actionButton = '';
+            if (student.approved_device_fingerprint) {
+                deviceStatus = 'Đã liên kết'; // More specific than 'Đã đăng nhập'
+                actionButton = `
+                    <button class="button small secondary unbind-btn" onclick="unbindDevice('${student.id}')" title="Gỡ liên kết thiết bị này">
+                        <i class="fas fa-unlink"></i> Gỡ liên kết
+                    </button>
+                `;
+            }
+            
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${student.full_name}</td>
                 <td>${student.phone_number}</td>
                 <td>${dateOfBirth}</td>
                 <td>${approvedAt}</td>
-                <td>${student.approved_device_fingerprint ? 'Đã đăng nhập' : 'Chưa đăng nhập'}</td>
+                <td>${deviceStatus}</td>
+                <td class="action-cell">${actionButton}</td>
             `;
             
             tableBody.appendChild(row);
@@ -278,6 +302,50 @@
             showLoader(false);
         }
     }
+    
+    // --- NEW FUNCTION: Unbind Device ---
+    async function unbindDevice(studentId) {
+        if (!confirm(`Bạn có chắc chắn muốn gỡ liên kết thiết bị cho học sinh này không? Học sinh sẽ cần đăng nhập lại và thiết bị mới sẽ được liên kết.`)) {
+            return;
+        }
+
+        showLoader(true);
+        try {
+            const response = await fetch(`/api/admin/unbind-device/${studentId}`, {
+                method: 'POST',
+                credentials: 'include', // Important for sending admin session cookie
+                headers: {
+                    'Content-Type': 'application/json' 
+                    // Add CSRF token header if your app uses them
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return;
+                }
+                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                 throw new Error(`Failed to unbind device: ${errorData.message || response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Đã gỡ liên kết thiết bị thành công.');
+                loadData(); // Reload data to reflect the change
+            } else {
+                alert('Lỗi khi gỡ liên kết thiết bị: ' + (result.message || 'Không rõ lỗi.'));
+            }
+        } catch (error) {
+            console.error('Error unbinding device:', error);
+            alert(`Lỗi khi gỡ liên kết thiết bị: ${error.message}`);
+        } finally {
+            showLoader(false);
+        }
+    }
+    // --- END NEW FUNCTION ---
     
     // Search function for approved students
     function setupSearch() {

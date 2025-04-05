@@ -341,8 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeLesson(); 
 
         submitButton.addEventListener('click', async () => {
-            // Disable the submit button to prevent multiple submissions
+            // Disable the submit button and provide visual feedback
             submitButton.disabled = true;
+            submitButton.textContent = 'Đang nộp bài...';
+            submitButton.style.opacity = '0.7'; // Dim the button slightly
             
             try {
                 // Get IP address
@@ -372,56 +374,91 @@ document.addEventListener('DOMContentLoaded', () => {
                 questionElements.forEach((questionElement) => {
                     const originalIndex = parseInt(questionElement.dataset.questionIndex);
                     const q = lesson.questions[originalIndex];
-                    totalPossiblePoints += q.points;
-                    let userAnswer, correctAnswer, isCorrect;
+                    
+                    // --- Ensure points is a number, default to 1 if missing/invalid ---
+                    const questionPoints = (typeof q.points === 'number' && q.points > 0) ? q.points : 1;
+                    totalPossiblePoints += questionPoints; 
+                    // --- End points validation ---
+
+                    let userAnswer, correctAnswer, isCorrect, optionsText = null; // Added optionsText
 
                     if (q.type === 'truefalse' && Array.isArray(q.options)) {
-                        const userAnswers = q.options.map((_, idx) => {
+                        // --- NEW: Handle multi-option true/false ---
+                        const userAnswersArray = q.options.map((_, idx) => {
                             const selectedInput = document.querySelector(`input[name="q${originalIndex}_${idx}"]:checked`);
-                            return selectedInput ? selectedInput.value === 'true' : null;
+                            return selectedInput ? selectedInput.value === 'true' : null; // Store boolean or null
                         });
                         
-                        isCorrect = Array.isArray(q.correct) && q.correct.every((correctAns, idx) => 
-                            userAnswers[idx] !== null && userAnswers[idx] === correctAns
-                        );
-                        
-                        userAnswer = q.options.map((opt, idx) => {
-                            const optionText = opt.text || opt; // Handle both formats
-                            return `${String.fromCharCode(65 + idx)}: ${optionText} - ${userAnswers[idx] ? 'True' : 'False'}`;
-                        }).join('\n');
-                        
-                        correctAnswer = q.options.map((opt, idx) => {
-                            const optionText = opt.text || opt; // Handle both formats
-                            return `${String.fromCharCode(65 + idx)}: ${optionText} - ${q.correct[idx] ? 'True' : 'False'}`;
-                        }).join('\n');
+                        const correctAnswersArray = q.correct; // Should be an array of booleans
+                        optionsText = q.options.map(opt => opt.text || opt); // Store option texts
+
+                        // Determine overall correctness (all must be correct)
+                        isCorrect = Array.isArray(correctAnswersArray) && 
+                                    correctAnswersArray.every((correctAns, idx) => 
+                                        userAnswersArray[idx] !== null && userAnswersArray[idx] === correctAns
+                                    );
+
+                        userAnswer = userAnswersArray; // Save array
+                        correctAnswer = correctAnswersArray; // Save array
+                        // --- END NEW ---
+
                     } else if (q.type === 'abcd') {
                         const selectedRadio = document.querySelector(`input[name="q${originalIndex}"]:checked`);
                         const selectedValue = selectedRadio ? selectedRadio.value : null;
                         
                         if (selectedValue) {
                             const mapping = window.questionMappings[originalIndex];
-                            const selectedMapping = mapping.find(m => m.displayedLetter === selectedValue);
+                            // Ensure mapping exists before trying to find
+                            const selectedMapping = mapping ? mapping.find(m => m.displayedLetter === selectedValue) : null; 
                             
-                            if (selectedMapping) {
+                            if (selectedMapping && q.options[selectedMapping.originalIndex]) {
                                 const option = q.options[selectedMapping.originalIndex];
                                 userAnswer = option.text || option; // Handle both formats
                                 
                                 const correctIndex = q.correct.toUpperCase().charCodeAt(0) - 65;
-                                const correctOption = q.options[correctIndex];
-                                correctAnswer = correctOption.text || correctOption; // Handle both formats
-                                
-                                isCorrect = selectedMapping.originalIndex === correctIndex;
+                                // Check if correct index is valid
+                                if (correctIndex >= 0 && correctIndex < q.options.length) { 
+                                    const correctOption = q.options[correctIndex];
+                                    correctAnswer = correctOption.text || correctOption; // Handle both formats
+                                    isCorrect = selectedMapping.originalIndex === correctIndex;
+                                } else {
+                                    // Handle case where q.correct is invalid
+                                    console.warn(`Invalid correct answer letter '${q.correct}' for question index ${originalIndex}`);
+                                    correctAnswer = 'Error: Invalid correct answer specified';
+                                    isCorrect = false; 
+                                }
+                            } else {
+                                // Handle case where mapping or option doesn't exist (shouldn't happen often)
+                                console.warn(`Could not find mapping or option for selected value '${selectedValue}' in question index ${originalIndex}`);
+                                userAnswer = selectedValue ? `Selected: ${selectedValue}` : 'No answer';
+                                correctAnswer = 'Error: Could not determine correct answer';
+                                isCorrect = false;
                             }
                         } else {
                             userAnswer = 'No answer';
                             const correctIndex = q.correct.toUpperCase().charCodeAt(0) - 65;
-                            const correctOption = q.options[correctIndex];
-                            correctAnswer = correctOption.text || correctOption; // Handle both formats
+                            // Check if correct index is valid before accessing
+                             if (correctIndex >= 0 && correctIndex < q.options.length) {
+                                const correctOption = q.options[correctIndex];
+                                correctAnswer = correctOption.text || correctOption;
+                             } else {
+                                 correctAnswer = 'Error: Invalid correct answer specified';
+                             }
+                            isCorrect = false;
                         }
                     } else if (q.type === 'number') {
-                        userAnswer = document.querySelector(`[name="q${originalIndex}"]`).value || 'No answer';
+                        const inputElement = document.querySelector(`[name="q${originalIndex}"]`);
+                        userAnswer = inputElement ? inputElement.value : 'No input found'; // Handle missing input
                         correctAnswer = q.correct.toString();
-                        isCorrect = userAnswer === correctAnswer;
+                        // Strict comparison, ensure userAnswer is not empty
+                        isCorrect = userAnswer !== '' && userAnswer === correctAnswer; 
+                    } else if (q.type === 'truefalse' && !Array.isArray(q.options)) {
+                         // --- Handle single true/false ---
+                         const selectElement = document.querySelector(`select[name="q${originalIndex}"]`);
+                         userAnswer = selectElement ? selectElement.value : 'No selection';
+                         correctAnswer = q.correct.toString(); // q.correct should be true or false
+                         isCorrect = userAnswer === correctAnswer;
+                         // --- End single true/false ---
                     }
 
                     quizResults.questions.push({
@@ -430,12 +467,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         userAnswer: userAnswer,
                         correctAnswer: correctAnswer,
                         isCorrect: isCorrect,
-                        points: q.points,
-                        earnedPoints: isCorrect ? q.points : 0
+                        points: questionPoints, // Use validated points
+                        earnedPoints: isCorrect ? questionPoints : 0,
+                        optionsText: optionsText // Add optionsText (will be null for non-multi-TF)
                     });
 
                     if (isCorrect) {
-                        score += q.points;
+                        score += questionPoints; // Use validated points
                     }
                 });
                 
@@ -459,16 +497,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('quizResults', JSON.stringify(quizResults));
                     window.location.href = `/result/${resultData.resultId}`;
                 } catch (error) {
-                    console.error('Error in quiz submission:', error);
-                    alert('Error submitting quiz. Please try again.');
+                    console.error('Error in quiz submission (saving results):', error);
+                    alert('Lỗi khi lưu kết quả. Vui lòng thử lại.');
+                    // Revert button state on save error
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Nộp bài';
+                    submitButton.style.opacity = '1'; 
                 }
             } catch (error) {
-                console.error('Error in quiz submission:', error);
-                alert('Error submitting quiz. Please try again.');
-            } finally {
-                // Re-enable the submit button if there was an error
-                submitButton.disabled = false;
-            }
+                console.error('Error in quiz submission (fetching lesson/IP):', error);
+                alert('Lỗi khi nộp bài. Vui lòng thử lại.');
+                 // Revert button state on initial error
+                 submitButton.disabled = false;
+                 submitButton.textContent = 'Nộp bài';
+                 submitButton.style.opacity = '1';
+            } 
         });
     }
 });

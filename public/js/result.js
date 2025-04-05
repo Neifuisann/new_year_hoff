@@ -147,29 +147,40 @@ function displaySortedResults(sortType) {
     };
 
     // Generate HTML for filtered questions
-    const resultHTML = filteredQuestions.map((question, index) => `
-        <div class="question-card ${question.isCorrect ? 'correct' : 'incorrect'}">
-            <div class="question-header">
-                <div class="question-info">
-                    <span class="question-number">Câu ${index + 1}</span>
-                    <span class="result-indicator">
-                        <i class="fas fa-${question.isCorrect ? 'check' : 'times'}"></i>
-                    </span>
-                </div>
-            </div>
-            
-            <div class="question-content">
-                <div class="question-top">
-                    <p class="question-text">${question.question}</p>
-                    <button class="explain-btn" 
-                        data-question="${encodeURIComponent(question.question)}"
-                        data-user-answer="${encodeURIComponent(formatAnswer(question.userAnswer, question.type))}"
-                        data-correct-answer="${encodeURIComponent(formatAnswer(question.correctAnswer, question.type))}">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>Xem giải thích (AI)</span>
-                    </button>
-                </div>
+    const resultHTML = filteredQuestions.map((question, index) => {
+        // --- NEW: Check for multi-option true/false ---
+        const isMultiTrueFalse = question.type === 'truefalse' && Array.isArray(question.optionsText);
+        
+        let answerSectionHTML = '';
+        if (isMultiTrueFalse) {
+            // --- Render individual options for multi-TF ---
+            answerSectionHTML = '<div class="answer-section multi-tf">';
+            question.optionsText.forEach((optionText, i) => {
+                const userAns = question.userAnswer[i];
+                const correctAns = question.correctAnswer[i];
+                const isSubCorrect = userAns === correctAns;
                 
+                const userAnsText = userAns === true ? 'True' : (userAns === false ? 'False' : 'Chưa chọn');
+                const correctAnsText = correctAns === true ? 'True' : 'False';
+
+                answerSectionHTML += `
+                    <div class="multi-tf-item">
+                        <span class="multi-tf-indicator ${isSubCorrect ? 'correct' : 'incorrect'}">
+                            <i class="fas fa-${isSubCorrect ? 'check' : 'times'}"></i>
+                        </span>
+                        <span class="multi-tf-option">${String.fromCharCode(65 + i)}) ${optionText}</span>
+                        <div class="multi-tf-answers">
+                            <span>(Đã chọn: ${userAnsText}</span>
+                            <span> | Đáp án: ${correctAnsText})</span>
+                        </div>
+                    </div>
+                `;
+            });
+            answerSectionHTML += '</div>';
+            // --- End multi-TF rendering ---
+        } else {
+            // --- Standard rendering for other question types ---
+            answerSectionHTML = `
                 <div class="answer-section">
                     <div class="answer-box user-answer ${question.isCorrect ? 'correct' : 'incorrect'}">
                         <div class="answer-label">
@@ -187,13 +198,45 @@ function displaySortedResults(sortType) {
                         <div class="answer-text">${formatAnswer(question.correctAnswer, question.type)}</div>
                     </div>
                 </div>
+            `;
+             // --- End standard rendering ---
+        }
+
+        return `
+            <div class="question-card ${question.isCorrect ? 'correct' : 'incorrect'}">
+                <div class="question-header">
+                    <div class="question-info">
+                        <span class="question-number">Câu ${index + 1}</span>
+                        <span class="result-indicator">
+                             ${isMultiTrueFalse ? '' : `<i class="fas fa-${question.isCorrect ? 'check' : 'times'}"></i>`}
+                             ${isMultiTrueFalse && question.isCorrect ? '<i class="fas fa-check"></i>' : ''} 
+                             ${isMultiTrueFalse && !question.isCorrect ? '<i class="fas fa-times"></i>' : ''} 
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="question-content">
+                    <div class="question-top">
+                        <p class="question-text">${question.question}</p>
+                        <button class="explain-btn" 
+                            data-question="${encodeURIComponent(question.question)}"
+                            data-user-answer="${encodeURIComponent(isMultiTrueFalse ? JSON.stringify(question.userAnswer) : formatAnswer(question.userAnswer, question.type))}" 
+                            data-correct-answer="${encodeURIComponent(isMultiTrueFalse ? JSON.stringify(question.correctAnswer) : formatAnswer(question.correctAnswer, question.type))}"
+                            ${isMultiTrueFalse ? 'data-options-text="' + encodeURIComponent(JSON.stringify(question.optionsText)) + '"' : ''} >
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Xem giải thích (AI)</span>
+                        </button>
+                    </div>
+                    
+                    ${answerSectionHTML} 
+                </div>
+                
+                <div class="explanation-box" style="display: none;">
+                    <div class="explanation-content"></div>
+                </div>
             </div>
-            
-            <div class="explanation-box" style="display: none;">
-                <div class="explanation-content"></div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     document.getElementById('result').innerHTML = resultHTML;
     attachExplanationListeners();
@@ -221,6 +264,10 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
     const explanationBox = questionCard.querySelector('.explanation-box');
     const explanationContent = explanationBox.querySelector('.explanation-content');
     
+    // --- Get optional options text ---
+    const optionsText = button.dataset.optionsText ? decodeURIComponent(button.dataset.optionsText) : null;
+    // ---
+
     if (explanationContent.dataset.loaded === 'true') {
         explanationBox.style.display = explanationBox.style.display === 'none' ? 'block' : 'none';
         button.innerHTML = explanationBox.style.display === 'none' ? 
@@ -239,6 +286,27 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
         const decodedUserAnswer = decodeURIComponent(button.dataset.userAnswer);
         const decodedCorrectAnswer = decodeURIComponent(button.dataset.correctAnswer);
         
+        // --- Prepare user/correct answer text for prompt ---
+        let userAnswerText = decodedUserAnswer;
+        let correctAnswerText = decodedCorrectAnswer;
+        if (optionsText) { // If multi-TF, format the array answers
+            try {
+                const userAnswers = JSON.parse(decodedUserAnswer);
+                const correctAnswers = JSON.parse(decodedCorrectAnswer);
+                const parsedOptions = JSON.parse(optionsText);
+                userAnswerText = parsedOptions.map((opt, i) => 
+                    `${String.fromCharCode(65 + i)}: ${userAnswers[i] === true ? 'True' : (userAnswers[i] === false ? 'False' : 'N/A')}`
+                ).join('\n');
+                correctAnswerText = parsedOptions.map((opt, i) => 
+                    `${String.fromCharCode(65 + i)}: ${correctAnswers[i] ? 'True' : 'False'}`
+                ).join('\n');
+            } catch (e) {
+                console.error('Error parsing multi-TF answers for prompt:', e);
+                // Fallback to raw strings if parsing fails
+            }
+        }
+        // ---
+        
         // Direct API call to Google Gemini API
         const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc"; // This is the same key from server-side
         const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent";
@@ -253,8 +321,8 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
                     parts: [{
                         text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:
 Question: ${decodedQuestion}
-User's answer: ${decodedUserAnswer}
-Correct answer: ${decodedCorrectAnswer}`
+${optionsText ? 'Options:\n' + JSON.parse(optionsText).map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n') + '\n' : ''}User's answer: ${userAnswerText}
+Correct answer: ${correctAnswerText}`
                     }]
                 }],
                 generationConfig: {

@@ -1147,4 +1147,37 @@ app.delete('/api/admin/reject-student/:studentId', requireAuth, async (req, res)
     }
 });
 
+// New endpoint to unbind a device from a student
+app.post('/api/admin/unbind-device/:studentId', requireAuth, async (req, res) => {
+    const studentId = req.params.studentId;
+    try {
+        const { data, error } = await supabase
+            .from('students')
+            .update({ approved_device_fingerprint: null })
+            .eq('id', studentId)
+            .select('id') // Select something to confirm the update happened
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') { // Code for "No rows returned"
+                return res.status(404).json({ success: false, message: 'Student not found.' });
+            }
+            console.error(`Error unbinding device for student ${studentId}:`, error);
+            throw error; // Throw for generic server error
+        }
+
+        if (!data) {
+            // Should be caught by PGRST116, but as a fallback
+            return res.status(404).json({ success: false, message: 'Student not found (post-update check).' });
+        }
+
+        console.log(`Device unbind successful for student ${studentId}.`);
+        res.json({ success: true, message: 'Device unbound successfully. The student can now log in from a new device.' });
+
+    } catch (error) {
+        console.error(`Error processing unbind request for student ${studentId}:`, error);
+        res.status(500).json({ success: false, error: 'Failed to unbind device', details: error.message });
+    }
+});
+
 module.exports = app;
