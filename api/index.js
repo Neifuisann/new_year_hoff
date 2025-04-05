@@ -1630,4 +1630,76 @@ app.post('/api/admin/upload-image', requireAuth, upload.single('imageFile'), asy
 });
 // --- END Corrected Endpoint ---
 
+// --- Endpoint for saving raw lesson content (used as session storage fallback) ---
+app.post('/api/admin/save-raw-lesson', requireAuth, async (req, res) => {
+    try {
+        const { id, rawContent } = req.body;
+        
+        if (!rawContent) {
+            return res.status(400).json({ success: false, error: 'No content provided' });
+        }
+        
+        if (!id) {
+            return res.status(400).json({ success: false, error: 'No ID provided' });
+        }
+        
+        // Save the raw content to a temporary table or file
+        // Use Supabase to store this in a custom table
+        const { data, error } = await supabaseAdmin
+            .from('temp_lesson_content')
+            .upsert({ 
+                id: id,
+                content: rawContent,
+                created_at: new Date().toISOString(),
+                user_id: req.session.user?.id || 'unknown'
+            });
+            
+        if (error) {
+            console.error('Error saving raw lesson content:', error);
+            return res.status(500).json({ success: false, error: error.message });
+        }
+        
+        console.log(`Raw lesson content saved for ID: ${id}`);
+        return res.json({ success: true, id: id });
+        
+    } catch (error) {
+        console.error('Error in save-raw-lesson endpoint:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// --- Endpoint for retrieving raw lesson content ---
+app.get('/api/admin/raw-lesson/:id', requireAuth, async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({ success: false, error: 'No ID provided' });
+        }
+        
+        // Retrieve the raw content from storage
+        const { data, error } = await supabaseAdmin
+            .from('temp_lesson_content')
+            .select('content')
+            .eq('id', id)
+            .single();
+            
+        if (error) {
+            console.error('Error retrieving raw lesson content:', error);
+            return res.status(500).json({ success: false, error: error.message });
+        }
+        
+        if (!data) {
+            return res.status(404).json({ success: false, error: 'Content not found' });
+        }
+        
+        console.log(`Raw lesson content retrieved for ID: ${id}`);
+        return res.json({ success: true, content: data.content });
+        
+    } catch (error) {
+        console.error('Error in get-raw-lesson endpoint:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = app;

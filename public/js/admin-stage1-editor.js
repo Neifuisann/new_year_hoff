@@ -536,6 +536,56 @@ function applySyntaxHighlighting(cm) {
     });
 }
 
+// If sessionStorage fails, try to use direct API saving
+async function saveRawContentToServer() {
+    if (!editor) {
+        console.error("Editor not initialized, cannot save raw content");
+        return false;
+    }
+    
+    try {
+        // Force editor to save to textarea
+        editor.save(); 
+        
+        // Get the editor content
+        const rawContent = editor.getValue();
+        
+        // Create a temporary lesson ID if we don't have one
+        const tempId = editingId || ('temp_' + Date.now());
+        
+        // Send the raw content to the server
+        const response = await fetch('/api/admin/save-raw-lesson', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: tempId,
+                rawContent: rawContent
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log("Raw content saved successfully with ID:", result.id);
+            // Store this ID in both sessionStorage and localStorage
+            sessionStorage.setItem('rawContentId', result.id);
+            localStorage.setItem('rawContentId', result.id);
+            return result.id;
+        } else {
+            throw new Error(result.error || "Unknown error saving raw content");
+        }
+    } catch (error) {
+        console.error("Error saving raw content:", error);
+        return false;
+    }
+}
+
 function proceedToConfiguration() {
     if (!editor) {
         alert('Editor not initialized.');
@@ -581,10 +631,46 @@ function proceedToConfiguration() {
         console.log(JSON.stringify(stage1Data, null, 2));
         // --- END DEBUGGING ---
         
+        // Store in sessionStorage
         sessionStorage.setItem('lessonStage1Data', JSON.stringify(stage1Data));
         
+        // Add a backup using localStorage as well (in case sessionStorage fails)
+        try {
+            localStorage.setItem('lessonStage1Data_backup', JSON.stringify(stage1Data));
+            console.log("Backup stored in localStorage");
+        } catch (storageError) {
+            console.warn("Could not store backup in localStorage:", storageError);
+        }
+        
+        // Verify the data was stored correctly
+        const storedData = sessionStorage.getItem('lessonStage1Data');
+        if (!storedData) {
+            console.error("Failed to retrieve data from sessionStorage immediately after storing!");
+            alert("Warning: There may be an issue with your browser's sessionStorage. Trying an alternative approach.");
+            
+            // Try to save raw content directly to server
+            console.log("Attempting to save raw content to server...");
+            saveRawContentToServer().then(savedId => {
+                if (savedId) {
+                    console.log("Raw content saved with ID:", savedId);
+                    alert("Your content has been saved to the server. You will be redirected to the configuration page.");
+                    const configureUrl = savedId ? `/admin/configure/${savedId}` : '/admin/configure';
+                    window.location.href = configureUrl;
+                } else {
+                    alert("Failed to save your content. Please try again or contact support.");
+                }
+            });
+            return; // Don't proceed until the save operation completes
+        }
+        
         const configureUrl = editingId ? `/admin/configure/${editingId}` : '/admin/configure';
-        window.location.href = configureUrl;
+        
+        // Use a small delay before redirecting to ensure storage is complete
+        console.log("Redirecting to " + configureUrl + " in 100ms...");
+        setTimeout(() => {
+            window.location.href = configureUrl;
+        }, 100);
+        
     } catch (error) {
         console.error("Error storing data for Stage 2:", error);
         alert('Could not proceed to configuration: ' + error.message);
@@ -825,3 +911,42 @@ function insertLatexDelimiters(delimiter) {
     }
     editor.focus();
 }
+
+// Add utility for debugging session storage issues
+function debugSessionStorage() {
+    console.log("==== SESSION STORAGE DEBUG ====");
+    try {
+        // Test if sessionStorage is available and working
+        sessionStorage.setItem('test_key', 'test_value');
+        const testValue = sessionStorage.getItem('test_key');
+        console.log("SessionStorage test: " + (testValue === 'test_value' ? 'PASSED' : 'FAILED'));
+        sessionStorage.removeItem('test_key');
+        
+        // Check lesson data
+        const lessonData = sessionStorage.getItem('lessonStage1Data');
+        console.log("lessonStage1Data in sessionStorage: " + (lessonData ? 'PRESENT' : 'MISSING'));
+        if (lessonData) {
+            try {
+                const parsedData = JSON.parse(lessonData);
+                console.log("Storage data successfully parsed, contains questions:", !!parsedData.questions);
+                console.log("Questions count:", parsedData.questions ? parsedData.questions.length : 0);
+            } catch (e) {
+                console.error("Error parsing session storage data:", e);
+            }
+        }
+        
+        // Check backup in localStorage
+        const backupData = localStorage.getItem('lessonStage1Data_backup');
+        console.log("lessonStage1Data_backup in localStorage: " + (backupData ? 'PRESENT' : 'MISSING'));
+        
+    } catch (e) {
+        console.error("Session storage test error:", e);
+        alert("Your browser may have issues with sessionStorage. Please enable cookies and storage for this site.");
+    }
+    console.log("==============================");
+}
+
+// Run debug automatically on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(debugSessionStorage, 500);
+});
