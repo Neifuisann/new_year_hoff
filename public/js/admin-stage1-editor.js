@@ -1,7 +1,11 @@
 let editingId = null;
 let editor = null;
 
+// Main document ready handler
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log("DOMContentLoaded event fired");
+    
+    // Initialize editor from existing content
     const pathParts = window.location.pathname.split('/');
     editingId = null;
 
@@ -26,6 +30,57 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     initializeEditor(initialTextContent);
+    
+    // Setup file input for image uploads
+    const fileInput = document.getElementById('image-upload-input');
+    if (fileInput) {
+        console.log("File input element found, adding change listener");
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                console.log("File selected:", file.name);
+                uploadImage(file, null); // Call upload function with the selected file
+            }
+        });
+    } else {
+        console.warn("Image upload input element not found");
+    }
+    
+    // Add debug utility for syncing editor
+    const syncButton = document.createElement('button');
+    syncButton.textContent = "Debug: Sync Editor";
+    syncButton.style.position = "fixed";
+    syncButton.style.bottom = "10px";
+    syncButton.style.right = "10px";
+    syncButton.style.zIndex = "9999";
+    syncButton.style.padding = "5px";
+    syncButton.style.fontSize = "10px";
+    syncButton.style.opacity = "0.5";
+    syncButton.onclick = function() {
+        if (editor) {
+            console.log("Manually syncing editor to textarea");
+            editor.save(); // Save editor content to the original textarea
+            const currentText = editor.getValue();
+            console.log("Current editor text:", currentText);
+            alert("Editor synced to textarea");
+        }
+    };
+    document.body.appendChild(syncButton);
+    
+    // Ensure Next button correctly saves editor content
+    const nextButton = document.querySelector('.next-btn');
+    if (nextButton) {
+        // Replace any existing onclick handler to make sure the editor is saved first
+        nextButton.onclick = function(event) {
+            event.preventDefault(); // Prevent default action
+            console.log("Next button clicked, ensuring editor content is saved");
+            if (editor) {
+                editor.save(); // Force the editor to save to the textarea
+            }
+            // Then proceed to configuration
+            proceedToConfiguration();
+        };
+    }
 });
 
 function generateInitialText(questions) {
@@ -487,33 +542,53 @@ function proceedToConfiguration() {
         return;
     }
     
-    const lessonText = editor.getValue();
-    const parsedQuestions = parseQuizText(lessonText);
-
-    if (parsedQuestions.length === 0) {
-        if (!confirm("There are no questions. Proceed to configuration anyway?")) {
+    try {
+        // CRITICAL: Make sure we're getting the most current content from the editor
+        editor.save(); // Force editor to update the underlying textarea
+        
+        // Get the newest content from the editor
+        const lessonText = editor.getValue();
+        
+        // Log the raw text for debugging
+        console.log("Raw editor content being processed:");
+        console.log(lessonText);
+        
+        const parsedQuestions = parseQuizText(lessonText);
+    
+        // --- DEBUGGING: Log the parsed questions before storing --- 
+        console.log("Parsed Questions (Stage 1):");
+        console.log(JSON.stringify(parsedQuestions, null, 2)); 
+        // --- END DEBUGGING ---
+    
+        if (parsedQuestions.length === 0) {
+            if (!confirm("There are no questions. Proceed to configuration anyway?")) {
+                return;
+            }
+        }
+        if (parsedQuestions.some(q => q.type === 'invalid')) {
+            alert('Some questions could not be parsed correctly. Please fix them before proceeding.');
             return;
         }
-    }
-    if (parsedQuestions.some(q => q.type === 'invalid')) {
-        alert('Some questions could not be parsed correctly. Please fix them before proceeding.');
-        return;
-    }
-
-    try {
+    
         const stage1Data = {
             questions: parsedQuestions,
-            editingId: editingId
+            editingId: editingId,
+            rawText: lessonText // Store the raw text as well for safety
         };
+        
+        // --- DEBUGGING: Log the data being stored --- 
+        console.log("Storing in sessionStorage (lessonStage1Data):");
+        console.log(JSON.stringify(stage1Data, null, 2));
+        // --- END DEBUGGING ---
+        
         sessionStorage.setItem('lessonStage1Data', JSON.stringify(stage1Data));
         
         const configureUrl = editingId ? `/admin/configure/${editingId}` : '/admin/configure';
         window.location.href = configureUrl;
-
     } catch (error) {
         console.error("Error storing data for Stage 2:", error);
-        alert('Could not proceed to configuration. Check console for details.');
-        sessionStorage.removeItem('lessonStage1Data');
+        alert('Could not proceed to configuration: ' + error.message);
+        // Don't remove the session storage if there's an error - we might want to inspect it
     }
 }
 
@@ -675,10 +750,34 @@ async function uploadImage(file, url) {
         const result = await response.json();
 
         if (response.ok && result.success && result.imageUrl) {
+            // Remember cursor position
+            const cursorPos = editor.getCursor();
+            
+            // Insert the image tag at cursor position
             const imageTag = `[img src="${result.imageUrl}"]`;
             editor.replaceSelection(imageTag);
-            editor.focus();
+            
+            // Make sure it's actually inserted into the editor's value
             console.log("Image tag inserted:", imageTag);
+            editor.focus();
+            
+            // Critical steps to ensure changes are saved
+            editor.refresh(); // Force a refresh of the editor
+            
+            // Update the editor's underlying textarea
+            editor.save();
+            
+            // Also trigger a change event to update preview and syntax highlighting
+            const currentText = editor.getValue();
+            console.log("Editor text after image insertion:", currentText.substring(Math.max(0, cursorPos.ch - 10), cursorPos.ch + imageTag.length + 10));
+            
+            // Update preview and highlighting
+            const parsed = parseQuizText(currentText);
+            updatePreview(parsed);
+            applySyntaxHighlighting(editor);
+            
+            // Successful status message
+            console.log("Image uploaded and inserted successfully");
         } else {
             throw new Error(result.error || 'Upload không thành công.'); // Upload failed
         }
@@ -711,20 +810,6 @@ function showImageUploadIndicator(show) {
      }
      // You could also add a dedicated loading spinner element
 }
-
-// Event listener for the hidden file input
-document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('image-upload-input');
-    if (fileInput) {
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                uploadImage(file, null); // Call upload function with the selected file
-            }
-        });
-    }
-    // Existing DOMContentLoaded logic...
-});
 
 // --- END: Image Upload/URL Handling ---
 
