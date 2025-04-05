@@ -328,16 +328,17 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoader(true); // Show loader immediately
     const submitButton = document.getElementById('submit-quiz-btn');
     if (submitButton) {
-        // Get student info from localStorage
-        const studentInfo = JSON.parse(localStorage.getItem('studentInfo'));
-        if (!studentInfo) {
-            // If no student info, redirect back to home
-            window.location.href = '/';
-            return;
-        }
+        // REMOVED: Get student info from localStorage
+        // REMOVED: const studentInfo = JSON.parse(localStorage.getItem('studentInfo'));
+        // REMOVED: if (!studentInfo) {
+        // REMOVED:     // If no student info, redirect back to home
+        // REMOVED:     window.location.href = '/';
+        // REMOVED:     return;
+        // REMOVED: }
 
         // Rest of your initialization code...
-        initializeLesson(); // This will handle hiding the loader
+        // This function already handles authentication checks and potential redirects
+        initializeLesson(); 
 
         submitButton.addEventListener('click', async () => {
             // Disable the submit button to prevent multiple submissions
