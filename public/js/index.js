@@ -231,7 +231,7 @@ function updatePaginationControls() {
 
     // Previous Button
     const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
+    prevButton.textContent = 'Trước';
     prevButton.disabled = currentPage === 1;
     prevButton.onclick = () => {
         if (currentPage > 1) {
@@ -243,13 +243,13 @@ function updatePaginationControls() {
 
     // Page Number Indicator (Simple version)
     const pageInfo = document.createElement('span');
-    pageInfo.textContent = ` Page ${currentPage} of ${totalPages} `;
+    pageInfo.textContent = ` Trang ${currentPage} trên ${totalPages} `;
     pageInfo.style.margin = '0 10px'; // Add some spacing
     paginationContainer.appendChild(pageInfo);
 
     // Next Button
     const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
+    nextButton.textContent = 'Tiếp';
     nextButton.disabled = currentPage === totalPages;
     nextButton.onclick = () => {
         if (currentPage < totalPages) {

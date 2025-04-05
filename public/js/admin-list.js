@@ -276,7 +276,7 @@ function updateAdminPaginationControls() {
     if (totalPages <= 1) return; 
 
     const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
+    prevButton.textContent = 'Trước';
     prevButton.disabled = currentPage === 1;
     prevButton.onclick = () => {
         if (currentPage > 1) {
@@ -292,7 +292,7 @@ function updateAdminPaginationControls() {
     paginationContainer.appendChild(pageInfo);
 
     const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
+    nextButton.textContent = 'Tiếp';
     nextButton.disabled = currentPage === totalPages;
     nextButton.onclick = () => {
         if (currentPage < totalPages) {

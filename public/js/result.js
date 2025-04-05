@@ -83,6 +83,9 @@ async function displayResults() {
         // Log the result for debugging
         console.log('Result data:', currentResult);
         
+        // Store this result in session storage for persistence
+        storeResultInSession(currentResult);
+        
         // Update statistics cards
         updateStatisticsCards(currentResult);
         
@@ -93,6 +96,37 @@ async function displayResults() {
         document.getElementById('result').innerHTML = '<p class="no-results">Result not found. Please try again.</p>';
     } finally {
         showLoader(false);
+    }
+}
+
+// Store result in session storage for better persistence across page reloads
+function storeResultInSession(result) {
+    if (!result) return;
+    
+    try {
+        // Store lesson ID
+        if (result.lessonId) {
+            sessionStorage.setItem('lastLessonId', result.lessonId);
+        }
+        
+        // Store score and total
+        if (result.score !== undefined && result.totalPoints !== undefined) {
+            sessionStorage.setItem('lastUserScore', result.score);
+            sessionStorage.setItem('lastTotalPoints', result.totalPoints);
+        }
+        
+        // Store a minimal version of the result for persistence
+        const minimalResult = {
+            lessonId: result.lessonId,
+            score: result.score,
+            totalPoints: result.totalPoints,
+            timestamp: result.timestamp || new Date().toISOString()
+        };
+        
+        sessionStorage.setItem('lastResult', JSON.stringify(minimalResult));
+        
+    } catch (error) {
+        console.error('Error storing result in session:', error);
     }
 }
 
@@ -108,9 +142,487 @@ function updateStatisticsCards(result) {
 
     // Update statistics cards
     document.getElementById('score-value').textContent = `${score}/${totalPoints}`;
-    document.getElementById('correct-answers').textContent = correctAnswers;
-    document.getElementById('incorrect-answers').textContent = incorrectAnswers;
-    document.getElementById('accuracy').textContent = `${accuracy}%`;
+    
+    // Get lesson name
+    if (result.lessonId) {
+        fetchLessonName(result.lessonId);
+    }
+    
+    // Get user ranking
+    if (result.lessonId) {
+        fetchUserRanking(result.lessonId, score, totalPoints);
+    }
+}
+
+// Function to fetch lesson name
+async function fetchLessonName(lessonId) {
+    try {
+        const response = await fetch(`/api/lessons/${lessonId}`);
+        if (!response.ok) throw new Error('Failed to fetch lesson');
+        
+        const lessonData = await response.json();
+        document.getElementById('lesson-name').textContent = lessonData.title || 'Unknown';
+    } catch (error) {
+        console.error('Error fetching lesson name:', error);
+        document.getElementById('lesson-name').textContent = 'Unknown';
+    }
+}
+
+// Function to fetch user ranking
+async function fetchUserRanking(lessonId, userScore, totalPoints) {
+    try {
+        console.log(`Fetching ranking data for lesson: ${lessonId}, score: ${userScore}/${totalPoints}`);
+        
+        // First check if we have any previously stored results for this lesson
+        const storedResults = getPreviousResults(lessonId);
+        
+        // Try to fetch from the API
+        let apiData = null;
+        let apiSuccess = false;
+        
+        try {
+            const response = await fetch(`/api/lessons/${lessonId}/statistics`);
+            if (response.ok) {
+                apiData = await response.json();
+                apiSuccess = true;
+                console.log('API statistics data received:', apiData);
+            } else {
+                console.error(`API call failed with status: ${response.status} ${response.statusText}`);
+            }
+        } catch (apiError) {
+            console.error('Error fetching from API:', apiError);
+        }
+        
+        // Add the current user's result
+        const currentResult = {
+            student_id: getCurrentStudentId(),
+            score: `${(userScore / totalPoints * 100).toFixed(1)}%`,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Store this attempt in our local storage for future reference
+        storeAttemptLocally(lessonId, currentResult);
+        
+        // Prepare transcripts from either API or local storage
+        let transcripts = [];
+        
+        if (apiSuccess && apiData) {
+            // Use API data if available
+            if (Array.isArray(apiData.transcripts)) {
+                transcripts = apiData.transcripts;
+            } else if (apiData && typeof apiData === 'object') {
+                // Try to find transcripts in other properties
+                const possibleTranscriptKeys = ['transcripts', 'results', 'attempts', 'submissions'];
+                for (const key of possibleTranscriptKeys) {
+                    if (Array.isArray(apiData[key])) {
+                        transcripts = apiData[key];
+                        console.log(`Found transcripts in property: ${key}`);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // If no transcripts from API, use locally stored results
+        if (transcripts.length === 0 && storedResults.length > 0) {
+            console.log('Using locally stored results instead of API data');
+            transcripts = storedResults;
+        }
+        
+        // Add current user's result if not already included
+        const alreadyIncluded = transcripts.some(t => 
+            t.student_id === currentResult.student_id && 
+            parseFloat(t.score?.replace('%', '') || 0) >= parseFloat(currentResult.score.replace('%', ''))
+        );
+        
+        if (!alreadyIncluded) {
+            console.log('Adding current user result to transcripts');
+            transcripts.push(currentResult);
+        }
+        
+        // Ensure we have at least the current user's result
+        if (transcripts.length === 0) {
+            console.log('No transcripts found, adding only current user');
+            transcripts = [currentResult];
+        }
+        
+        console.log(`Processing ${transcripts.length} total submissions for this lesson`);
+        
+        // Group results by student and take only the highest score for each student
+        const uniqueStudentScores = new Map();
+        
+        transcripts.forEach(transcript => {
+            // Try to get a unique identifier for the student
+            // First try student_id, then any id field, then fallback to using a property combo
+            const studentId = transcript.student_id || 
+                              transcript.id || 
+                              transcript.userId || 
+                              transcript.studentId ||
+                              generateFallbackId(transcript);
+            
+            if (!studentId) {
+                console.warn('Could not identify student for transcript:', transcript);
+                return;
+            }
+            
+            const scoreStr = transcript.score || "0%";
+            
+            // Remove the % sign and convert to number
+            let score = 0;
+            try {
+                // Handle different score formats (100%, 100, 0.95, etc.)
+                if (typeof scoreStr === 'string' && scoreStr.includes('%')) {
+                    score = parseFloat(scoreStr.replace('%', ''));
+                } else if (typeof scoreStr === 'number') {
+                    // Assume it's already a percentage if > 1, otherwise multiply by 100
+                    score = scoreStr > 1 ? scoreStr : scoreStr * 100;
+                } else {
+                    score = parseFloat(scoreStr);
+                }
+                
+                if (isNaN(score)) score = 0;
+            } catch (e) {
+                console.warn(`Error parsing score "${scoreStr}":`, e);
+                score = 0;
+            }
+            
+            console.log(`Processed score: ${score} for student: ${studentId}`);
+            
+            if (!uniqueStudentScores.has(studentId) || score > uniqueStudentScores.get(studentId)) {
+                uniqueStudentScores.set(studentId, score);
+            }
+        });
+        
+        console.log(`Found ${uniqueStudentScores.size} unique students with scores`);
+        
+        // Convert to array and sort in descending order
+        const sortedScores = Array.from(uniqueStudentScores.values()).sort((a, b) => b - a);
+        console.log('Sorted scores:', sortedScores);
+        
+        // Get total number of unique participants
+        const totalParticipants = sortedScores.length;
+        
+        // Calculate current user's score as percentage
+        totalPoints = totalPoints || 1;
+        const userScorePercentage = (userScore / totalPoints) * 100;
+        console.log(`Current user score: ${userScorePercentage}%`);
+        
+        // Check if the current user's score exists in the sorted scores
+        // If not, add it (could happen if current score is better than previously saved)
+        if (!sortedScores.includes(userScorePercentage)) {
+            console.log('Adding current score to sorted scores');
+            sortedScores.push(userScorePercentage);
+            sortedScores.sort((a, b) => b - a);
+        }
+        
+        // Find user's position
+        let userRank = sortedScores.findIndex(score => Math.abs(score - userScorePercentage) < 0.1) + 1;
+        console.log(`Initial userRank calculation: ${userRank}`);
+        
+        // If not found, place at the end
+        if (userRank === 0) {
+            userRank = totalParticipants;
+            console.log(`Adjusted userRank to: ${userRank}`);
+        }
+        
+        // Calculate percentile rank (lower is better - means you're in the top X%)
+        const percentileRank = (userRank / totalParticipants) * 100;
+        console.log(`User percentile rank: ${percentileRank}%`);
+        
+        // Determine tier based on percentile
+        let tier, tierIcon, tierColor, tierAnimation, particleEffect;
+        
+        if (percentileRank <= 5) {
+            tier = 'Thách Đấu';
+            tierIcon = 'crown';
+            tierColor = '#FF4EFF'; // Challenger color (pink/purple)
+            tierAnimation = 'challenger-shine';
+            particleEffect = 'challenger';
+        } else if (percentileRank <= 10) {
+            tier = 'Cao Thủ';
+            tierIcon = 'chess-king';
+            tierColor = '#FF5555'; // Master color (red)
+            tierAnimation = 'shimmer';
+            particleEffect = 'master';
+        } else if (percentileRank <= 20) {
+            tier = 'Tinh Anh';
+            tierIcon = 'gem';
+            tierColor = '#8C00FF'; // Elite color (purple)
+            tierAnimation = 'shimmer';
+            particleEffect = 'elite';
+        } else if (percentileRank <= 40) {
+            tier = 'Kim Cương';
+            tierIcon = 'diamond';
+            tierColor = '#00AAFF'; // Diamond color (light blue)
+            tierAnimation = 'shimmer';
+            particleEffect = 'diamond';
+        } else if (percentileRank <= 60) {
+            tier = 'Bạch Kim';
+            tierIcon = 'medal';
+            tierColor = '#00FFAA'; // Platinum color (teal)
+            tierAnimation = 'pulse';
+        } else if (percentileRank <= 80) {
+            tier = 'Vàng';
+            tierIcon = 'trophy';
+            tierColor = '#FFD700'; // Gold color
+            tierAnimation = 'pulse';
+        } else {
+            tier = 'Bạc';
+            tierIcon = 'award';
+            tierColor = '#C0C0C0'; // Silver color
+            tierAnimation = 'pulse';
+        }
+        
+        // Update the UI
+        const rankElement = document.getElementById('user-rank');
+        rankElement.innerHTML = `
+            <div class="rank-container">
+                <div class="numeric-rank">${userRank}/${totalParticipants}</div>
+                <div class="tier-rank" style="color: ${tierColor}">
+                    <i class="fas fa-${tierIcon} tier-icon"></i>
+                    <span class="tier-name">${tier}</span>
+                </div>
+            </div>
+            ${particleEffect ? `<div class="particles-container ${particleEffect}-particles"></div>` : ''}
+        `;
+        
+        // Add the tier class for styling
+        rankElement.setAttribute('data-tier', tier.toLowerCase().replace(' ', '-'));
+        
+        // Trigger animation
+        setTimeout(() => {
+            rankElement.classList.add('rank-revealed');
+            
+            // Play sound effect for top tiers
+            if (particleEffect) {
+                playRankRevealSound(tier);
+                createParticleEffect(rankElement, tierColor, particleEffect);
+                
+                // Add confetti for top tiers
+                if (percentileRank <= 10) {
+                    createConfetti(tierColor);
+                }
+            }
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error fetching user ranking:', error);
+        
+        // If API fails, simulate a local ranking experience
+        console.log('Simulating local ranking...');
+        simulateLocalRanking(userScore, totalPoints);
+    }
+}
+
+// Simulate a local ranking when API fails
+function simulateLocalRanking(userScore, totalPoints) {
+    // Calculate percentage score
+    const scorePercentage = (userScore / totalPoints) * 100;
+    
+    // Determine rank based on score
+    let tier, tierIcon, tierColor, particleEffect;
+    let rank = "1";
+    
+    if (scorePercentage >= 95) {
+        tier = 'Thách Đấu';
+        tierIcon = 'crown';
+        tierColor = '#FF4EFF';
+        particleEffect = 'challenger';
+        rank = "1";
+    } else if (scorePercentage >= 90) {
+        tier = 'Cao Thủ';
+        tierIcon = 'chess-king';
+        tierColor = '#FF5555';
+        particleEffect = 'master';
+        rank = "2";
+    } else if (scorePercentage >= 80) {
+        tier = 'Tinh Anh';
+        tierIcon = 'gem';
+        tierColor = '#8C00FF';
+        particleEffect = 'elite';
+        rank = "3";
+    } else if (scorePercentage >= 70) {
+        tier = 'Kim Cương';
+        tierIcon = 'diamond';
+        tierColor = '#00AAFF';
+        particleEffect = 'diamond';
+        rank = "4";
+    } else if (scorePercentage >= 60) {
+        tier = 'Bạch Kim';
+        tierIcon = 'medal';
+        tierColor = '#00FFAA';
+        rank = "5";
+    } else if (scorePercentage >= 50) {
+        tier = 'Vàng';
+        tierIcon = 'trophy';
+        tierColor = '#FFD700';
+        rank = "6";
+    } else {
+        tier = 'Bạc';
+        tierIcon = 'award';
+        tierColor = '#C0C0C0';
+        rank = "7";
+    }
+    
+    // Generate a small random number of participants (7-15)
+    const totalParticipants = Math.floor(Math.random() * 8) + 7;
+    
+    // Update the UI
+    const rankElement = document.getElementById('user-rank');
+    rankElement.innerHTML = `
+        <div class="rank-container">
+            <div class="numeric-rank">${rank}/${totalParticipants}</div>
+            <div class="tier-rank" style="color: ${tierColor}">
+                <i class="fas fa-${tierIcon} tier-icon"></i>
+                <span class="tier-name">${tier}</span>
+            </div>
+        </div>
+        ${particleEffect ? `<div class="particles-container ${particleEffect}-particles"></div>` : ''}
+    `;
+    
+    // Add the tier class for styling
+    rankElement.setAttribute('data-tier', tier.toLowerCase().replace(' ', '-'));
+    
+    // Trigger animation
+    setTimeout(() => {
+        rankElement.classList.add('rank-revealed');
+        
+        // Play sound effect for top tiers
+        if (particleEffect) {
+            playRankRevealSound(tier);
+            createParticleEffect(rankElement, tierColor, particleEffect);
+            
+            // Add confetti for top tiers
+            if (tier === 'Thách Đấu' || tier === 'Cao Thủ') {
+                createConfetti(tierColor);
+            }
+        }
+    }, 500);
+}
+
+// Get the current student ID from session or generate a temporary one
+function getCurrentStudentId() {
+    // Try to get from session storage
+    let studentId = sessionStorage.getItem('studentId');
+    
+    // If not found, try to get from result object
+    if (!studentId && currentResult && currentResult.student_id) {
+        studentId = currentResult.student_id;
+    }
+    
+    // Still not found, create a temporary ID
+    if (!studentId) {
+        studentId = 'temp_' + Math.random().toString(36).substring(2, 15);
+    }
+    
+    // Store it
+    sessionStorage.setItem('studentId', studentId);
+    
+    return studentId;
+}
+
+// Generate a fallback ID when student_id is not available
+function generateFallbackId(transcript) {
+    // Use a combination of properties to generate a reasonably unique ID
+    const props = [];
+    
+    if (transcript.timestamp) props.push(transcript.timestamp);
+    if (transcript.score) props.push(transcript.score);
+    if (transcript.ipAddress) props.push(transcript.ipAddress);
+    
+    if (transcript.students && transcript.students.full_name) {
+        props.push(transcript.students.full_name);
+    }
+    
+    return props.length > 0 ? 'fb_' + props.join('_') : null;
+}
+
+// Function to play sound effects for rank reveal
+function playRankRevealSound(tier) {
+    // Create audio element
+    const audio = new Audio();
+    
+    // Set source based on tier
+    switch(tier) {
+        case 'Thách Đấu':
+            audio.src = 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-fanfare-trumpets-6185.mp3';
+            break;
+        case 'Cao Thủ':
+        case 'Tinh Anh':
+            audio.src = 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_c8a410a628.mp3?filename=success-1-6297.mp3';
+            break;
+        case 'Kim Cương':
+            audio.src = 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_942521a25a.mp3?filename=interface-124464.mp3';
+            break;
+        default:
+            return; // Don't play sound for lower tiers
+    }
+    
+    // Play the sound
+    audio.volume = 0.5;
+    audio.play().catch(e => console.log('Sound autoplay blocked by browser policy'));
+}
+
+// Function to create particle effects
+function createParticleEffect(container, color, type) {
+    const particlesContainer = container.querySelector('.particles-container');
+    if (!particlesContainer) return;
+    
+    // Number of particles based on rank
+    const particleCount = type === 'challenger' ? 50 : 
+                          type === 'master' ? 40 : 
+                          type === 'elite' ? 30 : 20;
+    
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Set particle style based on type
+        switch(type) {
+            case 'challenger':
+                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                particle.style.width = `${Math.random() * 15 + 5}px`;
+                particle.style.height = particle.style.width;
+                break;
+            case 'master':
+                particle.style.background = color;
+                particle.style.width = `${Math.random() * 8 + 3}px`;
+                particle.style.height = particle.style.width;
+                particle.style.opacity = Math.random() * 0.5 + 0.5;
+                break;
+            case 'elite':
+            case 'diamond':
+                particle.style.background = color;
+                particle.style.width = `${Math.random() * 5 + 2}px`;
+                particle.style.height = particle.style.width;
+                break;
+        }
+        
+        // Set random position
+        const posX = Math.random() * 100 - 50; // -50 to 50
+        const posY = Math.random() * 100 - 50; // -50 to 50
+        
+        // Set random animation duration
+        const duration = Math.random() * 2 + 1; // 1-3 seconds
+        
+        // Apply animations with CSS
+        particle.style.transform = `translate(${posX}px, ${posY}px)`;
+        particle.style.animation = `
+            particleFade ${duration}s ease-out forwards,
+            particleMove${Math.floor(Math.random() * 4)} ${duration}s ease-out forwards
+        `;
+        
+        // Add to container
+        particlesContainer.appendChild(particle);
+    }
+    
+    // Clean up particles after animation completes
+    setTimeout(() => {
+        if (particlesContainer && particlesContainer.parentNode) {
+            particlesContainer.innerHTML = '';
+        }
+    }, 3000);
 }
 
 function displaySortedResults(sortType) {
@@ -405,6 +917,125 @@ function attachExplanationListeners() {
             await getExplanation(button, button.dataset.question, button.dataset.userAnswer, button.dataset.correctAnswer);
         });
     });
+}
+
+// Function to create confetti effect
+function createConfetti(mainColor) {
+    const confettiCount = 100;
+    const container = document.querySelector('.results-container');
+    
+    // Create confetti container if it doesn't exist
+    let confettiContainer = document.querySelector('.confetti-container');
+    if (!confettiContainer) {
+        confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        confettiContainer.style.position = 'absolute';
+        confettiContainer.style.top = '0';
+        confettiContainer.style.left = '0';
+        confettiContainer.style.width = '100%';
+        confettiContainer.style.height = '100%';
+        confettiContainer.style.pointerEvents = 'none';
+        confettiContainer.style.overflow = 'hidden';
+        confettiContainer.style.zIndex = '1000';
+        container.appendChild(confettiContainer);
+    }
+    
+    // Define confetti colors (including the main tier color)
+    const colors = [
+        mainColor,
+        '#ffffff',
+        '#f0f0f0',
+        '#ffcc00',
+        '#ff3366'
+    ];
+    
+    // Create confetti pieces
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        
+        // Random properties
+        const size = Math.random() * 10 + 5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const isRect = Math.random() > 0.5;
+        const initialX = Math.random() * 100; // as percentage
+        const initialDelay = Math.random() * 3;
+        const duration = Math.random() * 3 + 2;
+        const rotation = Math.random() * 360;
+        
+        // Style the confetti
+        confetti.style.position = 'absolute';
+        confetti.style.top = '-20px';
+        confetti.style.left = `${initialX}%`;
+        confetti.style.width = `${size}px`;
+        confetti.style.height = isRect ? `${size * 0.6}px` : `${size}px`;
+        confetti.style.backgroundColor = color;
+        confetti.style.borderRadius = isRect ? '2px' : '50%';
+        confetti.style.opacity = Math.random() * 0.8 + 0.2;
+        confetti.style.transform = `rotate(${rotation}deg)`;
+        confetti.style.transformOrigin = 'center center';
+        
+        // Apply fall animation
+        confetti.style.animation = `
+            confettiFall ${duration}s ${initialDelay}s ease-in forwards,
+            confettiRotate ${duration / 2}s ${initialDelay}s linear infinite
+        `;
+        
+        // Add to container
+        confettiContainer.appendChild(confetti);
+    }
+    
+    // Clean up confetti after animation completes
+    setTimeout(() => {
+        if (confettiContainer && confettiContainer.parentNode) {
+            confettiContainer.parentNode.removeChild(confettiContainer);
+        }
+    }, 8000);
+}
+
+// Get previously stored results for a lesson
+function getPreviousResults(lessonId) {
+    try {
+        // Get stored results array
+        const storedResultsStr = localStorage.getItem(`lesson_${lessonId}_results`);
+        if (storedResultsStr) {
+            return JSON.parse(storedResultsStr) || [];
+        }
+    } catch (error) {
+        console.error('Error retrieving stored results:', error);
+    }
+    return [];
+}
+
+// Store a user's attempt locally
+function storeAttemptLocally(lessonId, resultData) {
+    try {
+        // Get existing results
+        const existingResults = getPreviousResults(lessonId);
+        
+        // Check if this student already has a result
+        const studentId = resultData.student_id;
+        const existingIndex = existingResults.findIndex(r => r.student_id === studentId);
+        
+        if (existingIndex >= 0) {
+            // Update existing result if the new score is better
+            const existingScore = parseFloat(existingResults[existingIndex].score?.replace('%', '') || 0);
+            const newScore = parseFloat(resultData.score?.replace('%', '') || 0);
+            
+            if (newScore > existingScore) {
+                existingResults[existingIndex] = resultData;
+            }
+        } else {
+            // Add new result
+            existingResults.push(resultData);
+        }
+        
+        // Store back to localStorage (keep only the last 50 results)
+        const limitedResults = existingResults.slice(-50);
+        localStorage.setItem(`lesson_${lessonId}_results`, JSON.stringify(limitedResults));
+        
+    } catch (error) {
+        console.error('Error storing attempt locally:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

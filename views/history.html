@@ -9,6 +9,12 @@
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator hidden">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu...</p>
+    </div>
+
     <a href="/" class="home-button">
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
@@ -87,9 +93,13 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Pagination controls -->
+                <div id="pagination-controls" class="pagination-container"></div>
             </div>
         </div>
     </div>
+    
     <script src="/js/history.js"></script>
 </body>
 </html> 

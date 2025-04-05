@@ -17,6 +17,255 @@
         .katex-html {
             display: none !important;
         }
+        
+        /* Rank styling and animations */
+        #user-rank {
+            transition: all 0.5s ease;
+            min-height: 2.5em;
+        }
+        
+        .rank-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2em;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .numeric-rank {
+            font-size: 0.8em;
+            font-weight: normal;
+            opacity: 0.8;
+        }
+        
+        .tier-rank {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .tier-icon {
+            font-size: 1.5em;
+            margin-bottom: 0.2em;
+            filter: drop-shadow(0 0 4px currentColor);
+            animation: pulse 2s infinite;
+        }
+        
+        .tier-name {
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+        
+        /* Animation when rank is revealed */
+        .rank-revealed .rank-container {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Tier-specific animations */
+        [data-tier="thách-đấu"] .tier-icon {
+            animation: challenger-shine 3s infinite;
+        }
+        
+        [data-tier="cao-thủ"] .tier-icon,
+        [data-tier="tinh-anh"] .tier-icon,
+        [data-tier="kim-cương"] .tier-icon {
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shimmer {
+            0% { filter: drop-shadow(0 0 3px currentColor); }
+            50% { filter: drop-shadow(0 0 7px currentColor); }
+            100% { filter: drop-shadow(0 0 3px currentColor); }
+        }
+        
+        @keyframes challenger-shine {
+            0% { 
+                filter: drop-shadow(0 0 5px currentColor); 
+                transform: scale(1) rotate(0deg);
+            }
+            25% { 
+                filter: drop-shadow(0 0 10px currentColor);
+                transform: scale(1.1) rotate(5deg);
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px currentColor);
+                transform: scale(1.15) rotate(0deg);
+            }
+            75% { 
+                filter: drop-shadow(0 0 10px currentColor);
+                transform: scale(1.1) rotate(-5deg);
+            }
+            100% { 
+                filter: drop-shadow(0 0 5px currentColor);
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        
+        /* Special visual effects for specific tiers */
+        [data-tier="thách-đấu"] .stat-card {
+            background: linear-gradient(135deg, #FF4EFF 0%, #b700a5 100%);
+            animation: glow 3s infinite;
+        }
+        
+        [data-tier="cao-thủ"] .stat-card {
+            background: linear-gradient(135deg, #FF5555 0%, #b70000 100%);
+        }
+        
+        [data-tier="tinh-anh"] .stat-card {
+            background: linear-gradient(135deg, #8C00FF 0%, #5800a3 100%);
+        }
+        
+        [data-tier="kim-cương"] .stat-card {
+            background: linear-gradient(135deg, #00AAFF 0%, #0066cc 100%);
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 78, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 78, 255, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 78, 255, 0.5); }
+        }
+        
+        /* Particle effects */
+        .particles-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .particle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* Particle animations */
+        @keyframes particleFade {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        @keyframes particleMove0 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(var(--x, 100px), calc(var(--y, 100px) - 50px)); }
+        }
+        
+        @keyframes particleMove1 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(calc(var(--x, -100px) * -1), calc(var(--y, 100px) - 70px)); }
+        }
+        
+        @keyframes particleMove2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(calc(var(--x, 70px) - 30px), var(--y, -100px)); }
+        }
+        
+        @keyframes particleMove3 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(calc(var(--x, -70px) * -1), var(--y, -100px)); }
+        }
+        
+        /* Special containers */
+        .challenger-particles .particle {
+            box-shadow: 0 0 10px currentColor;
+        }
+        
+        /* Card styling enhancement */
+        .stat-card.warning {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Add a shine effect to top-tier cards */
+        [data-tier="thách-đấu"] ~ .stat-card.warning::after,
+        [data-tier="cao-thủ"] ~ .stat-card.warning::after,
+        [data-tier="tinh-anh"] ~ .stat-card.warning::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            20% { transform: translateX(100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        /* Confetti animations */
+        @keyframes confettiFall {
+            0% { 
+                transform: translateY(0) rotate(var(--rotation, 0deg)); 
+                opacity: var(--opacity, 0.8);
+            }
+            70% {
+                opacity: var(--opacity, 0.8);
+            }
+            100% { 
+                transform: translateY(100vh) rotate(var(--rotation, 0deg));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes confettiRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Add position relative to the container to allow for absolute positioning */
+        .results-container {
+            position: relative;
+        }
+        
+        /* Make the stat card for ranking a little fancier */
+        .stat-card.warning {
+            transition: all 0.3s ease;
+        }
+        
+        /* Add hover effects to the rank card */
+        .stat-card.warning:hover {
+            transform: scale(1.03);
+            cursor: pointer;
+        }
+        
+        /* Add badge-like appearance to higher ranks */
+        [data-tier="thách-đấu"] .tier-name,
+        [data-tier="cao-thủ"] .tier-name,
+        [data-tier="tinh-anh"] .tier-name {
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            padding: 2px 8px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px currentColor;
+        }
     </style>
 </head>
 <body>
@@ -43,26 +292,19 @@
                 <div class="stat-value" id="score-value">-</div>
                 <div class="stat-label">Điểm</div>
             </div>
-            <div class="stat-card success">
+            <div class="stat-card info">
                 <div class="stat-icon">
-                    <i class="fas fa-check"></i>
+                    <i class="fas fa-book"></i>
                 </div>
-                <div class="stat-value" id="correct-answers">-</div>
-                <div class="stat-label">Số câu đúng</div>
+                <div class="stat-value" id="lesson-name">-</div>
+                <div class="stat-label">Bài học</div>
             </div>
             <div class="stat-card warning">
                 <div class="stat-icon">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-trophy"></i>
                 </div>
-                <div class="stat-value" id="incorrect-answers">-</div>
-                <div class="stat-label">Số câu sai</div>
-            </div>
-            <div class="stat-card info">
-                <div class="stat-icon">
-                    <i class="fas fa-percentage"></i>
-                </div>
-                <div class="stat-value" id="accuracy">-</div>
-                <div class="stat-label">Tỉ lệ hoàn thành</div>
+                <div class="stat-value" id="user-rank">-</div>
+                <div class="stat-label">Xếp hạng của bạn</div>
             </div>
         </div>
 

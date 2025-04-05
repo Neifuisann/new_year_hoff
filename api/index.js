@@ -1359,7 +1359,41 @@ app.post('/api/admin/unbind-device/:studentId', requireAuth, async (req, res) =>
 // This is the correct endpoint to apply caching to
 app.get('/api/history', requireAuth, async (req, res) => {
     try {
-        const { data: historyData, error } = await supabase
+        // --- Pagination, Sorting, Searching Parameters ---
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 15; // Default limit for history
+        const search = req.query.search || '';
+        const sort = req.query.sort || 'time-desc'; // Default sort: newest first
+        
+        const startIndex = (page - 1) * limit;
+
+        // Determine sorting parameters
+        let orderAscending = false;
+        let orderColumn = 'timestamp'; // Default is results.timestamp
+        
+        // Map frontend sort keys to potential database columns
+        const sortMap = {
+            'time-asc': { column: 'timestamp', ascending: true },
+            'time-desc': { column: 'timestamp', ascending: false },
+            'name-asc': { column: 'students.full_name', ascending: true }, // Requires join
+            'name-desc': { column: 'students.full_name', ascending: false }, // Requires join
+            'lesson-asc': { column: 'lessons.title', ascending: true }, // Requires join
+            'lesson-desc': { column: 'lessons.title', ascending: false }, // Requires join
+            'score-asc': { column: 'score', ascending: true },
+            'score-desc': { column: 'score', ascending: false },
+        };
+
+        if (sortMap[sort]) {
+            orderColumn = sortMap[sort].column;
+            orderAscending = sortMap[sort].ascending;
+        } else {
+            // Default if invalid sort provided
+            orderColumn = 'timestamp';
+            orderAscending = false;
+        }
+
+        // --- Base Query --- 
+        let query = supabase
             .from('results')
             .select(`
                 id, 
@@ -1368,25 +1402,55 @@ app.get('/api/history', requireAuth, async (req, res) => {
                 score,
                 totalPoints,
                 lessonId, 
-                students ( full_name ), 
+                students!inner ( full_name ), 
                 lessons ( title ) 
-            `)
-             .order('timestamp', { ascending: false });
+            `, { count: 'exact' }); // Request total count
+
+        // --- Apply Search Filter --- 
+        if (search) {
+            // Search across student name (joined) and lesson title (joined)
+            // Note: Searching joined tables might require an RPC function for optimal performance,
+            // especially with large datasets. This 'or' filter might be slow.
+            // We also need to handle the 'quiz_game' case for lessonTitle.
+             query = query.or(`students.full_name.ilike.%${search}%,lessons.title.ilike.%${search}%${search.toLowerCase().includes('chinh') || search.toLowerCase().includes('phục') ? ',lessonId.eq.quiz_game' : ''}`);
+             // The ilike operator performs case-insensitive matching.
+             // Added condition to search for 'quiz_game' if search term contains 'chinh' or 'phục'
+        }
+
+        // --- Apply Sorting --- 
+        // Handle sorting on joined tables carefully. Supabase might require specific syntax.
+        // If sorting on joined fields doesn't work directly, consider an RPC or view.
+        if (orderColumn.includes('.')) {
+            // Syntax for ordering by related table column
+            const [relatedTable, relatedColumn] = orderColumn.split('.');
+            query = query.order(relatedColumn, { foreignTable: relatedTable, ascending: orderAscending });
+        } else {
+            query = query.order(orderColumn, { ascending: orderAscending });
+        }
+        
+        // --- Apply Pagination ---
+        query = query.range(startIndex, startIndex + limit - 1);
+
+        // --- Execute Query --- 
+        const { data: historyData, error, count: totalCount } = await query;
 
         if (error) throw error;
         
         const history = historyData.map(result => ({
-            resultId: result.id,
+            resultId: result.id, // Use the actual result ID
             studentName: result.students?.full_name || 'Unknown Student',
             lessonTitle: result.lessons?.title || (result.lessonId === 'quiz_game' ? 'Trò chơi chinh phục' : 'Unknown Lesson'),
             submittedAt: result.timestamp,
             score: result.score,
             totalPoints: result.totalPoints,
-            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A'
+            // Keep scorePercentage calculation or remove if not needed
+            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A' 
         }));
         
-        // --- Caching Logic ---
-        const etag = generateETag(history);
+        // --- Caching Logic --- 
+        // Caching is complex with pagination/search/sort. Let's disable for now.
+        /* 
+        const etag = generateETag({ history, totalCount, page, limit, search, sort });
         const clientETag = req.headers['if-none-match'];
 
         if (clientETag && clientETag === `"${etag}"`) {
@@ -1395,13 +1459,21 @@ app.get('/api/history', requireAuth, async (req, res) => {
         }
         
         console.log('Cache miss for /api/history');
-        // Cache history for a short duration, e.g., 1 minute
-        setCacheHeaders(res, etag, 60 * 1); 
-        // --- End Caching Logic ---
+        setCacheHeaders(res, etag, 60 * 1); // Cache for 1 minute? Adjust as needed
+        */
+        // --- End Caching Logic --- 
         
-        res.json(history);
+        // Return paginated data and total count
+        res.json({ 
+            history: history, 
+            total: totalCount,
+            page: page,
+            limit: limit
+        });
+
     } catch (error) {
         console.error('Failed to load history:', error);
+        // Avoid sending cache headers on error
         res.removeHeader('ETag');
         res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load history', details: error.message });
