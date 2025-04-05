@@ -1,5 +1,6 @@
 // Store shuffled options mapping globally
 window.questionMappings = {};
+let currentLessonData = null; // Variable to store loaded lesson data
 
 // --- Student Authentication Functions ---
 async function checkStudentAuthentication() {
@@ -287,9 +288,11 @@ async function initializeLesson() {
         }
         
         const lesson = await response.json();
+        currentLessonData = lesson; // Store the lesson data
         
         if (lesson.error) {
             document.body.innerHTML = '<h1>Lesson not found</h1>';
+            currentLessonData = null; // Clear data on error
             return;
         }
         
@@ -346,17 +349,25 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'Đang nộp bài...';
             submitButton.style.opacity = '0.7'; // Dim the button slightly
             
+            // Check if lesson data is available
+            if (!currentLessonData) {
+                console.error("Lesson data not loaded, cannot submit.");
+                alert("Lỗi: Dữ liệu bài học chưa được tải. Vui lòng tải lại trang.");
+                // Revert button state
+                submitButton.disabled = false;
+                submitButton.textContent = 'Nộp bài';
+                submitButton.style.opacity = '1';
+                return; 
+            }
+            
             try {
                 // Get IP address
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
                 
-                const lessonId = window.location.pathname.split('/')[2];
-                const response = await fetch(`/api/lessons/${lessonId}`);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch lesson: ${response.status}`);
-                }
-                const lesson = await response.json();
+                const lessonId = currentLessonData.id; // Use stored lesson ID
+                const lesson = currentLessonData; // Use stored lesson data
+                
                 let score = 0;
                 let totalPossiblePoints = 0;
                 let resultHtml = '';
@@ -364,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const quizResults = {
                     lessonId: lessonId,
                     questions: [],
-                    studentInfo: JSON.parse(localStorage.getItem('studentInfo')),
                     ipAddress: ipData.ip,
                     submittedAt: new Date().toISOString()
                 };

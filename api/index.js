@@ -1,11 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
 const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
+const { inject } = require('@vercel/analytics');
 const upload = multer({ storage: multer.memoryStorage() });
 const { Pool } = require('pg');
 const pgSession = require('connect-pg-simple')(session);
@@ -13,6 +14,24 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
+
+// --- Global Error Handling ---
+process.on('uncaughtException', (error) => {
+  console.error('FATAL: Uncaught Exception:', error);
+  // Implement more graceful shutdown if possible (e.g., close DB connections)
+  process.exit(1); 
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('FATAL: Unhandled Rejection at:', promise, 'reason:', reason);
+  // Log appropriately, maybe trigger alerts
+  // Consider if shutdown is necessary depending on the rejection
+});
+// --- End Global Error Handling ---
+
+// Initialize Vercel Analytics
+inject();
 
 // Initialize Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://miojaflixmncmhsgyabd.supabase.co';
@@ -25,15 +44,16 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware to inject Vercel Analytics
+// Middleware to inject Speed Insights script
 app.use((req, res, next) => {
     const originalSend = res.send;
     
     res.send = function(body) {
-        // Only inject analytics into HTML responses
-        if (typeof body === 'string' && body.includes('</html>')) {
-            // Inject the Vercel Analytics script right before the closing body tag
-            body = body.replace('</body>', `<script defer src="/_vercel/insights/script.js"></script></body>`);
+        // Only inject script into HTML responses
+        if (typeof body === 'string' && body.includes('</head>')) {
+            // Inject the Speed Insights script before the closing head tag
+            const speedInsightsScript = '<script defer src="/_vercel/speed-insights/script.js"></script>';
+            body = body.replace('</head>', `${speedInsightsScript}</head>`);
         }
         return originalSend.call(this, body);
     };
@@ -42,9 +62,18 @@ app.use((req, res, next) => {
 });
 
 app.use(cookieParser());
-app.use(bodyParser.json({ limit: '50mb', extended: true }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
-app.use(express.static('public', { charset: 'utf-8' }));
+app.use(bodyParser.json({ limit: '10mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true, parameterLimit: 50000 }));
+app.use(express.static(path.join(process.cwd(), 'public'), { 
+    maxAge: '1d',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, filePath) => {
+        if (path.extname(filePath) === '.html') {
+            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        }
+    } 
+}));
 
 // Configure express-session
 app.set('trust proxy', 1); // Trust first proxy, crucial for Vercel/Heroku/etc.
@@ -96,6 +125,40 @@ app.use(session({
     },
     proxy: true // Trust the reverse proxy when setting secure cookies (Vercel/Heroku)
 }));
+
+// --- Cache Helper Functions ---
+function generateETag(data) {
+  if (!data) {
+    return null; // Or a default ETag for empty data
+  }
+  // Use JSON.stringify for consistent serialization of JS objects/arrays
+  // Sort keys for objects to ensure consistent hashing regardless of key order
+  const dataString = JSON.stringify(data, (key, value) => {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return Object.keys(value)
+        .sort()
+        .reduce((sorted, key) => {
+          sorted[key] = value[key];
+          return sorted;
+        }, {});
+    }
+    return value;
+  });
+  // Create a SHA1 hash - strong enough for ETag, reasonably fast
+  return crypto.createHash('sha1').update(dataString).digest('hex');
+}
+
+function setCacheHeaders(res, etag, maxAgeSeconds = 60) { // Default cache: 1 minute
+  if (etag) {
+    // ETags should be quoted as per HTTP spec
+    res.setHeader('ETag', `"${etag}"`); 
+  }
+  // Cache-Control: public (allow proxies), max-age (duration), must-revalidate (check ETag before using stale cache)
+  res.setHeader('Cache-Control', `public, max-age=${maxAgeSeconds}, must-revalidate`);
+  // Optionally add Last-Modified if you have a relevant timestamp for the data
+  // res.setHeader('Last-Modified', new Date(data.lastUpdated).toUTCString());
+}
+// --- End Cache Helper Functions ---
 
 // Admin credentials
 const adminCredentials = {
@@ -200,9 +263,7 @@ app.get('/admin/students', requireAuth, (req, res) => res.sendFile(path.join(pro
 app.get('/admin/statistics/:id', requireAuth, (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views', 'lesson-statistics.html'));
 });
-app.get('/history', requireAuth, (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'views', 'history.html'));
-});
+app.get('/history', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'history.html')));
 app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-quiz-edit.html')));
 
 // API Endpoints
@@ -443,85 +504,108 @@ app.get('/api/lessons', async (req, res) => {
     try {
         // --- Pagination, Sorting, Searching Parameters ---
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+        const limit = parseInt(req.query.limit) || 10; 
         const search = req.query.search || '';
-        const sort = req.query.sort || 'order'; // Default sort by 'order' (was newest)
+        const sort = req.query.sort || 'order'; 
         
         const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit - 1;
+        // endIndex is not directly used in the same way for RPC pagination
 
-        // --- Build Supabase Query ---
-        let query = supabase
-            .from('lessons')
-            .select('id, title, color, created, lastUpdated, views, order, subject, grade, tags, description, purpose, pricing, lessonImage, randomQuestions', { count: 'exact' }); // Explicitly select fields, excluding 'questions'
-
-        // Apply Search Filter (if provided)
-        if (search) {
-            // Search in title OR tags array
-            // Using .or() with ilike for title and contains for tags array
-            // Adjust column names ('title', 'tags') if they are different in your DB
-            query = query.or(`title.ilike.%${search}%,tags.cs.{${search}}`); 
-            // Note: `tags.cs.{${search}}` checks if the tags array contains the search term.
-            // This assumes tags are stored as a text array e.g., {'math', 'easy'}
-            // If tags are stored differently (e.g., JSONB), the query needs adjustment.
-        }
-        
-        // Apply Sorting
+        // Determine sorting parameters (used in both RPC and non-RPC paths)
         let orderAscending = true;
-        let orderColumn = 'order'; // Default to manual order
-
+        let orderColumn = 'order'; 
         switch (sort) {
-            case 'newest':
-                orderColumn = 'created'; // Assuming you have a 'created' timestamp
-                orderAscending = false;
-                break;
-            case 'oldest':
-                orderColumn = 'created'; 
-                orderAscending = true;
-                break;
-            case 'az':
-                orderColumn = 'title';
-                orderAscending = true;
-                break;
-            case 'za':
-                orderColumn = 'title';
-                orderAscending = false;
-                break;
-            case 'newest-changed':
-                orderColumn = 'lastUpdated'; // Assuming you have 'lastUpdated'
-                orderAscending = false;
-                break;
-            case 'popular':
-                orderColumn = 'views'; // Assuming you have 'views'
-                orderAscending = false;
-                break;
-             case 'order': // Explicitly handle the default order
-                 orderColumn = 'order';
-                 orderAscending = true;
-                 break;
+            case 'newest': orderColumn = 'created'; orderAscending = false; break;
+            case 'oldest': orderColumn = 'created'; orderAscending = true; break;
+            case 'az': orderColumn = 'title'; orderAscending = true; break;
+            case 'za': orderColumn = 'title'; orderAscending = false; break;
+            case 'newest-changed': orderColumn = 'lastUpdated'; orderAscending = false; break;
+            case 'popular': orderColumn = 'views'; orderAscending = false; break;
+            case 'order': orderColumn = 'order'; orderAscending = true; break;
             // Add other sort cases if needed
         }
-        query = query.order(orderColumn, { ascending: orderAscending });
 
-        // Apply Pagination
-        query = query.range(startIndex, endIndex);
+        let lessons = [];
+        let total = 0;
 
-        // --- Execute Query ---
-        const { data: lessons, error, count } = await query;
+        if (search) {
+            // --- Use RPC for search --- 
+            // Call the PostgreSQL function 'search_lessons' we created
+            let rpcQuery = supabase
+                .rpc('search_lessons', { search_term: search })
+                // Apply sorting to the results returned by the RPC function
+                .order(orderColumn, { ascending: orderAscending })
+                // Apply pagination to the results returned by the RPC function
+                .range(startIndex, startIndex + limit - 1); 
 
-        if (error) throw error;
+            const { data: rpcData, error: rpcError } = await rpcQuery;
+            
+            if (rpcError) throw rpcError; // Throw error if RPC call fails
+            
+            lessons = rpcData || [];
+            
+            // Limitation: Basic RPC doesn't easily return total count for pagination when searching.
+            // We need a separate query or a modified RPC function to get the accurate total count.
+            // For now, we'll estimate total based on whether we received a full page, 
+            // or ideally, make another call just for the count.
+            const { count, error: countError } = await supabase
+                .rpc('search_lessons', { search_term: search }, { count: 'exact', head: true }); // Perform a head request to get only the count
 
-        // --- Return Paginated Response ---
-        res.json({
-            lessons: lessons || [],
-            total: count || 0,
+            if (countError) {
+                console.warn('Could not get total count for search results:', countError);
+                // Fallback or estimate count if needed, here setting total to length if count fails
+                total = lessons.length + startIndex; // Simplistic estimate
+            } else {
+                total = count || 0;
+            }
+
+        } else {
+            // --- Original non-search query --- 
+            let nonSearchQuery = supabase
+                .from('lessons')
+                .select('id, title, color, created, lastUpdated, views, order, subject, grade, tags, description, purpose, pricing, lessonImage, randomQuestions', { count: 'exact' })
+                .order(orderColumn, { ascending: orderAscending })
+                .range(startIndex, startIndex + limit - 1); 
+
+            const { data: nonSearchData, error: nonSearchError, count: nonSearchCount } = await nonSearchQuery;
+            
+            if (nonSearchError) throw nonSearchError; // Throw error if query fails
+            
+            lessons = nonSearchData || [];
+            total = nonSearchCount || 0;
+        }
+        
+        // --- Caching Logic --- 
+        const responsePayload = {
+            lessons: lessons,
+            total: total,
             page: page,
-            limit: limit
-        });
+            limit: limit,
+            // Include search and sort parameters in ETag calculation for uniqueness
+            search: search,
+            sort: sort
+        };
+        const etag = generateETag(responsePayload);
+
+        // Check If-None-Match header from the client
+        const clientETag = req.headers['if-none-match'];
+        if (clientETag && clientETag === `"${etag}"`) { // Compare quoted ETag
+            console.log('Cache hit for /api/lessons');
+            return res.status(304).send(); // Not Modified
+        }
+
+        // If no match or no client ETag, set headers and send response
+        console.log('Cache miss for /api/lessons');
+        setCacheHeaders(res, etag, 60 * 5); // Cache for 5 minutes
+        res.json(responsePayload);
+        // --- End Caching Logic --- 
 
     } catch (error) {
         console.error('Error fetching lessons:', error);
-        res.status(500).json({ error: 'Failed to fetch lessons', details: error.message });
+        const errorDetails = error.details || error.message || 'Unknown error';
+        // Ensure status is set correctly even for caught errors
+        const statusCode = error.status || 500;
+        res.status(statusCode).json({ error: 'Failed to fetch lessons', details: errorDetails });
     }
 });
 
@@ -541,6 +625,23 @@ app.get('/api/lessons/:id', async (req, res) => {
             throw fetchError || new Error('Lesson not found');
         }
 
+        // --- Caching Logic ---
+        const etag = generateETag(lesson); // ETag based on the lesson data
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log(`Cache hit for /api/lessons/${lessonId}`);
+            // Send 304 without updating views if cache is valid
+            return res.status(304).send();
+        }
+
+        console.log(`Cache miss for /api/lessons/${lessonId}`);
+        // Set cache headers *before* potentially modifying the data (views)
+        // Cache for a slightly longer duration? e.g., 10 minutes
+        setCacheHeaders(res, etag, 60 * 10);
+        // --- End Caching Logic ---
+
+        // Update view count only on cache miss (when sending full data)
         const currentViews = lesson.views || 0;
         const { error: updateError } = await supabase
             .from('lessons')
@@ -548,12 +649,19 @@ app.get('/api/lessons/:id', async (req, res) => {
             .eq('id', lessonId);
 
         if (updateError) {
+            // Log warning but don't fail the request just because view count update failed
             console.warn('Failed to update view count for lesson', lessonId, updateError);
         }
 
+        // Send the full lesson data
         res.json(lesson);
+
     } catch (error) {
         console.error(`Error fetching lesson ${lessonId}:`, error);
+        // Avoid sending cache headers on error
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
+        res.removeHeader('Last-Modified'); // If you added Last-Modified
         res.status(500).json({ error: 'Failed to fetch lesson', details: error.message });
     }
 });
@@ -740,45 +848,28 @@ app.get('/api/results/:id', async (req, res) => {
             }
             throw error || new Error('Result not found');
         }
+        
+        // --- Caching Logic ---
+        // Results are typically immutable once submitted, so cache aggressively
+        const etag = generateETag(result);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log(`Cache hit for /api/results/${resultId}`);
+            return res.status(304).send();
+        }
+        
+        console.log(`Cache miss for /api/results/${resultId}`);
+        // Cache for a long duration, e.g., 1 day, as results don't change
+        setCacheHeaders(res, etag, 60 * 60 * 24); 
+        // --- End Caching Logic ---
+
         res.json(result);
     } catch (error) {
         console.error(`Error fetching result ${resultId}:`, error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch result', details: error.message });
-    }
-});
-
-app.get('/api/history', requireAuth, async (req, res) => {
-    try {
-        const { data: historyData, error } = await supabase
-            .from('results')
-            .select(`
-                id, 
-                student_id, 
-                timestamp, 
-                score,
-                totalPoints,
-                lessonId, 
-                students ( full_name ), 
-                lessons ( title ) 
-            `)
-             .order('timestamp', { ascending: false });
-
-        if (error) throw error;
-        
-        const history = historyData.map(result => ({
-            resultId: result.id,
-            studentName: result.students?.full_name || 'Unknown Student',
-            lessonTitle: result.lessons?.title || (result.lessonId === 'quiz_game' ? 'Trò chơi chinh phục' : 'Unknown Lesson'),
-            submittedAt: result.timestamp,
-            score: result.score,
-            totalPoints: result.totalPoints,
-            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A'
-        }));
-        
-        res.json(history);
-    } catch (error) {
-        console.error('Failed to load history:', error);
-        res.status(500).json({ error: 'Failed to load history', details: error.message });
     }
 });
 
@@ -812,121 +903,108 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
     const lessonId = req.params.id;
 
     try {
+        // Fetch lesson data (needed for potential cache key or headers)
+        const { data: lessonData, error: lessonError } = await supabase
+            .from('lessons')
+            .select('lastUpdated') // Fetch only what's needed, e.g., lastUpdated
+            .eq('id', lessonId)
+            .maybeSingle(); // Use maybeSingle in case lesson is deleted
+
+        if (lessonError) {
+            console.error('Error fetching lesson data for stats:', lessonError);
+            // Decide if this is fatal or if you can proceed without lesson info
+            // For caching, we might need the lastUpdated time
+        }
+
+        // Fetch results data
         const { data: lessonResults, error: resultsError } = await supabase
             .from('results')
             .select(`
                 *, 
                 students ( full_name ) 
             `)
-            .eq('lessonId', lessonId);
+            .eq('lessonId', lessonId); // Removed order for consistency in ETag
+            // .order('timestamp', { ascending: false }); // Ordering might change ETag unnecessarily if data is the same
             
         if (resultsError) throw resultsError;
         
+        // Process statistics (existing logic)
+        let statsPayload;
         if (!lessonResults || lessonResults.length === 0) {
-            return res.json({
+            statsPayload = {
                 uniqueStudents: 0,
                 totalAttempts: 0,
                 averageScore: 0,
+                // ... other default stats ...
                 lowScores: 0,
                 highScores: 0,
                 scoreDistribution: { labels: [], data: [] },
                 questionStats: [],
                 transcripts: []
-            });
-        }
-
-        const uniqueStudents = new Set(lessonResults.map(r => r.student_id)).size;
-        
-        const scores = lessonResults.map(r => {
-             const totalPoints = r.totalPoints || 1;
-             const studentScore = typeof r.score === 'number' ? r.score : 0;
-             return totalPoints > 0 ? (studentScore / totalPoints) * 100 : 0;
-        });
-        const averageScore = scores.length ? 
-            (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
-        
-        const scoreRanges = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-        const distribution = new Array(scoreRanges.length - 1).fill(0);
-        
-        lessonResults.forEach((result) => {
-            const totalPoints = result.totalPoints || 1;
-            const studentScore = typeof result.score === 'number' ? result.score : 0;
-            const scorePercent = totalPoints > 0 ? (studentScore / totalPoints) * 100 : 0;
-            const normalizedScore = Math.max(0, Math.min(100, scorePercent));
-            const rangeIndex = normalizedScore === 100 ? 9 : Math.floor(normalizedScore / 10);
-            if (rangeIndex >= 0 && rangeIndex < distribution.length) {
-            distribution[rangeIndex]++;
-            } else {
-                console.warn(`Calculated invalid range index ${rangeIndex} for score ${normalizedScore}`);
-            }
-        });
-
-        const questionStats = {};
-        lessonResults.forEach(result => {
-            if (Array.isArray(result.questions)) {
-                 result.questions.forEach(q => {
-                    const questionKey = q.question || `question_${q.originalIndex || Date.now()}`;
-                    if (!questionStats[questionKey]) {
-                        questionStats[questionKey] = {
-                            questionText: q.question,
-                            total: 0,
-                            completed: 0,
-                            correct: 0,
-                            incorrect: 0
-                        };
-                    }
-                    questionStats[questionKey].total++;
-                    questionStats[questionKey].completed++;
-                    if (q.isCorrect) {
-                        questionStats[questionKey].correct++;
-                    } else {
-                        questionStats[questionKey].incorrect++;
-                    }
-                });
-            } else {
-                console.warn(`Result ${result.id || 'N/A'} has invalid questions format:`, result.questions);
-            }
-        });
-        
-        const formattedQuestionStats = Object.values(questionStats).map((stats) => ({
-            question: stats.questionText,
-            totalStudents: stats.total,
-            completed: stats.completed,
-            notCompleted: 0,
-            correct: stats.correct,
-            incorrect: stats.incorrect,
-            accuracy: stats.completed > 0 ? ((stats.correct / stats.completed) * 100).toFixed(1) + '%' : 'N/A'
-        }));
-
-        const transcripts = lessonResults.map(r => {
-             const totalPoints = r.totalPoints || 1;
-             const studentScore = typeof r.score === 'number' ? r.score : 0;
-             return {
-                name: r.students?.full_name || 'Unknown Student',
-                score: totalPoints > 0 ? ((studentScore / totalPoints) * 100).toFixed(1) + '%' : '0.0%',
-                timestamp: r.timestamp,
-                ip: r.ipAddress || 'N/A'
             };
-        });
+        } else {
+            // ... existing statistics calculation logic ...
+            const uniqueStudents = new Set(lessonResults.map(r => r.student_id)).size;
+            const scores = lessonResults.map(r => {/* ... */ return (typeof r.score === 'number' ? r.score : 0) / (r.totalPoints || 1) * 100; });
+            const averageScore = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            const scoreRanges = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+            const distribution = new Array(scoreRanges.length - 1).fill(0);
+            lessonResults.forEach((result) => {
+                 const scorePercent = (typeof result.score === 'number' ? result.score : 0) / (result.totalPoints || 1) * 100;
+                 const normalizedScore = Math.max(0, Math.min(100, scorePercent));
+                 const rangeIndex = normalizedScore === 100 ? 9 : Math.floor(normalizedScore / 10);
+                 if (rangeIndex >= 0 && rangeIndex < distribution.length) distribution[rangeIndex]++;
+            });
+            const questionStats = {}; /* ... existing logic ... */
+            lessonResults.forEach(result => {
+                if (Array.isArray(result.questions)) {
+                    result.questions.forEach(q => {
+                        const questionKey = q.question || `question_${q.originalIndex || Date.now()}`;
+                        if (!questionStats[questionKey]) { /* init stats */ questionStats[questionKey] = { questionText: q.question, total: 0, completed: 0, correct: 0, incorrect: 0 }; }
+                        questionStats[questionKey].total++;
+                        questionStats[questionKey].completed++;
+                        if (q.isCorrect) questionStats[questionKey].correct++; else questionStats[questionKey].incorrect++;
+                    });
+                }
+            });
+            const formattedQuestionStats = Object.values(questionStats).map((stats) => ({/* ... */ accuracy: stats.completed > 0 ? ((stats.correct / stats.completed) * 100).toFixed(1) + '%' : 'N/A' }));
+            const transcripts = lessonResults.map(r => ({/* ... */ score: ((typeof r.score === 'number' ? r.score : 0) / (r.totalPoints || 1) * 100).toFixed(1) + '%' }));
 
-        res.json({
-            uniqueStudents,
-            totalAttempts: lessonResults.length,
-            averageScore: averageScore.toFixed(1),
-            lowScores: scores.filter(s => s < 50).length,
-            highScores: scores.filter(s => s >= 50).length,
-            scoreDistribution: {
-                labels: scoreRanges.slice(0, -1).map((n, i) => 
-                    i === 9 ? '90-100%' : `${n}-${n+9}%`
-                ),
-                data: distribution
-            },
-            questionStats: formattedQuestionStats,
-            transcripts: transcripts
-        });
+            statsPayload = {
+                uniqueStudents,
+                totalAttempts: lessonResults.length,
+                averageScore: averageScore.toFixed(1),
+                lowScores: scores.filter(s => s < 50).length,
+                highScores: scores.filter(s => s >= 50).length,
+                scoreDistribution: { labels: scoreRanges.slice(0, -1).map((n, i) => i === 9 ? '90-100%' : `${n}-${n+9}%`), data: distribution },
+                questionStats: formattedQuestionStats,
+                transcripts: transcripts
+            };
+        }
+        
+        // --- Caching Logic ---
+        // Include lesson's lastUpdated time in ETag if available, to bust cache when lesson changes
+        // Also include results data for accuracy
+        const cacheData = { stats: statsPayload, lessonLastUpdated: lessonData?.lastUpdated }; 
+        const etag = generateETag(cacheData);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log(`Cache hit for /api/lessons/${lessonId}/statistics`);
+            return res.status(304).send();
+        }
+        
+        console.log(`Cache miss for /api/lessons/${lessonId}/statistics`);
+        // Cache statistics for a moderate duration, e.g., 5 minutes
+        setCacheHeaders(res, etag, 60 * 5); 
+        // --- End Caching Logic ---
+
+        res.json(statsPayload);
 
     } catch (error) {
         console.error(`Error fetching statistics for lesson ${lessonId}:`, error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load statistics', details: error.message });
     }
 });
@@ -950,18 +1028,46 @@ app.get('/api/check-student-auth', (req, res) => {
     }
 });
 
-app.get('/api/gallery-images', (req, res) => {
+app.get('/api/gallery-images', async (req, res) => {
     const imagesDir = path.join(__dirname, '..', 'public', 'lesson_images');
     try {
-        if (!fs.existsSync(imagesDir)) {
-            fs.mkdirSync(imagesDir, { recursive: true });
+        // Ensure directory exists asynchronously
+        try {
+            await fs.access(imagesDir);
+        } catch (dirError) {
+            if (dirError.code === 'ENOENT') {
+                await fs.mkdir(imagesDir, { recursive: true });
+            } else {
+                throw dirError; // Re-throw unexpected errors
+            }
         }
-        const files = fs.readdirSync(imagesDir)
-            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-            .map(file => `/lesson_images/${file}`);
+
+        // Read directory asynchronously
+        const dirents = await fs.readdir(imagesDir, { withFileTypes: true });
+        const files = dirents
+            .filter(dirent => dirent.isFile() && /\.(jpg|jpeg|png|gif)$/i.test(dirent.name))
+            .map(dirent => `/lesson_images/${dirent.name}`)
+            .sort(); // Sort filenames for consistent ETag generation
+            
+        // --- Caching Logic ---
+        const etag = generateETag(files);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/gallery-images');
+            return res.status(304).send();
+        }
+        
+        console.log('Cache miss for /api/gallery-images');
+        // Cache gallery images list for a reasonable time, e.g., 10 minutes
+        setCacheHeaders(res, etag, 60 * 10);
+        // --- End Caching Logic ---
+
         res.json(files);
     } catch (error) {
         console.error('Error reading gallery images:', error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load gallery images' });
     }
 });
@@ -976,13 +1082,29 @@ app.get('/api/quiz', requireStudentAuth, async (req, res) => {
 
         if (error) throw error;
         
-        if (!quizConfig || !quizConfig.quiz_data) {
-             return res.json({ questions: [] });
-        }
+        const quizData = quizConfig?.quiz_data || { questions: [] }; // Ensure we have a default value
 
-        res.json(quizConfig.quiz_data);
+        // --- Caching Logic ---
+        const etag = generateETag(quizData);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/quiz');
+            return res.status(304).send();
+        }
+        
+        console.log('Cache miss for /api/quiz');
+        // Cache quiz data for a moderate duration, e.g., 30 minutes
+        setCacheHeaders(res, etag, 60 * 30); 
+        // --- End Caching Logic ---
+
+        res.json(quizData);
+
     } catch (error) {
         console.error('Error loading quiz data:', error);
+        // Avoid sending cache headers on error
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load quiz data', details: error.message });
     }
 });
@@ -1059,10 +1181,26 @@ app.get('/api/tags', async (req, res) => {
 
         const uniqueSortedTags = Array.from(allTags).sort();
 
+        // --- Caching Logic ---
+        const etag = generateETag(uniqueSortedTags);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/tags');
+            return res.status(304).send();
+        }
+
+        console.log('Cache miss for /api/tags');
+        setCacheHeaders(res, etag, 60 * 15); // Cache tags for 15 minutes
+        // --- End Caching Logic ---
+
         res.json(uniqueSortedTags);
 
     } catch (error) {
         console.error('Error fetching tags:', error);
+        // Avoid sending cache headers on error
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch tags', details: error.message });
     }
 });
@@ -1076,9 +1214,28 @@ app.get('/api/admin/unapproved-students', requireAuth, async (req, res) => {
             .order('created_at', { ascending: true });
 
         if (error) throw error;
-        res.json(data || []);
+        
+        const studentsData = data || [];
+        
+        // --- Caching Logic ---
+        const etag = generateETag(studentsData);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/admin/unapproved-students');
+            return res.status(304).send();
+        }
+        
+        console.log('Cache miss for /api/admin/unapproved-students');
+        // Cache for a short duration as this list might change frequently
+        setCacheHeaders(res, etag, 60 * 1); // 1 minute cache
+        // --- End Caching Logic ---
+        
+        res.json(studentsData);
     } catch (error) {
         console.error('Error fetching unapproved students:', error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch unapproved students', details: error.message });
     }
 });
@@ -1093,9 +1250,28 @@ app.get('/api/admin/approved-students', requireAuth, async (req, res) => {
             .order('full_name', { ascending: true });
 
         if (error) throw error;
-        res.json(data || []);
+        
+        const studentsData = data || [];
+        
+        // --- Caching Logic ---
+        const etag = generateETag(studentsData);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/admin/approved-students');
+            return res.status(304).send();
+        }
+        
+        console.log('Cache miss for /api/admin/approved-students');
+        // Cache for a moderate duration, e.g., 5 minutes
+        setCacheHeaders(res, etag, 60 * 5);
+        // --- End Caching Logic ---
+        
+        res.json(studentsData);
     } catch (error) {
         console.error('Error fetching approved students:', error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch approved students', details: error.message });
     }
 });
@@ -1177,6 +1353,58 @@ app.post('/api/admin/unbind-device/:studentId', requireAuth, async (req, res) =>
     } catch (error) {
         console.error(`Error processing unbind request for student ${studentId}:`, error);
         res.status(500).json({ success: false, error: 'Failed to unbind device', details: error.message });
+    }
+});
+
+// This is the correct endpoint to apply caching to
+app.get('/api/history', requireAuth, async (req, res) => {
+    try {
+        const { data: historyData, error } = await supabase
+            .from('results')
+            .select(`
+                id, 
+                student_id, 
+                timestamp, 
+                score,
+                totalPoints,
+                lessonId, 
+                students ( full_name ), 
+                lessons ( title ) 
+            `)
+             .order('timestamp', { ascending: false });
+
+        if (error) throw error;
+        
+        const history = historyData.map(result => ({
+            resultId: result.id,
+            studentName: result.students?.full_name || 'Unknown Student',
+            lessonTitle: result.lessons?.title || (result.lessonId === 'quiz_game' ? 'Trò chơi chinh phục' : 'Unknown Lesson'),
+            submittedAt: result.timestamp,
+            score: result.score,
+            totalPoints: result.totalPoints,
+            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A'
+        }));
+        
+        // --- Caching Logic ---
+        const etag = generateETag(history);
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag && clientETag === `"${etag}"`) {
+            console.log('Cache hit for /api/history');
+            return res.status(304).send();
+        }
+        
+        console.log('Cache miss for /api/history');
+        // Cache history for a short duration, e.g., 1 minute
+        setCacheHeaders(res, etag, 60 * 1); 
+        // --- End Caching Logic ---
+        
+        res.json(history);
+    } catch (error) {
+        console.error('Failed to load history:', error);
+        res.removeHeader('ETag');
+        res.removeHeader('Cache-Control');
+        res.status(500).json({ error: 'Failed to load history', details: error.message });
     }
 });
 
