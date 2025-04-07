@@ -524,16 +524,16 @@ app.get('/api/lessons', async (req, res) => {
     try {
         // --- Pagination, Sorting, Searching Parameters ---
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10; 
+        const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || '';
-        const sort = req.query.sort || 'order'; 
-        
+        const sort = req.query.sort || 'order';
+
         const startIndex = (page - 1) * limit;
         // endIndex is not directly used in the same way for RPC pagination
 
         // Determine sorting parameters (used in both RPC and non-RPC paths)
         let orderAscending = true;
-        let orderColumn = 'order'; 
+        let orderColumn = 'order';
         switch (sort) {
             case 'newest': orderColumn = 'created'; orderAscending = false; break;
             case 'oldest': orderColumn = 'created'; orderAscending = true; break;
@@ -549,24 +549,24 @@ app.get('/api/lessons', async (req, res) => {
         let total = 0;
 
         if (search) {
-            // --- Use RPC for search --- 
+            // --- Use RPC for search ---
             // Call the PostgreSQL function 'search_lessons' we created
             let rpcQuery = supabase
                 .rpc('search_lessons', { search_term: search })
                 // Apply sorting to the results returned by the RPC function
                 .order(orderColumn, { ascending: orderAscending })
                 // Apply pagination to the results returned by the RPC function
-                .range(startIndex, startIndex + limit - 1); 
+                .range(startIndex, startIndex + limit - 1);
 
             const { data: rpcData, error: rpcError } = await rpcQuery;
-            
+
             if (rpcError) throw rpcError; // Throw error if RPC call fails
-            
+
             lessons = rpcData || [];
-            
+
             // Limitation: Basic RPC doesn't easily return total count for pagination when searching.
             // We need a separate query or a modified RPC function to get the accurate total count.
-            // For now, we'll estimate total based on whether we received a full page, 
+            // For now, we'll estimate total based on whether we received a full page,
             // or ideally, make another call just for the count.
             const { count, error: countError } = await supabase
                 .rpc('search_lessons', { search_term: search }, { count: 'exact', head: true }); // Perform a head request to get only the count
@@ -580,50 +580,46 @@ app.get('/api/lessons', async (req, res) => {
             }
 
         } else {
-            // --- Original non-search query --- 
+            // --- Original non-search query ---
             let nonSearchQuery = supabase
                 .from('lessons')
                 .select('id, title, color, created, lastUpdated, views, order, subject, grade, tags, description, purpose, pricing, lessonImage, randomQuestions', { count: 'exact' })
                 .order(orderColumn, { ascending: orderAscending })
-                .range(startIndex, startIndex + limit - 1); 
+                .range(startIndex, startIndex + limit - 1);
 
             const { data: nonSearchData, error: nonSearchError, count: nonSearchCount } = await nonSearchQuery;
-            
+
             if (nonSearchError) throw nonSearchError; // Throw error if query fails
-            
+
             lessons = nonSearchData || [];
             total = nonSearchCount || 0;
         }
-        
-        // --- Caching Logic --- 
+
+        // --- Caching Logic Removed ---
         const responsePayload = {
             lessons: lessons,
             total: total,
             page: page,
             limit: limit,
-            // Include search and sort parameters in ETag calculation for uniqueness
             search: search,
             sort: sort
         };
-        const etag = generateETag(responsePayload);
+        // const etag = generateETag(responsePayload);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/lessons');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/lessons');
+        // setCacheHeaders(res, etag, 60 * 5); // Cache for 5 minutes
 
-        // Check If-None-Match header from the client
-        const clientETag = req.headers['if-none-match'];
-        if (clientETag && clientETag === `"${etag}"`) { // Compare quoted ETag
-            console.log('Cache hit for /api/lessons');
-            return res.status(304).send(); // Not Modified
-        }
-
-        // If no match or no client ETag, set headers and send response
-        console.log('Cache miss for /api/lessons');
-        setCacheHeaders(res, etag, 60 * 5); // Cache for 5 minutes
+        // Send response directly
         res.json(responsePayload);
-        // --- End Caching Logic --- 
+        // --- End Caching Logic Removal ---
 
     } catch (error) {
         console.error('Error fetching lessons:', error);
         const errorDetails = error.details || error.message || 'Unknown error';
-        // Ensure status is set correctly even for caught errors
         const statusCode = error.status || 500;
         res.status(statusCode).json({ error: 'Failed to fetch lessons', details: errorDetails });
     }
@@ -645,23 +641,19 @@ app.get('/api/lessons/:id', async (req, res) => {
             throw fetchError || new Error('Lesson not found');
         }
 
-        // --- Caching Logic ---
-        const etag = generateETag(lesson); // ETag based on the lesson data
-        const clientETag = req.headers['if-none-match'];
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(lesson);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log(`Cache hit for /api/lessons/${lessonId}`);
+        //     // Send 304 without updating views if cache is valid
+        //     return res.status(304).send();
+        // }
+        // console.log(`Cache miss for /api/lessons/${lessonId}`);
+        // setCacheHeaders(res, etag, 60 * 10);
+        // --- End Caching Logic Removal ---
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log(`Cache hit for /api/lessons/${lessonId}`);
-            // Send 304 without updating views if cache is valid
-            return res.status(304).send();
-        }
-
-        console.log(`Cache miss for /api/lessons/${lessonId}`);
-        // Set cache headers *before* potentially modifying the data (views)
-        // Cache for a slightly longer duration? e.g., 10 minutes
-        setCacheHeaders(res, etag, 60 * 10);
-        // --- End Caching Logic ---
-
-        // Update view count only on cache miss (when sending full data)
+        // Update view count (this logic remains)
         const currentViews = lesson.views || 0;
         const { error: updateError } = await supabase
             .from('lessons')
@@ -678,10 +670,10 @@ app.get('/api/lessons/:id', async (req, res) => {
 
     } catch (error) {
         console.error(`Error fetching lesson ${lessonId}:`, error);
-        // Avoid sending cache headers on error
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
-        res.removeHeader('Last-Modified'); // If you added Last-Modified
+        // Removed cache header cleanup as they are not set
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
+        // res.removeHeader('Last-Modified');
         res.status(500).json({ error: 'Failed to fetch lesson', details: error.message });
     }
 });
@@ -868,27 +860,24 @@ app.get('/api/results/:id', async (req, res) => {
             }
             throw error || new Error('Result not found');
         }
-        
-        // --- Caching Logic ---
-        // Results are typically immutable once submitted, so cache aggressively
-        const etag = generateETag(result);
-        const clientETag = req.headers['if-none-match'];
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log(`Cache hit for /api/results/${resultId}`);
-            return res.status(304).send();
-        }
-        
-        console.log(`Cache miss for /api/results/${resultId}`);
-        // Cache for a long duration, e.g., 1 day, as results don't change
-        setCacheHeaders(res, etag, 60 * 60 * 24); 
-        // --- End Caching Logic ---
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(result);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log(`Cache hit for /api/results/${resultId}`);
+        //     return res.status(304).send();
+        // }
+        // console.log(`Cache miss for /api/results/${resultId}`);
+        // setCacheHeaders(res, etag, 60 * 60 * 24);
+        // --- End Caching Logic Removal ---
 
         res.json(result);
     } catch (error) {
         console.error(`Error fetching result ${resultId}:`, error);
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch result', details: error.message });
     }
 });
@@ -940,14 +929,14 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
         const { data: lessonResults, error: resultsError } = await supabase
             .from('results')
             .select(`
-                *, 
-                students ( full_name ) 
+                *,
+                students ( full_name )
             `)
             .eq('lessonId', lessonId); // Removed order for consistency in ETag
             // .order('timestamp', { ascending: false }); // Ordering might change ETag unnecessarily if data is the same
-            
+
         if (resultsError) throw resultsError;
-        
+
         // Process statistics (existing logic)
         let statsPayload;
         if (!lessonResults || lessonResults.length === 0) {
@@ -987,8 +976,21 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
                     });
                 }
             });
-            const formattedQuestionStats = Object.values(questionStats).map((stats) => ({/* ... */ accuracy: stats.completed > 0 ? ((stats.correct / stats.completed) * 100).toFixed(1) + '%' : 'N/A' }));
-            const transcripts = lessonResults.map(r => ({/* ... */ score: ((typeof r.score === 'number' ? r.score : 0) / (r.totalPoints || 1) * 100).toFixed(1) + '%' }));
+            // Corrected formatting logic to avoid map error
+            const formattedQuestionStats = Object.values(questionStats).map((stats) => ({
+                question: stats.questionText,
+                total: stats.total,
+                completed: stats.completed,
+                correct: stats.correct,
+                incorrect: stats.incorrect,
+                accuracy: stats.completed > 0 ? ((stats.correct / stats.completed) * 100).toFixed(1) + '%' : 'N/A'
+            }));
+            // Corrected formatting logic for transcripts
+            const transcripts = lessonResults.map(r => ({
+                studentName: r.students?.full_name || 'Unknown',
+                timestamp: r.timestamp,
+                score: ((typeof r.score === 'number' ? r.score : 0) / (r.totalPoints || 1) * 100).toFixed(1) + '%'
+            }));
 
             statsPayload = {
                 uniqueStudents,
@@ -1001,30 +1003,26 @@ app.get('/api/lessons/:id/statistics', requireAuth, async (req, res) => {
                 transcripts: transcripts
             };
         }
-        
-        // --- Caching Logic ---
-        // Include lesson's lastUpdated time in ETag if available, to bust cache when lesson changes
-        // Also include results data for accuracy
-        const cacheData = { stats: statsPayload, lessonLastUpdated: lessonData?.lastUpdated }; 
-        const etag = generateETag(cacheData);
-        const clientETag = req.headers['if-none-match'];
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log(`Cache hit for /api/lessons/${lessonId}/statistics`);
-            return res.status(304).send();
-        }
-        
-        console.log(`Cache miss for /api/lessons/${lessonId}/statistics`);
-        // Cache statistics for a moderate duration, e.g., 5 minutes
-        setCacheHeaders(res, etag, 60 * 5); 
-        // --- End Caching Logic ---
+        // --- Caching Logic Removed ---
+        // const cacheData = { stats: statsPayload, lessonLastUpdated: lessonData?.lastUpdated };
+        // const etag = generateETag(cacheData);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log(`Cache hit for /api/lessons/${lessonId}/statistics`);
+        //     return res.status(304).send();
+        // }
+        // console.log(`Cache miss for /api/lessons/${lessonId}/statistics`);
+        // setCacheHeaders(res, etag, 60 * 5);
+        // --- End Caching Logic Removal ---
 
         res.json(statsPayload);
 
     } catch (error) {
         console.error(`Error fetching statistics for lesson ${lessonId}:`, error);
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load statistics', details: error.message });
     }
 });
@@ -1068,26 +1066,24 @@ app.get('/api/gallery-images', async (req, res) => {
             .filter(dirent => dirent.isFile() && /\.(jpg|jpeg|png|gif)$/i.test(dirent.name))
             .map(dirent => `/lesson_images/${dirent.name}`)
             .sort(); // Sort filenames for consistent ETag generation
-            
-        // --- Caching Logic ---
-        const etag = generateETag(files);
-        const clientETag = req.headers['if-none-match'];
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log('Cache hit for /api/gallery-images');
-            return res.status(304).send();
-        }
-        
-        console.log('Cache miss for /api/gallery-images');
-        // Cache gallery images list for a reasonable time, e.g., 10 minutes
-        setCacheHeaders(res, etag, 60 * 10);
-        // --- End Caching Logic ---
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(files);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/gallery-images');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/gallery-images');
+        // setCacheHeaders(res, etag, 60 * 10);
+        // --- End Caching Logic Removal ---
 
         res.json(files);
     } catch (error) {
         console.error('Error reading gallery images:', error);
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load gallery images' });
     }
 });
@@ -1101,30 +1097,27 @@ app.get('/api/quiz', requireStudentAuth, async (req, res) => {
             .maybeSingle();
 
         if (error) throw error;
-        
+
         const quizData = quizConfig?.quiz_data || { questions: [] }; // Ensure we have a default value
 
-        // --- Caching Logic ---
-        const etag = generateETag(quizData);
-        const clientETag = req.headers['if-none-match'];
-
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log('Cache hit for /api/quiz');
-            return res.status(304).send();
-        }
-        
-        console.log('Cache miss for /api/quiz');
-        // Cache quiz data for a moderate duration, e.g., 30 minutes
-        setCacheHeaders(res, etag, 60 * 30); 
-        // --- End Caching Logic ---
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(quizData);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/quiz');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/quiz');
+        // setCacheHeaders(res, etag, 60 * 30);
+        // --- End Caching Logic Removal ---
 
         res.json(quizData);
 
     } catch (error) {
         console.error('Error loading quiz data:', error);
-        // Avoid sending cache headers on error
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load quiz data', details: error.message });
     }
 });
@@ -1201,26 +1194,24 @@ app.get('/api/tags', async (req, res) => {
 
         const uniqueSortedTags = Array.from(allTags).sort();
 
-        // --- Caching Logic ---
-        const etag = generateETag(uniqueSortedTags);
-        const clientETag = req.headers['if-none-match'];
-
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log('Cache hit for /api/tags');
-            return res.status(304).send();
-        }
-
-        console.log('Cache miss for /api/tags');
-        setCacheHeaders(res, etag, 60 * 15); // Cache tags for 15 minutes
-        // --- End Caching Logic ---
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(uniqueSortedTags);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/tags');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/tags');
+        // setCacheHeaders(res, etag, 60 * 15); // Cache tags for 15 minutes
+        // --- End Caching Logic Removal ---
 
         res.json(uniqueSortedTags);
 
     } catch (error) {
         console.error('Error fetching tags:', error);
-        // Avoid sending cache headers on error
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch tags', details: error.message });
     }
 });
@@ -1234,28 +1225,26 @@ app.get('/api/admin/unapproved-students', requireAuth, async (req, res) => {
             .order('created_at', { ascending: true });
 
         if (error) throw error;
-        
-        const studentsData = data || [];
-        
-        // --- Caching Logic ---
-        const etag = generateETag(studentsData);
-        const clientETag = req.headers['if-none-match'];
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log('Cache hit for /api/admin/unapproved-students');
-            return res.status(304).send();
-        }
-        
-        console.log('Cache miss for /api/admin/unapproved-students');
-        // Cache for a short duration as this list might change frequently
-        setCacheHeaders(res, etag, 60 * 1); // 1 minute cache
-        // --- End Caching Logic ---
-        
+        const studentsData = data || [];
+
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(studentsData);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/admin/unapproved-students');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/admin/unapproved-students');
+        // setCacheHeaders(res, etag, 60 * 1); // 1 minute cache
+        // --- End Caching Logic Removal ---
+
         res.json(studentsData);
     } catch (error) {
         console.error('Error fetching unapproved students:', error);
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch unapproved students', details: error.message });
     }
 });
@@ -1270,28 +1259,26 @@ app.get('/api/admin/approved-students', requireAuth, async (req, res) => {
             .order('full_name', { ascending: true });
 
         if (error) throw error;
-        
-        const studentsData = data || [];
-        
-        // --- Caching Logic ---
-        const etag = generateETag(studentsData);
-        const clientETag = req.headers['if-none-match'];
 
-        if (clientETag && clientETag === `"${etag}"`) {
-            console.log('Cache hit for /api/admin/approved-students');
-            return res.status(304).send();
-        }
-        
-        console.log('Cache miss for /api/admin/approved-students');
-        // Cache for a moderate duration, e.g., 5 minutes
-        setCacheHeaders(res, etag, 60 * 5);
-        // --- End Caching Logic ---
-        
+        const studentsData = data || [];
+
+        // --- Caching Logic Removed ---
+        // const etag = generateETag(studentsData);
+        // const clientETag = req.headers['if-none-match'];
+        // if (clientETag && clientETag === `"${etag}"`) {
+        //     console.log('Cache hit for /api/admin/approved-students');
+        //     return res.status(304).send();
+        // }
+        // console.log('Cache miss for /api/admin/approved-students');
+        // setCacheHeaders(res, etag, 60 * 5);
+        // --- End Caching Logic Removal ---
+
         res.json(studentsData);
     } catch (error) {
         console.error('Error fetching approved students:', error);
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to fetch approved students', details: error.message });
     }
 });
@@ -1384,13 +1371,13 @@ app.get('/api/history', requireAuth, async (req, res) => {
         const limit = parseInt(req.query.limit) || 15; // Default limit for history
         const search = req.query.search || '';
         const sort = req.query.sort || 'time-desc'; // Default sort: newest first
-        
+
         const startIndex = (page - 1) * limit;
 
         // Determine sorting parameters
         let orderAscending = false;
         let orderColumn = 'timestamp'; // Default is results.timestamp
-        
+
         // Map frontend sort keys to potential database columns
         const sortMap = {
             'time-asc': { column: 'timestamp', ascending: true },
@@ -1412,21 +1399,21 @@ app.get('/api/history', requireAuth, async (req, res) => {
             orderAscending = false;
         }
 
-        // --- Base Query --- 
+        // --- Base Query ---
         let query = supabase
             .from('results')
             .select(`
-                id, 
-                student_id, 
-                timestamp, 
+                id,
+                student_id,
+                timestamp,
                 score,
                 totalPoints,
-                lessonId, 
-                students!inner ( full_name ), 
-                lessons ( title ) 
+                lessonId,
+                students!inner ( full_name ),
+                lessons ( title )
             `, { count: 'exact' }); // Request total count
 
-        // --- Apply Search Filter --- 
+        // --- Apply Search Filter ---
         if (search) {
             // Search across student name (joined) and lesson title (joined)
             // Note: Searching joined tables might require an RPC function for optimal performance,
@@ -1437,7 +1424,7 @@ app.get('/api/history', requireAuth, async (req, res) => {
              // Added condition to search for 'quiz_game' if search term contains 'chinh' or 'phục'
         }
 
-        // --- Apply Sorting --- 
+        // --- Apply Sorting ---
         // Handle sorting on joined tables carefully. Supabase might require specific syntax.
         // If sorting on joined fields doesn't work directly, consider an RPC or view.
         if (orderColumn.includes('.')) {
@@ -1447,15 +1434,15 @@ app.get('/api/history', requireAuth, async (req, res) => {
         } else {
             query = query.order(orderColumn, { ascending: orderAscending });
         }
-        
+
         // --- Apply Pagination ---
         query = query.range(startIndex, startIndex + limit - 1);
 
-        // --- Execute Query --- 
+        // --- Execute Query ---
         const { data: historyData, error, count: totalCount } = await query;
 
         if (error) throw error;
-        
+
         const history = historyData.map(result => ({
             resultId: result.id, // Use the actual result ID
             studentName: result.students?.full_name || 'Unknown Student',
@@ -1464,12 +1451,11 @@ app.get('/api/history', requireAuth, async (req, res) => {
             score: result.score,
             totalPoints: result.totalPoints,
             // Keep scorePercentage calculation or remove if not needed
-            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A' 
+            scorePercentage: result.totalPoints ? ((result.score / result.totalPoints) * 100).toFixed(1) + '%' : 'N/A'
         }));
-        
-        // --- Caching Logic --- 
-        // Caching is complex with pagination/search/sort. Let's disable for now.
-        /* 
+
+        // --- Caching Logic (already removed/commented) ---
+        /*
         const etag = generateETag({ history, totalCount, page, limit, search, sort });
         const clientETag = req.headers['if-none-match'];
 
@@ -1477,15 +1463,15 @@ app.get('/api/history', requireAuth, async (req, res) => {
             console.log('Cache hit for /api/history');
             return res.status(304).send();
         }
-        
+
         console.log('Cache miss for /api/history');
         setCacheHeaders(res, etag, 60 * 1); // Cache for 1 minute? Adjust as needed
         */
-        // --- End Caching Logic --- 
-        
+        // --- End Caching Logic ---
+
         // Return paginated data and total count
-        res.json({ 
-            history: history, 
+        res.json({
+            history: history,
             total: totalCount,
             page: page,
             limit: limit
@@ -1493,9 +1479,9 @@ app.get('/api/history', requireAuth, async (req, res) => {
 
     } catch (error) {
         console.error('Failed to load history:', error);
-        // Avoid sending cache headers on error
-        res.removeHeader('ETag');
-        res.removeHeader('Cache-Control');
+        // Removed cache header cleanup (was already commented out)
+        // res.removeHeader('ETag');
+        // res.removeHeader('Cache-Control');
         res.status(500).json({ error: 'Failed to load history', details: error.message });
     }
 });
