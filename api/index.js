@@ -42,9 +42,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://miojaflixmn
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pb2phZmxpeG1uY21oc2d5YWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2NTU0NTUsImV4cCI6MjA1OTIzMTQ1NX0.e3nU5sBvHsFHZP48jg1vjYsP-N2S4AgYuQgt8opHE_g';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
 
-// Debug info about Supabase setup
-console.log(`Supabase URL: ${supabaseUrl}`);
-console.log(`Service Key present: ${!!supabaseServiceKey}`);
 if (!supabaseServiceKey) {
   console.warn('WARNING: SUPABASE_SERVICE_KEY environment variable not set. Storage uploads might fail if RLS requires authenticated users or service role.');
   // Depending on your RLS, you might need the service key for direct uploads.
@@ -189,14 +186,6 @@ const adminCredentials = {
 
 // Middleware to protect admin routes
 const requireAuth = (req, res, next) => {
-    // ADD THIS LOG: Log the entire session object as seen by this middleware
-    console.log('requireAuth - Full Session Object:', JSON.stringify(req.session)); 
-
-    console.log('Auth check - Session:', { 
-        isAuthenticated: req.session.isAuthenticated,
-        hasSession: !!req.session,
-        sessionID: req.sessionID
-    });
     
     if (req.session.isAuthenticated) {
         console.log('Admin authenticated, proceeding to route');
@@ -220,11 +209,6 @@ const requireAuth = (req, res, next) => {
 
 // Middleware to protect student routes
 const requireStudentAuth = (req, res, next) => {
-    console.log('Student Auth check - Session:', { 
-        studentId: req.session.studentId,
-        hasSession: !!req.session,
-        sessionID: req.sessionID
-    });
 
     if (req.session.studentId) { // Check ONLY for studentId
         console.log('Student authenticated, proceeding.');
@@ -288,6 +272,14 @@ app.get('/admin/statistics/:id', requireAuth, (req, res) => {
 });
 app.get('/history', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'history.html')));
 app.get('/admin/quiz', requireAuth, (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'admin-quiz-edit.html')));
+
+
+// --- FIXED Leaderboard Route (No Auth Required) ---
+app.get('/leaderboard', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'leaderboard.html')));
+
+// --- ADDED Profile Page Route --- 
+// Decide if authentication is needed here
+app.get('/profile/:studentId', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'profile.html'))); 
 
 // API Endpoints
 app.post('/api/login', async (req, res) => {
@@ -822,29 +814,74 @@ app.post('/api/results', requireStudentAuth, async (req, res) => {
         return res.status(401).json({ error: 'Unauthorized: No student session found.' });
     }
 
+    // Extract all necessary data from the request body
+    const {
+        lessonId,
+        questions,
+        score,
+        totalPoints,
+        ipAddress,
+        timeTaken, // Added
+        streak    // Added
+    } = req.body;
+
     const newResultData = {
-        id: Date.now().toString(),
-        lessonId: req.body.lessonId,
+        id: Date.now().toString(), // Consider using UUID or database sequence
+        lessonId: lessonId,
         timestamp: now,
-        questions: req.body.questions,
-        score: req.body.score,
-        totalPoints: req.body.totalPoints,
+        questions: questions,
+        score: score,
+        totalPoints: totalPoints,
         student_id: studentIdFromSession,
-        ipAddress: req.body.ipAddress
+        ipAddress: ipAddress
+        // timeTaken and streak are not part of the 'results' table schema based on search results
     };
 
     try {
-        const { data, error } = await supabase
+        // 1. Save the result first
+        const { data: savedResult, error: saveError } = await supabase
             .from('results')
             .insert(newResultData)
-            .select('id')
+            .select('id') // Select the ID of the newly inserted row
             .single();
 
-        if (error) throw error;
-        res.json({ success: true, resultId: data.id });
-    } catch (error) {
-        console.error('Error saving result:', error);
-        res.status(500).json({ error: 'Failed to save result', details: error.message });
+        if (saveError) {
+            console.error('Error saving result to database:', saveError);
+            return res.status(500).json({ error: 'Failed to save result', details: saveError.message });
+        }
+        
+        if (!savedResult || !savedResult.id) {
+            console.error('Result saved but no ID returned.');
+            return res.status(500).json({ error: 'Failed to save result (ID missing)'});
+        }
+        
+        // --- ADDED: Update rating *after* saving result --- 
+        try {
+            // Call the existing updateStudentRating function 
+            // Pass the necessary data: studentId, lessonId, score, totalPoints, timeTaken, streak
+            await updateStudentRating(
+                studentIdFromSession,
+                lessonId,
+                score,
+                totalPoints,
+                timeTaken,
+                streak
+            );
+            console.log(`Rating updated for student ${studentIdFromSession} after saving result ${savedResult.id}`);
+        } catch (ratingError) {
+            // Log the rating error but don't fail the entire request
+            // The result was saved successfully, which is the primary goal here.
+            console.error(`Failed to update rating for student ${studentIdFromSession} after saving result ${savedResult.id}:`, ratingError);
+            // Optionally, you could add a flag in the response indicating rating update failure
+        }
+        // --- END Rating Update ---
+
+        // Send success response with the ID of the saved result
+        res.json({ success: true, resultId: savedResult.id });
+
+    } catch (error) { // Catch any unexpected error during the process
+        console.error('Unexpected error in /api/results:', error);
+        res.status(500).json({ error: 'Failed to process result submission', details: error.message });
     }
 });
 
@@ -1816,5 +1853,286 @@ app.get('/share/lesson/:lessonId', async (req, res) => {
     }
 });
 // --- END Share Lesson Route ---
+
+// --- Rating System Endpoints ---
+app.get('/api/ratings', async (req, res) => {
+    try {
+        const { data: ratings, error } = await supabase
+            .from('ratings')
+            .select(`
+                *,
+                students ( full_name )
+            `)
+            .order('rating', { ascending: false })
+            .limit(100);
+
+        if (error) {
+            console.error('Supabase error fetching ratings:', error);
+            // Return a specific error instead of throwing
+            return res.status(500).json({ 
+                error: 'Failed to fetch ratings from database', 
+                details: error.message 
+            });
+        }
+
+        // Ensure ratings is always an array
+        const ratingsData = Array.isArray(ratings) ? ratings : [];
+
+        res.json(ratingsData); // Send array (could be empty)
+
+    } catch (error) { // Catch other unexpected errors
+        console.error('Error in /api/ratings endpoint:', error);
+        res.status(500).json({ 
+            error: 'Internal server error fetching ratings', 
+            details: error.message 
+        });
+    }
+});
+
+app.get('/api/ratings/:studentId', async (req, res) => {
+    try {
+        const { data: rating, error } = await supabase
+            .from('ratings')
+            .select(`
+                *,
+                students ( full_name )
+            `)
+            .eq('student_id', req.params.studentId)
+            .single();
+
+        if (error) throw error;
+        res.json(rating);
+    } catch (error) {
+        console.error('Error fetching student rating:', error);
+        res.status(500).json({ error: 'Failed to fetch student rating' });
+    }
+});
+
+app.get('/api/ratings/:studentId/history', async (req, res) => {
+    try {
+        const { data: history, error } = await supabase
+            .from('rating_history')
+            .select('*')
+            .eq('student_id', req.params.studentId)
+            .order('timestamp', { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+        res.json(history);
+    } catch (error) {
+        console.error('Error fetching rating history:', error);
+        res.status(500).json({ error: 'Failed to fetch rating history' });
+    }
+});
+
+// --- Rating Calculation Helper Functions ---
+function calculateRatingChange(previousRating, performance, timeTaken, streak) {
+    // Base K-factor (sensitivity of rating changes)
+    const baseK = 32;
+    
+    // Time bonus (faster completion = higher bonus)
+    const timeBonus = Math.max(0, 1 - (timeTaken / 300)); // 5 minutes max time bonus
+    
+    // Streak multiplier
+    const streakMultiplier = 1 + (Math.min(streak, 10) * 0.1); // Max 2x multiplier at 10 streak
+    
+    // Performance factor (0-1)
+    const performanceFactor = performance;
+    
+    // Calculate expected score (ELO formula)
+    const expectedScore = 1 / (1 + Math.pow(10, (1500 - previousRating) / 400));
+    
+    // Calculate rating change
+    const ratingChange = baseK * (performanceFactor - expectedScore) * timeBonus * streakMultiplier;
+    
+    return Math.round(ratingChange);
+}
+
+// --- Update Rating on Lesson Completion ---
+async function updateStudentRating(studentId, lessonId, score, totalPoints, timeTaken, streak) {
+    try {
+        // Get current rating
+        const { data: currentRating, error: ratingError } = await supabase
+            .from('ratings')
+            .select('*')
+            .eq('student_id', studentId)
+            .single();
+
+        if (ratingError && ratingError.code !== 'PGRST116') throw ratingError;
+
+        const previousRating = currentRating?.rating || 1500; // Default starting rating
+        const performance = score / totalPoints;
+        
+        // Calculate new rating
+        const ratingChange = calculateRatingChange(previousRating, performance, timeTaken, streak);
+        const newRating = previousRating + ratingChange;
+
+        // Update or insert rating
+        const { error: upsertError } = await supabase
+            .from('ratings')
+            .upsert({
+                student_id: studentId,
+                rating: newRating,
+                last_updated: new Date().toISOString()
+            });
+
+        if (upsertError) throw upsertError;
+
+        // Record rating history
+        const { error: historyError } = await supabase
+            .from('rating_history')
+            .insert({
+                student_id: studentId,
+                lesson_id: lessonId,
+                previous_rating: previousRating,
+                rating_change: ratingChange,
+                new_rating: newRating,
+                performance: performance,
+                time_taken: timeTaken,
+                streak: streak,
+                timestamp: new Date().toISOString()
+            });
+
+        if (historyError) throw historyError;
+
+        return { newRating, ratingChange };
+    } catch (error) {
+        console.error('Error updating student rating:', error);
+        throw error;
+    }
+}
+
+app.post('/api/ratings/update', requireAuth, async (req, res) => {
+    try {
+        const { lessonId, score, totalPoints, timeTaken, streak } = req.body;
+        const studentId = req.session.studentId;
+
+        if (!studentId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Get current rating
+        const { data: currentRating, error: ratingError } = await supabase
+            .from('ratings')
+            .select('*')
+            .eq('student_id', studentId)
+            .single();
+
+        if (ratingError && ratingError.code !== 'PGRST116') throw ratingError;
+
+        const previousRating = currentRating?.rating || 1500; // Default starting rating
+        const performance = score / totalPoints;
+        
+        // Calculate new rating
+        const ratingChange = calculateRatingChange(previousRating, performance, timeTaken, streak);
+        const newRating = previousRating + ratingChange;
+
+        // Update or insert rating
+        const { error: upsertError } = await supabase
+            .from('ratings')
+            .upsert({
+                student_id: studentId,
+                rating: newRating,
+                last_updated: new Date().toISOString()
+            });
+
+        if (upsertError) throw upsertError;
+
+        // Record rating history
+        const { error: historyError } = await supabase
+            .from('rating_history')
+            .insert({
+                student_id: studentId,
+                lesson_id: lessonId,
+                previous_rating: previousRating,
+                rating_change: ratingChange,
+                new_rating: newRating,
+                performance: performance,
+                time_taken: timeTaken,
+                streak: streak,
+                timestamp: new Date().toISOString()
+            });
+
+        if (historyError) throw historyError;
+
+        res.json({ 
+            success: true,
+            ratingChange,
+            newRating,
+            previousRating
+        });
+
+    } catch (error) {
+        console.error('Error updating rating:', error);
+        res.status(500).json({ error: 'Failed to update rating' });
+    }
+});
+
+// --- ADDED API Endpoint for Profile Data --- 
+app.get('/api/profile/:studentId', async (req, res) => {
+    const requestedStudentId = req.params.studentId;
+    // Optional: Check if viewing user is allowed to see this profile
+    // const viewingUserId = req.session.studentId;
+    // if (!viewingUserId) { return res.status(401).json({ error: 'Authentication required' }); }
+    // Add logic here if profiles are not public
+
+    try {
+        // 1. Fetch Student Info
+        const { data: student, error: studentError } = await supabase
+            .from('students')
+            .select('id, full_name, created_at') // Select needed fields
+            .eq('id', requestedStudentId)
+            .maybeSingle(); // Use maybeSingle in case ID doesn't exist
+
+        if (studentError) throw studentError;
+        if (!student) return res.status(404).json({ error: 'Student not found' });
+
+        // 2. Fetch Current Rating
+        const { data: rating, error: ratingError } = await supabase
+            .from('ratings')
+            .select('rating')
+            .eq('student_id', requestedStudentId)
+            .maybeSingle();
+            
+        if (ratingError) {
+            console.warn(`Could not fetch rating for student ${requestedStudentId}:`, ratingError.message);
+            // Don't fail the request, rating might not exist yet
+        }
+
+        // 3. Fetch Rating History (Join with lessons to get titles)
+        const { data: ratingHistory, error: historyError } = await supabase
+            .from('rating_history')
+            .select(`
+                *,
+                lessons ( title )
+            `)
+            .eq('student_id', requestedStudentId)
+            .order('timestamp', { ascending: false })
+            .limit(20); // Limit history entries shown
+            
+        if (historyError) {
+             console.error(`Error fetching rating history for student ${requestedStudentId}:`, historyError);
+             // Don't necessarily fail the request, just might not show history
+             // throw historyError; 
+        }
+        
+        // Format history to include lesson title directly
+        const formattedHistory = ratingHistory?.map(item => ({
+            ...item,
+            lesson_title: item.lessons?.title // Flatten the structure
+        })) || [];
+
+        // 4. Combine and Send Response
+        res.json({
+            student: student,
+            rating: rating, // Send rating object (might be null)
+            ratingHistory: formattedHistory // Send formatted history (might be empty array)
+        });
+
+    } catch (error) {
+        console.error(`Error fetching profile data for student ${requestedStudentId}:`, error);
+        res.status(500).json({ error: 'Failed to fetch profile data', details: error.message });
+    }
+});
 
 module.exports = app;

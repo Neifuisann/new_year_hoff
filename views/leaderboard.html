@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng xếp hạng - Học tập</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        body {
+            background-color: #f8f9fa; /* Slightly lighter grey */
+            color: #212529; /* Darker text */
+            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .leaderboard-container {
+            max-width: 960px; /* Optimized width */
+            margin: 30px auto; /* More top/bottom margin */
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        }
+
+        .leaderboard-header {
+            text-align: center; /* Center header content */
+            margin-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+
+        .leaderboard-header h1 {
+            font-size: 1.9rem;
+            color: #343a40;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .leaderboard-header p {
+            color: #6c757d; /* Grey text */
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        .leaderboard-filters {
+            display: flex; /* Use flexbox */
+            justify-content: center; /* Center buttons */
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-button {
+            padding: 8px 16px; /* Standard padding */
+            font-size: 0.9rem;
+            border: 1px solid #ced4da;
+            border-radius: 20px; /* Pill shape */
+            background: #fff;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-button:hover {
+             border-color: #adb5bd;
+             background-color: #f8f9fa;
+        }
+
+        .filter-button.active {
+            background: #0d6efd; /* Bootstrap primary */
+            color: white;
+            border-color: #0d6efd;
+            font-weight: 500;
+        }
+        
+        /* --- Table Wrapper for Scrolling --- */
+        .table-responsive-wrapper {
+            overflow-x: auto; /* Enable horizontal scroll on overflow */
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .leaderboard-table {
+            width: 100%; /* Ensure table tries to take full width */
+            min-width: 600px; /* Minimum width before scrolling starts */
+            border-collapse: collapse; /* Remove gaps between cells */
+        }
+
+        .leaderboard-table th {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            font-size: 0.85rem; /* Smaller header text */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            text-align: left; /* Align text left */
+            border-bottom: 2px solid #dee2e6; /* Stronger bottom border */
+        }
+        .leaderboard-table th.center-align { text-align: center; }
+
+        .leaderboard-table td {
+            padding: 12px 15px;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.95rem;
+            vertical-align: middle;
+            color: #495057;
+        }
+        .leaderboard-table td.center-align { text-align: center; }
+
+        .leaderboard-table tr:hover td {
+             background-color: #f8f9fa; /* Subtle hover effect */
+        }
+
+        .leaderboard-table td a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .leaderboard-table td a:hover {
+            text-decoration: underline;
+        }
+
+        .rank {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0d6efd;
+        }
+
+        .top-3 .rank {
+            font-size: 1.1em;
+            font-weight: 700;
+        }
+
+        .medal {
+             margin-right: 5px;
+             color: #ffc107; /* Gold color for all medals */
+        }
+        .top-3 .medal {
+             font-size: 1.2em;
+        }
+        .gold { color: #ffc107; }
+        .silver { color: #adb5bd; }
+        .bronze { color: #fd7e14; }
+
+        .rating-value {
+             font-weight: 600;
+        }
+
+        .rating-change {
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .rating-change.positive {
+            color: #198754; /* Bootstrap success green */
+            background-color: rgba(25, 135, 84, 0.1);
+        }
+
+        .rating-change.negative {
+            color: #dc3545; /* Bootstrap danger red */
+             background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background-color: #e9ecef;
+            color: #495057;
+            border-radius: 50%;
+            display: inline-flex; /* Use inline-flex */
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .user-profile span {
+             line-height: 1.2;
+        }
+
+        .loading, .error, .no-results {
+            padding: 50px 15px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 1rem;
+        }
+        .loading::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #0d6efd;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px; /* Slightly reduced gap */
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button,
+        .pagination span {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .pagination button {
+            border: 1px solid #dee2e6;
+            background: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            color: #0d6efd;
+        }
+        .pagination button:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            opacity: 0.6;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+        .pagination button:not(:disabled):hover {
+             background-color: #e9ecef;
+             border-color: #ced4da;
+        }
+        .pagination #page-info {
+             color: #495057;
+             font-weight: 600;
+             background-color: #f8f9fa;
+             border: 1px solid #dee2e6;
+        }
+
+        /* --- Mobile Adjustments --- */
+        @media (max-width: 768px) {
+            .leaderboard-container {
+                margin: 15px;
+                padding: 15px;
+            }
+            .leaderboard-header h1 { font-size: 1.7rem; }
+            .leaderboard-header p { font-size: 0.95rem; }
+            .filter-button { padding: 6px 12px; font-size: 0.85rem; }
+            
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .user-profile { gap: 8px; }
+        }
+
+        @media (max-width: 480px) {
+            .leaderboard-header h1 { font-size: 1.5rem; }
+            .leaderboard-header p { font-size: 0.9rem; }
+            .leaderboard-filters { gap: 6px; margin-bottom: 20px; }
+            .filter-button { padding: 5px 10px; font-size: 0.8rem; }
+
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            .rank { font-size: 0.9rem; }
+            .user-avatar { width: 28px; height: 28px; font-size: 0.8rem; }
+            .pagination button,
+            .pagination span {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+            .pagination { gap: 6px; }
+        }
+
+    </style>
+</head>
+<body>
+    <a href="/" class="home-button">
+        <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
+    </a>
+    <div class="leaderboard-container">
+        <div class="leaderboard-header">
+            <h1>Bảng xếp hạng</h1>
+            <p>Xem thứ hạng của bạn so với các học viên khác.</p>
+        </div>
+
+        <div class="leaderboard-filters">
+            <button class="filter-button active" data-filter="all">Tất cả</button>
+            <button class="filter-button" data-filter="month">Tháng Này</button>
+            <button class="filter-button" data-filter="week">Tuần Này</button>
+        </div>
+
+        <!-- Add wrapper for horizontal scrolling -->
+        <div class="table-responsive-wrapper">
+            <div id="leaderboard-content">
+                <!-- Table will be inserted here by JS -->
+                <div class="loading">Đang tải...</div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button id="prev-page" disabled> <i class="fas fa-chevron-left"></i> Trước </button>
+            <span id="page-info">Trang 1</span>
+            <button id="next-page"> Tiếp <i class="fas fa-chevron-right"></i> </button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let currentFilter = 'all';
+        const pageSize = 20;
+
+        async function loadLeaderboard() {
+            const contentDiv = document.getElementById('leaderboard-content');
+            contentDiv.innerHTML = '<div class="loading">Đang tải...</div>'; // Show loading inside the content area
+            
+            // Disable pagination during load
+            document.getElementById('prev-page').disabled = true;
+            document.getElementById('next-page').disabled = true;
+
+            try {
+                const response = await fetch(`/api/ratings?page=${currentPage}&filter=${currentFilter}`);
+                const ratings = await response.json();
+
+                if (!response.ok) {
+                    const errorData = ratings; 
+                    console.error('API Error fetching ratings:', errorData);
+                    contentDiv.innerHTML = `<div class="error">Lỗi tải bảng xếp hạng: ${errorData.details || errorData.error || 'Unknown error'}</div>`;
+                    return;
+                }
+                
+                if (!ratings || ratings.length === 0) {
+                    contentDiv.innerHTML = '<div class="no-results">Không có dữ liệu xếp hạng cho bộ lọc này.</div>';
+                    document.getElementById('page-info').textContent = `Trang ${currentPage}`;
+                    // Prev button should be enabled if currentPage > 1 even if no results on *this* page
+                    document.getElementById('prev-page').disabled = currentPage === 1;
+                    document.getElementById('next-page').disabled = true; // No results, so no next page
+                    return;
+                }
+
+                const table = document.createElement('table');
+                table.className = 'leaderboard-table';
+                
+                const thead = document.createElement('thead');
+                thead.innerHTML = `
+                    <tr>
+                        <th class="center-align">Hạng</th>
+                        <th>Học sinh</th>
+                        <th class="center-align">Điểm</th>
+                        <th class="center-align">Thay đổi</th> 
+                    </tr>
+                `;
+                table.appendChild(thead);
+
+                const tbody = document.createElement('tbody');
+                ratings.forEach((rating, index) => {
+                    const rank = (currentPage - 1) * pageSize + index + 1;
+                    const row = document.createElement('tr');
+                    if (rank <= 3) row.className = 'top-3';
+
+                    // Placeholder for rating change - fetch/calculate this properly later
+                    const ratingChange = 0; // rating.last_rating_change || 0;
+                    const changeClass = ratingChange > 0 ? 'positive' : ratingChange < 0 ? 'negative' : '';
+                    const changeSymbol = ratingChange > 0 ? '+' : '';
+                    
+                    row.innerHTML = `
+                        <td class="rank center-align">
+                            ${rank <= 3 ? `<span class="medal ${['gold', 'silver', 'bronze'][rank-1]}"><i class="fas fa-medal"></i></span>` : ''}
+                            ${rank}
+                        </td>
+                        <td>
+                            <div class="user-profile">
+                                <div class="user-avatar">${rating.students?.full_name?.[0]?.toUpperCase() || '?'}</div>
+                                <!-- Ensure student_id is available in rating object -->
+                                <a href="/profile/${rating.student_id || '#'}" title="Xem hồ sơ của ${rating.students?.full_name || 'Vô danh'}">
+                                    <span>${rating.students?.full_name || 'Vô danh'}</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="center-align rating-value">${Math.round(rating.rating)}</td>
+                        <td class="center-align">
+                            <span class="rating-change ${changeClass}">
+                                ${changeSymbol}${ratingChange}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+
+                contentDiv.innerHTML = ''; // Clear loading/previous content
+                contentDiv.appendChild(table);
+
+                // Update pagination 
+                document.getElementById('prev-page').disabled = currentPage === 1;
+                document.getElementById('page-info').textContent = `Trang ${currentPage}`;
+                document.getElementById('next-page').disabled = ratings.length < pageSize;
+
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                contentDiv.innerHTML = '<div class="error">Không thể tải bảng xếp hạng. Vui lòng thử lại sau.</div>';
+                 // Also handle pagination state on error
+                 document.getElementById('prev-page').disabled = currentPage === 1;
+                 document.getElementById('next-page').disabled = true;
+                 document.getElementById('page-info').textContent = `Trang ${currentPage}`;
+            }
+        }
+
+        // --- Event Listeners --- 
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Prevent re-loading if already active
+                if (button.classList.contains('active')) return;
+                
+                document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.dataset.filter;
+                currentPage = 1; // Reset to page 1 when filter changes
+                loadLeaderboard();
+            });
+        });
+
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadLeaderboard();
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+             if (!document.getElementById('next-page').disabled) {
+                 currentPage++;
+                 loadLeaderboard();
+             }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', loadLeaderboard);
+
+    </script>
+</body>
+</html> 

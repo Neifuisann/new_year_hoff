@@ -1,0 +1,16 @@
+<nav class="main-nav">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">Học tập</a>
+        <div class="nav-links">
+            <a href="/lessons" class="nav-link">Bài học</a>
+            <a href="/leaderboard" class="nav-link">Bảng xếp hạng</a>
+            ${isAuthenticated ? `
+                <a href="/profile" class="nav-link">Hồ sơ</a>
+                <a href="/logout" class="nav-link">Đăng xuất</a>
+            ` : `
+                <a href="/login" class="nav-link">Đăng nhập</a>
+                <a href="/register" class="nav-link">Đăng ký</a>
+            `}
+        </div>
+    </div>
+</nav> 

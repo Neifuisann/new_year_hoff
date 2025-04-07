@@ -419,12 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
                 
-                const lessonId = currentLessonData.id; // Use stored lesson ID
-                const lesson = currentLessonData; // Use stored lesson data
+                const lessonId = currentLessonData.id;
+                const lesson = currentLessonData;
                 
                 let score = 0;
                 let totalPossiblePoints = 0;
-                let resultHtml = '';
+                const startTime = performance.now();
 
                 const quizResults = {
                     lessonId: lessonId,
@@ -439,12 +439,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const originalIndex = parseInt(questionElement.dataset.questionIndex);
                     const q = lesson.questions[originalIndex];
                     
-                    // --- Ensure points is a number, default to 1 if missing/invalid ---
                     const questionPoints = (typeof q.points === 'number' && q.points > 0) ? q.points : 1;
-                    totalPossiblePoints += questionPoints; 
-                    // --- End points validation ---
+                    totalPossiblePoints += questionPoints;
 
-                    let userAnswer, correctAnswer, isCorrect, optionsText = null; // Added optionsText
+                    let userAnswer, correctAnswer, isCorrect, optionsText = null;
 
                     if (q.type === 'truefalse' && Array.isArray(q.options)) {
                         // --- NEW: Handle multi-option true/false ---
@@ -531,22 +529,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         userAnswer: userAnswer,
                         correctAnswer: correctAnswer,
                         isCorrect: isCorrect,
-                        points: questionPoints, // Use validated points
+                        points: questionPoints,
                         earnedPoints: isCorrect ? questionPoints : 0,
-                        optionsText: optionsText // Add optionsText (will be null for non-multi-TF)
+                        optionsText: optionsText
                     });
 
                     if (isCorrect) {
-                        score += questionPoints; // Use validated points
+                        score += questionPoints;
                     }
                 });
                 
-                // Update final scores using only displayed questions
+                // Update final scores, time, and streak in the payload
                 quizResults.totalPoints = totalPossiblePoints;
                 quizResults.score = score;
+                quizResults.timeTaken = (performance.now() - startTime) / 1000;
+                quizResults.streak = getCurrentStreak(lessonId);
 
+                // --- REVERTED: Call /api/results to save and trigger rating update server-side --- 
                 try {
-                    // Save results to server
                     const saveResponse = await fetch('/api/results', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -554,28 +554,97 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
 
                     if (!saveResponse.ok) {
-                        throw new Error('Failed to save results');
+                        const errorData = await saveResponse.json();
+                        throw new Error(errorData.message || 'Failed to save results');
                     }
 
                     const resultData = await saveResponse.json();
-                    localStorage.setItem('quizResults', JSON.stringify(quizResults));
-                    window.location.href = `/result/${resultData.resultId}`;
-                } catch (error) {
-                    console.error('Error in quiz submission (saving results):', error);
-                    alert('Lỗi khi lưu kết quả. Vui lòng thử lại.');
+                    
+                    // Store minimal result in localStorage for potential use on result page
+                    localStorage.setItem('quizResults', JSON.stringify({
+                        lessonId: quizResults.lessonId,
+                        score: quizResults.score,
+                        totalPoints: quizResults.totalPoints,
+                        resultId: resultData.resultId
+                    })); 
+                    
+                    // Redirect to the result page
+                    window.location.href = `/result/${resultData.resultId}`; 
+
+                } catch (saveError) {
+                    console.error('Error saving results:', saveError);
+                    alert('Lỗi khi lưu kết quả: ' + saveError.message);
                     // Revert button state on save error
                     submitButton.disabled = false;
                     submitButton.textContent = 'Nộp bài';
                     submitButton.style.opacity = '1'; 
+                    return; // Stop execution if saving failed
                 }
+                // --- END REVERT --- 
+
             } catch (error) {
-                console.error('Error in quiz submission (fetching lesson/IP):', error);
-                alert('Lỗi khi nộp bài. Vui lòng thử lại.');
-                 // Revert button state on initial error
-                 submitButton.disabled = false;
-                 submitButton.textContent = 'Nộp bài';
-                 submitButton.style.opacity = '1';
-            } 
+                console.error('Error submitting quiz:', error);
+                alert('An error occurred while submitting your quiz. Please try again.');
+            } finally {
+                // Ensure button is re-enabled even if redirection happens
+                // Although redirection might make this less critical
+                submitButton.disabled = false;
+                submitButton.textContent = 'Nộp bài'; // Revert text back to Vietnamese
+                submitButton.style.opacity = '1';
+            }
         });
     }
 });
+
+function getCurrentStreak(lessonId) {
+    try {
+        const streakData = localStorage.getItem(`lesson_${lessonId}_streak`);
+        if (streakData) {
+            const { lastAttempt, streak } = JSON.parse(streakData);
+            const now = new Date();
+            const lastAttemptDate = new Date(lastAttempt);
+            
+            // Check if last attempt was yesterday or today
+            const isConsecutiveDay = (
+                (now.getDate() === lastAttemptDate.getDate() && now.getMonth() === lastAttemptDate.getMonth() && now.getFullYear() === lastAttemptDate.getFullYear()) ||
+                (now.getDate() === lastAttemptDate.getDate() + 1 && now.getMonth() === lastAttemptDate.getMonth() && now.getFullYear() === lastAttemptDate.getFullYear())
+            );
+            
+            return isConsecutiveDay ? streak + 1 : 1;
+        }
+    } catch (error) {
+        console.error('Error getting streak:', error);
+    }
+    return 1;
+}
+
+function updateStreak(lessonId, score, totalPoints) {
+    try {
+        const currentStreak = getCurrentStreak(lessonId);
+        const performance = score / totalPoints;
+        
+        // Only update streak if performance is good (e.g., > 70%)
+        if (performance >= 0.7) {
+            localStorage.setItem(`lesson_${lessonId}_streak`, JSON.stringify({
+                lastAttempt: new Date().toISOString(),
+                streak: currentStreak
+            }));
+        } else {
+            // Reset streak if performance is poor
+            localStorage.setItem(`lesson_${lessonId}_streak`, JSON.stringify({
+                lastAttempt: new Date().toISOString(),
+                streak: 1
+            }));
+        }
+    } catch (error) {
+        console.error('Error updating streak:', error);
+    }
+}
+
+function showResultModal(quizResults) {
+    // Implementation of showResultModal function
+}
+
+function storeResultInSession(quizResults) {
+    // Implementation of storeResultInSession function
+}

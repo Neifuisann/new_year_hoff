@@ -1038,6 +1038,268 @@ function storeAttemptLocally(lessonId, resultData) {
     }
 }
 
+function showResultModal(quizResults) {
+    const modal = document.createElement('div');
+    modal.className = 'result-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2>Quiz Results</h2>
+            
+            <div class="score-section">
+                <div class="score-display">
+                    <span class="score">${quizResults.score}/${quizResults.totalPoints}</span>
+                    <span class="percentage">${Math.round((quizResults.score / quizResults.totalPoints) * 100)}%</span>
+                </div>
+                
+                ${quizResults.ratingChange !== undefined ? `
+                    <div class="rating-change">
+                        <h3>Rating Update</h3>
+                        <div class="rating-info">
+                            <span class="new-rating">New Rating: ${Math.round(quizResults.newRating)}</span>
+                            <span class="change ${quizResults.ratingChange > 0 ? 'positive' : 'negative'}">
+                                ${quizResults.ratingChange > 0 ? '+' : ''}${quizResults.ratingChange}
+                            </span>
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+
+            <div class="performance-metrics">
+                <div class="metric">
+                    <span class="label">Time Taken</span>
+                    <span class="value">${Math.round(quizResults.timeTaken)}s</span>
+                </div>
+                <div class="metric">
+                    <span class="label">Current Streak</span>
+                    <span class="value">${quizResults.streak}</span>
+                </div>
+                <div class="metric">
+                    <span class="label">Questions</span>
+                    <span class="value">${quizResults.questions.length}</span>
+                </div>
+            </div>
+
+            <div class="question-breakdown">
+                <h3>Question Breakdown</h3>
+                ${quizResults.questions.map((q, index) => `
+                    <div class="question-result ${q.isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="question-header">
+                            <span class="question-number">Q${index + 1}</span>
+                            <span class="points">${q.earnedPoints}/${q.points} pts</span>
+                        </div>
+                        <div class="question-text">${q.question}</div>
+                        <div class="answer-details">
+                            <div class="your-answer">
+                                <strong>Your Answer:</strong> ${formatAnswer(q.userAnswer)}
+                            </div>
+                            ${!q.isCorrect ? `
+                                <div class="correct-answer">
+                                    <strong>Correct Answer:</strong> ${formatAnswer(q.correctAnswer)}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div class="modal-actions">
+                <button class="close-btn">Close</button>
+                <a href="/leaderboard" class="leaderboard-btn">View Leaderboard</a>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .score-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .percentage {
+            margin-left: 10px;
+            color: #666;
+        }
+
+        .rating-change {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .rating-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .new-rating {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .change {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .change.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .change.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .performance-metrics {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric .label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .metric .value {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .question-breakdown {
+            margin: 20px 0;
+        }
+
+        .question-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .question-result.correct {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .question-result.incorrect {
+            border-left: 4px solid #f44336;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .question-number {
+            font-weight: bold;
+        }
+
+        .points {
+            color: #666;
+        }
+
+        .answer-details {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .close-btn, .leaderboard-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .close-btn {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        .leaderboard-btn {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Add event listeners
+    modal.querySelector('.close-btn').addEventListener('click', () => {
+        document.body.removeChild(modal);
+        document.head.removeChild(style);
+    });
+}
+
+function formatAnswer(answer) {
+    if (Array.isArray(answer)) {
+        return answer.map(a => a === true ? 'True' : a === false ? 'False' : 'Not answered').join(', ');
+    }
+    return answer;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     showLoader(true); // Show loader immediately
     displayResults(); // This will handle hiding the loader
