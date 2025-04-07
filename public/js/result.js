@@ -821,7 +821,7 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
         
         // Direct API call to Google Gemini API
         const API_KEY = "AIzaSyAxJF-5iBBx7gp9RPwrAfF58ERZi69KzCc"; // This is the same key from server-side
-        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent";
+        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
         
         const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
             method: 'POST',
@@ -831,14 +831,14 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Please explain this question step by step in Vietnamese. Please always give facts and if necessary, provide notes:
-Question: ${decodedQuestion}
-${optionsText ? 'Options:\n' + JSON.parse(optionsText).map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n') + '\n' : ''}User's answer: ${userAnswerText}
-Correct answer: ${correctAnswerText}`
+                        text: `Hãy giải thích câu hỏi này từng bước bằng tiếng Việt. Hãy luôn trả lời bằng các thông tin chính xác và nếu cần thiết hãy đưa ra ghi chú:
+Câu hỏi: ${decodedQuestion}
+${optionsText ? 'Lựa chọn:\n' + JSON.parse(optionsText).map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n') + '\n' : ''}Đáp án của bạn: ${userAnswerText}
+Đáp án đúng: ${correctAnswerText}`
                     }]
                 }],
                 generationConfig: {
-                    temperature: 0.7,
+                    temperature: 0.3,
                     topK: 64,
                     topP: 0.95,
                     maxOutputTokens: 8192

@@ -13,6 +13,23 @@ function showLoader(show) {
     }
 }
 
+// Helper function to copy text to clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Share link copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy link. Please copy it manually.'); // Fallback message
+    });
+}
+
+// Function to handle clicking the share button
+function copyShareLink(lessonId) {
+    // Construct the share URL based on the current window location
+    const shareUrl = `${window.location.origin}/share/lesson/${lessonId}`;
+    copyToClipboard(shareUrl);
+}
+
 async function loadLessonsForAdmin() {
     if (isLoading) return;
     isLoading = true;
@@ -72,6 +89,7 @@ async function loadLessonsForAdmin() {
                            style="margin-right: 10px; vertical-align: middle;">
                     <a href="/admin/edit/${lesson.id}" class="button" >Chỉnh sửa</a>
                     <a href="/admin/statistics/${lesson.id}" class="button">Xem danh sách</a>
+                    <button onclick="copyShareLink(${lesson.id})" class="button share-button" title="Copy Share Link">Chia sẻ</button>
                     <button onclick="deleteLesson(${lesson.id})" class="delete-button">Xoá</button>
                 </div>
             `;
@@ -326,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize event listener for the review lesson form
     const form = document.getElementById('review-lesson-form');
     if (form) {
-        // form.addEventListener('submit', handleReviewLessonSubmit); // Commented out as function is not defined yet
+        form.addEventListener('submit', handleReviewLessonSubmit);
     }
 });
 

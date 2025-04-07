@@ -262,6 +262,9 @@ app.use('/result/:id', requireStudentAuth);
 app.use('/api/results', requireStudentAuth);
 app.use('/api/explain', requireStudentAuth);
 
+// Apply the middleware to relevant routes
+app.use('/lesson/', requireStudentInfo);
+
 // Routes
 app.get('/', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'landing.html')));
 app.get('/student/login', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'student-login.html')));
@@ -1687,5 +1690,131 @@ app.get('/api/admin/raw-lesson/:id', requireAuth, async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
+// --- NEW Share Lesson Route ---
+app.get('/share/lesson/:lessonId', async (req, res) => {
+    const lessonId = req.params.lessonId;
+    const loggedInStudentId = req.session.studentId; // Check if student is logged in
+    console.log(`Attempting to serve share page for lesson ID: ${lessonId}. Logged in student: ${loggedInStudentId || 'None'}`);
+
+    try {
+        // 1. Fetch lesson details including randomQuestions
+        const { data: lessonData, error: lessonError } = await supabase
+            .from('lessons')
+            .select('id, title, lessonImage, questions, randomQuestions') // Added randomQuestions
+            .eq('id', lessonId)
+            .single();
+
+        if (lessonError) throw new Error(`Database error fetching lesson: ${lessonError.message}`);
+        if (!lessonData) throw new Error('Lesson not found');
+        console.log(`Lesson found: ${lessonData.title}`);
+
+        // 2. Fetch TOTAL submission count from 'results' table
+        const { count: submissionCount, error: countError } = await supabase
+            .from('results') // Changed from 'submissions' to 'results'
+            .select('*', { count: 'exact', head: true })
+            .eq('lessonId', lessonId); // Changed from 'lesson_id' to 'lessonId'
+
+        if (countError) {
+            console.error(`Error fetching total submission count for lesson ${lessonId}:`, countError.message);
+        }
+        const totalSubmissions = submissionCount || 0;
+        console.log(`Total submission count: ${totalSubmissions}`);
+
+        // 3. Determine the question count to display
+        // Use randomQuestions if available and valid, otherwise fallback to total questions
+        const totalQuestionsAvailable = Array.isArray(lessonData.questions) ? lessonData.questions.length : 0;
+        const questionsPerAttempt = (typeof lessonData.randomQuestions === 'number' && lessonData.randomQuestions > 0)
+            ? lessonData.randomQuestions
+            : totalQuestionsAvailable; // Fallback to total if randomQuestions is not set/valid
+        console.log(`Questions per attempt: ${questionsPerAttempt}`);
+
+        // 4. Fetch USER'S past results (if logged in)
+        let userHistoryHtml = '';
+        if (loggedInStudentId) {
+            console.log(`Fetching history for student ${loggedInStudentId} and lesson ${lessonId}`);
+            const { data: historyData, error: historyError } = await supabase
+                .from('results')
+                .select('id, score, totalPoints, timestamp, questions')
+                .eq('student_id', loggedInStudentId)
+                .eq('lessonId', lessonId)
+                .order('timestamp', { ascending: false })
+                .limit(3); // Limit to latest 3 attempts
+
+            if (historyError) {
+                console.error(`Error fetching user history:`, historyError.message);
+                // Don't fail the page load, just show no history
+            } else if (historyData && historyData.length > 0) {
+                console.log(`Found ${historyData.length} history entries for the user.`);
+                // Generate HTML for history cards
+                userHistoryHtml = '<h2 style="text-align: left; margin-top: 30px; margin-bottom: 15px; font-size: 1.4em; color: #333;">Lịch sử làm bài của bạn</h2>';
+                historyData.forEach(result => {
+                    const score = result.score ?? 0;
+                    const totalPoints = result.totalPoints ?? 0;
+                    const scorePercent = totalPoints > 0 ? ((score / totalPoints) * 100).toFixed(2) : 'N/A';
+                    const correctAnswers = Array.isArray(result.questions)
+                        ? result.questions.filter(q => q.isCorrect).length
+                        : 0;
+                    const submissionTime = new Date(result.timestamp).toLocaleString('vi-VN', {
+                         day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    }); // Format like 17/03/2025 05:35
+
+                    // Basic card structure - styles can be improved later
+                    userHistoryHtml += `
+                        <div style="background-color: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 15px; margin-bottom: 10px; text-align: left;">
+                            <p style="margin: 5px 0; font-size: 1.2em; font-weight: bold; color: #1877f2;">Điểm của bạn: ${scorePercent}</p>
+                            <p style="margin: 5px 0;">Thời gian nộp bài: ${submissionTime}</p>
+                            <p style="margin: 5px 0;">Số lượng đúng: <strong style="color: green;">${correctAnswers}</strong> / ${totalPoints}</p>
+                             <!-- Add link to detailed result page if available -->
+                             ${result.id ? `<a href="/result/${result.id}" style="display: inline-block; margin-top: 10px; font-size: 0.9em; color: #555; text-decoration: none;">Xem chi tiết ›</a>` : ''}
+                        </div>
+                    `;
+                });
+            } else {
+                 console.log(`No history found for student ${loggedInStudentId} on lesson ${lessonId}`);
+            }
+        }
+
+        // 5. Read the HTML template
+        const templatePath = path.join(process.cwd(), 'views', 'share-lesson.html');
+        let htmlContent = await fs.readFile(templatePath, 'utf-8');
+
+        // 6. Replace placeholders
+        htmlContent = htmlContent.replace(/{{LESSON_NAME}}/g, lessonData.title || 'Không có tiêu đề');
+
+        // Use the URL directly from the database (it should already be the full public URL)
+        let imageUrl = lessonData.lessonImage || ''; 
+
+        // Remove the previous logic that tried to regenerate the URL
+        // if (imageUrl && !imageUrl.startsWith('http')) { ... }
+
+        htmlContent = htmlContent.replace(/{{LESSON_IMAGE_URL}}/g, imageUrl);
+        htmlContent = htmlContent.replace(/{{QUESTION_COUNT}}/g, questionsPerAttempt);
+        htmlContent = htmlContent.replace(/{{SUBMISSION_COUNT}}/g, totalSubmissions);
+        htmlContent = htmlContent.replace(/{{LESSON_ID}}/g, lessonData.id);
+        htmlContent = htmlContent.replace(/{{USER_HISTORY_HTML}}/g, userHistoryHtml);
+
+        // 7. Send the response
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.status(200).send(htmlContent);
+        console.log(`Successfully served share page for lesson ID: ${lessonId}`);
+
+    } catch (error) {
+        console.error(`Error generating share page for lesson ${lessonId}:`, error.message);
+        // Send a user-friendly error page
+        res.status(404).send(`
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head><meta charset="UTF-8"><title>Lỗi</title></head>
+            <body style="font-family: sans-serif; padding: 20px;">
+                <h1>Không tìm thấy bài học</h1>
+                <p>Bài học bạn yêu cầu (${lessonId}) không tồn tại hoặc đã xảy ra lỗi khi tải.</p>
+                <a href="/">Quay lại trang chủ</a>
+            </body>
+            </html>
+        `);
+    }
+});
+// --- END Share Lesson Route ---
 
 module.exports = app;
