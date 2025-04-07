@@ -315,16 +315,70 @@ async function initializeLesson() {
         
         await renderQuestions(lesson);
         console.log('Lesson initialized successfully');
+
+        // --- HIDE LOADER ---
+        showLoader(false); // Hide loader AFTER main content is rendered
+
+        // --- DEFERRED TAG FETCHING ---
+        // Fetch tags *after* the main content is loaded and loader is hidden
+        // This runs asynchronously and won't block the UI
+        fetchTagsAndDisplay(lesson); // Call a new function to handle tags
+
+        // Initialize auto-rendering for KaTeX and highlighting
+        // These can run after the loader is hidden as well
+        if (window.renderMathInElement) {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+        }
+        if (window.hljs) {
+            hljs.highlightAll();
+        }
+
     } catch (error) {
         console.error('Error loading lesson:', error);
         document.body.innerHTML = `
             <h1>Error loading lesson</h1>
             <p>Error details: ${error.message}</p>
         `;
-    } finally {
-        showLoader(false);
+        showLoader(false); // Ensure loader is hidden on error
     }
 }
+
+// --- NEW Function for Deferred Tag Fetching and Display ---
+async function fetchTagsAndDisplay(lesson) {
+    try {
+        console.log("Fetching tags in the background...");
+        const tagsResponse = await fetch('/api/tags'); // Fetch all available tags
+        if (tagsResponse.ok) {
+            const allAvailableTags = await tagsResponse.json(); // Not used in this example, but fetched
+
+            // Display the tags associated with *this* specific lesson
+            const titleElement = document.getElementById('lesson-title');
+            if (titleElement && Array.isArray(lesson.tags) && lesson.tags.length > 0) {
+                 // Check if tags are already displayed to prevent duplicates if called multiple times
+                 if (!document.querySelector('.lesson-tags')) {
+                    const tagsHtml = `<div class="lesson-tags" style="margin-top: 5px; font-size: 0.9em; color: #555;">Tags: ${lesson.tags.map(tag => `<span style="background-color: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; display: inline-block;">${tag}</span>`).join('')}</div>`;
+                    titleElement.insertAdjacentHTML('afterend', tagsHtml);
+                    console.log("Lesson tags displayed:", lesson.tags);
+                 }
+             } else {
+                 console.log("No tags associated with this lesson to display.");
+             }
+        } else {
+             console.warn('Failed to fetch tags list:', tagsResponse.status);
+        }
+    } catch (tagError) {
+        console.error('Error fetching or processing tags:', tagError);
+    }
+}
+// --- END New Function ---
 
 // Remove the old submitQuiz function and replace with new event listener setup
 document.addEventListener('DOMContentLoaded', () => {
