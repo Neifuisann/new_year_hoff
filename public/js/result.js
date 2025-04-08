@@ -660,7 +660,22 @@ function displaySortedResults(sortType) {
 
     // Generate HTML for filtered questions
     const resultHTML = filteredQuestions.map((question, index) => {
-        // --- NEW: Check for multi-option true/false ---
+        // --- NEW: Use saved image URL --- 
+        let imageHtml = '';
+        if (question.imageUrl) { // Check if imageUrl exists in the result data
+            imageHtml = `
+                <div class="question-image-container">
+                    <img src="${question.imageUrl}" 
+                         alt="Question Image" 
+                         class="question-image"
+                         loading="lazy"
+                         onload="this.classList.add('loaded')">
+                </div>
+            `;
+        }
+        // --- END NEW ---
+
+        // --- Check for multi-option true/false --- 
         const isMultiTrueFalse = question.type === 'truefalse' && Array.isArray(question.optionsText);
         
         let answerSectionHTML = '';
@@ -730,6 +745,7 @@ function displaySortedResults(sortType) {
                 <div class="question-content">
                     <div class="question-top">
                         <p class="question-text">${question.question}</p>
+                        ${imageHtml}
                         <button class="explain-btn" 
                             data-question="${encodeURIComponent(question.question)}"
                             data-user-answer="${encodeURIComponent(isMultiTrueFalse ? JSON.stringify(question.userAnswer) : formatAnswer(question.userAnswer, question.type))}" 
@@ -752,6 +768,7 @@ function displaySortedResults(sortType) {
 
     document.getElementById('result').innerHTML = resultHTML;
     attachExplanationListeners();
+    initializeImageZoom(); // Initialize image zoom functionality
     
     // Render LaTeX in the results
     if (typeof renderMathInElement === 'function') {
@@ -765,6 +782,210 @@ function displaySortedResults(sortType) {
             throwOnError: false
         });
     }
+}
+
+// Initialize image zoom functionality
+function initializeImageZoom() {
+    const questionImages = document.querySelectorAll('.question-image');
+    const imageModal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    const closeButton = document.getElementById('close-modal');
+    const zoomInButton = document.getElementById('zoom-in');
+    const zoomOutButton = document.getElementById('zoom-out');
+    const resetZoomButton = document.getElementById('reset-zoom');
+    
+    // Zooming variables
+    let scale = 1;
+    let panning = false;
+    let pointX = 0;
+    let pointY = 0;
+    let startX = 0;
+    let startY = 0;
+    
+    // Open modal when any question image is clicked
+    questionImages.forEach(function(image) {
+        image.addEventListener('click', function() {
+            openModal(this);
+        });
+    });
+    
+    function openModal(imageElement) {
+        modalImage.src = imageElement.src;
+        modalImage.alt = imageElement.alt;
+        imageModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        resetZoom();
+    }
+    
+    // Close modal when close button is clicked
+    closeButton.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside the image
+    imageModal.addEventListener('click', function(e) {
+        if (e.target === imageModal) {
+            closeModal();
+        }
+    });
+    
+    // Close modal when ESC key is pressed
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && imageModal.classList.contains('open')) {
+            closeModal();
+        }
+    });
+    
+    function closeModal() {
+        imageModal.classList.remove('open');
+        document.body.style.overflow = '';
+        resetZoom();
+    }
+    
+    // Zoom controls
+    zoomInButton.addEventListener('click', function() {
+        setZoom(scale + 0.5);
+    });
+    
+    zoomOutButton.addEventListener('click', function() {
+        setZoom(Math.max(1, scale - 0.5));
+    });
+    
+    resetZoomButton.addEventListener('click', resetZoom);
+    
+    function resetZoom() {
+        scale = 1;
+        pointX = 0;
+        pointY = 0;
+        modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    }
+    
+    function setZoom(newScale) {
+        scale = newScale;
+        modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    }
+    
+    // Mouse wheel zoom
+    modalImage.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        const xs = (e.clientX - pointX) / scale;
+        const ys = (e.clientY - pointY) / scale;
+        
+        if (e.deltaY < 0) {
+            scale *= 1.1;
+        } else {
+            scale /= 1.1;
+        }
+        
+        scale = Math.max(1, scale);
+        
+        pointX = e.clientX - xs * scale;
+        pointY = e.clientY - ys * scale;
+        
+        modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    });
+    
+    // Drag to pan
+    modalImage.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        
+        if (scale > 1) {
+            panning = true;
+            startX = e.clientX - pointX;
+            startY = e.clientY - pointY;
+        }
+    });
+    
+    imageModal.addEventListener('mousemove', function(e) {
+        e.preventDefault();
+        
+        if (panning && scale > 1) {
+            pointX = e.clientX - startX;
+            pointY = e.clientY - startY;
+            modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        }
+    });
+    
+    imageModal.addEventListener('mouseup', function(e) {
+        panning = false;
+    });
+    
+    imageModal.addEventListener('mouseleave', function(e) {
+        panning = false;
+    });
+    
+    // Mobile touch events
+    let evCache = [];
+    let prevDiff = -1;
+    
+    modalImage.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+        
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            evCache.push(e.changedTouches[i]);
+        }
+        
+        if (e.touches.length === 1) {
+            panning = true;
+            startX = e.touches[0].clientX - pointX;
+            startY = e.touches[0].clientY - pointY;
+        }
+    });
+    
+    modalImage.addEventListener('touchmove', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+            
+            const dist = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            
+            if (prevDiff > 0) {
+                if (dist > prevDiff) {
+                    scale *= 1.03;
+                } else if (dist < prevDiff) {
+                    scale /= 1.03;
+                }
+                
+                scale = Math.max(1, scale);
+                
+                modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+            }
+            
+            prevDiff = dist;
+        } else if (e.touches.length === 1 && panning && scale > 1) {
+            pointX = e.touches[0].clientX - startX;
+            pointY = e.clientY - startY;
+            modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        }
+    });
+    
+    modalImage.addEventListener('touchend', function(e) {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const idx = evCache.findIndex(cachedTouch => 
+                cachedTouch.identifier === e.changedTouches[i].identifier
+            );
+            if (idx >= 0) {
+                evCache.splice(idx, 1);
+            }
+        }
+        
+        if (evCache.length < 2) {
+            prevDiff = -1;
+        }
+        
+        if (e.touches.length === 0) {
+            panning = false;
+        }
+    });
+    
+    // Prevent default touchmove behavior
+    modalImage.addEventListener('touchmove', function(e) {
+        if (e.touches.length > 1 || (scale > 1 && e.touches.length === 1)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 }
 
 function sortResults(sortType) {

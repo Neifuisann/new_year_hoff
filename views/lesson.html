@@ -2,75 +2,233 @@
 <html>
 <head>
     <title>Bài học</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css">
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-    <!-- KaTeX CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCETKfPFPcxLR7diph9NkLkq3Y" crossorigin="anonymous">
-    <!-- Custom styles for KaTeX -->
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://miojaflixmncmhsgyabd.supabase.co">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="/js/lesson.js" as="script">
+    
+    <!-- Inline critical CSS -->
     <style>
-        /* Hide the katex-html elements while keeping katex-mathml visible */
-        .katex-html {
-            display: none !important;
-        }
-        
-        /* Enhanced styling for submit button */
-        #submit-quiz-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-        
-        #submit-quiz-btn:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-        
-        #submit-quiz-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Add space at the bottom of the page to prevent button from overlapping content */
         body {
-            padding-bottom: 80px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #dee3ec 100%);
+            min-height: 100vh;
         }
         
-        /* Responsive adjustments for mobile */
-        @media (max-width: 768px) {
-            #submit-quiz-btn {
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                right: 20px;
-                width: auto;
-                padding: 12px 20px;
-                font-size: 15px;
-                text-align: center;
-            }
+        .loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
         }
-
-        /* Style for the image container */
-        .lesson-image-container {
-            width: 100%; /* Ensure it takes available width */
-            text-align: center; /* Center the block image within */
-            margin-bottom: 25px; /* Add some space below the image */
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
         }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4375a7;
+            margin: 30px 0;
+        }
+        
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 0;
+            overflow: hidden;
+            display: block;
+        }
+        
+        .home-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Image zoom modal styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9990;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .image-modal.open {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .modal-image {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.1s ease;
+            transform-origin: center;
+            cursor: move;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 9999;
+            transition: background-color 0.2s;
+        }
+        
+        .close-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .close-button:before, .close-button:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+        }
+        
+        .close-button:before {
+            transform: rotate(45deg);
+        }
+        
+        .close-button:after {
+            transform: rotate(-45deg);
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 9999;
+        }
+        
+        .zoom-button {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.2s;
+        }
+        
+        .zoom-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .reset-zoom-button {
+            padding: 0 15px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 20px;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .reset-zoom-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Make all images clickable */
+        #lesson-image, .question-image {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        #lesson-image:hover, .question-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Load remaining styles asynchronously */
     </style>
+    <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all'; this.onload=null;">
+    <link rel="stylesheet" href="/css/lesson-questions.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+    <noscript><link rel="stylesheet" href="/css/lesson-questions.css"></noscript>
+    
+    <!-- Async KaTeX -->
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"></noscript>
 </head>
 <body>
     <!-- Loading Indicator -->
@@ -83,11 +241,27 @@
         <img src="https://styles.redditmedia.com/t5_851o4i/styles/profileIcon_0elfudeu2s5b1.jpg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=86be605407a08efe2894a6bacd089074aca51879" alt="Home">
     </a>
     
+    <!-- Image Zoom Modal -->
+    <div id="image-modal" class="image-modal">
+        <div class="modal-image-container">
+            <img id="modal-image" class="modal-image" alt="Zoomed Image">
+        </div>
+        <div class="close-button" id="close-modal"></div>
+        <div class="zoom-controls">
+            <button class="zoom-button" id="zoom-out">−</button>
+            <button class="reset-zoom-button" id="reset-zoom">Reset</button>
+            <button class="zoom-button" id="zoom-in">+</button>
+        </div>
+    </div>
     
     <h1 id="lesson-title"></h1>
     
     <div id="lesson-image-container" class="lesson-image-container" style="display: none;">
-        <img id="lesson-image" alt="Lesson Image" style="max-width: 100%; margin: 20px auto; display: block; border-radius: 8px;">
+        <img id="lesson-image" alt="Lesson Image" 
+             style="max-width: 100%; margin: 20px auto; display: block; border-radius: 8px;"
+             loading="eager" 
+             sizes="(max-width: 768px) 100vw, 800px"
+             onload="this.classList.add('loaded')">
     </div>
     
     <div id="abcd-questions">
@@ -104,10 +278,247 @@
 
     <button id="submit-quiz-btn">Nộp bài</button>
     <div id="result"></div>
-    <!-- KaTeX JS -->
+    
+    <!-- Move scripts to the end of body for better performance -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-    <!-- Optional: KaTeX auto-render extension -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script src="/js/lesson.js"></script>
+    
+    <script>
+        // Enhanced image zoom functionality with free zooming
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all zoomable images
+            const lessonImage = document.getElementById('lesson-image');
+            const questionImages = document.querySelectorAll('.question-image');
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const closeButton = document.getElementById('close-modal');
+            const zoomInButton = document.getElementById('zoom-in');
+            const zoomOutButton = document.getElementById('zoom-out');
+            const resetZoomButton = document.getElementById('reset-zoom');
+            
+            // Zooming variables
+            let scale = 1;
+            let panning = false;
+            let pointX = 0;
+            let pointY = 0;
+            let startX = 0;
+            let startY = 0;
+            
+            // Open modal when lesson image is clicked
+            if (lessonImage) {
+                lessonImage.addEventListener('click', function() {
+                    openModal(this);
+                });
+            }
+            
+            // Open modal when any question image is clicked
+            questionImages.forEach(function(image) {
+                image.addEventListener('click', function() {
+                    openModal(this);
+                });
+            });
+            
+            // Also find images that might be added dynamically
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'lesson-image' || e.target.classList.contains('question-image'))) {
+                    openModal(e.target);
+                }
+            });
+            
+            function openModal(imageElement) {
+                modalImage.src = imageElement.src;
+                modalImage.alt = imageElement.alt;
+                imageModal.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                
+                // Reset zoom on open
+                resetZoom();
+            }
+            
+            // Close modal when close button is clicked
+            if (closeButton) {
+                closeButton.addEventListener('click', closeModal);
+            }
+            
+            // Close modal when clicking outside the image
+            imageModal.addEventListener('click', function(e) {
+                if (e.target === imageModal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal when ESC key is pressed
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && imageModal.classList.contains('open')) {
+                    closeModal();
+                }
+            });
+            
+            function closeModal() {
+                imageModal.classList.remove('open');
+                document.body.style.overflow = ''; // Restore scrolling
+                resetZoom();
+            }
+            
+            // Zoom controls
+            zoomInButton.addEventListener('click', function() {
+                setZoom(scale + 0.5);
+            });
+            
+            zoomOutButton.addEventListener('click', function() {
+                setZoom(Math.max(1, scale - 0.5));
+            });
+            
+            resetZoomButton.addEventListener('click', resetZoom);
+            
+            function resetZoom() {
+                scale = 1;
+                pointX = 0;
+                pointY = 0;
+                modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+            }
+            
+            function setZoom(newScale) {
+                scale = newScale;
+                modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+            }
+            
+            // Mouse wheel zoom
+            modalImage.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const xs = (e.clientX - pointX) / scale;
+                const ys = (e.clientY - pointY) / scale;
+                
+                if (e.deltaY < 0) {
+                    // Zoom in
+                    scale *= 1.1;
+                } else {
+                    // Zoom out
+                    scale /= 1.1;
+                }
+                
+                // Limit minimum zoom to 1
+                scale = Math.max(1, scale);
+                
+                pointX = e.clientX - xs * scale;
+                pointY = e.clientY - ys * scale;
+                
+                modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+            });
+            
+            // Drag to pan
+            modalImage.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                
+                if (scale > 1) {
+                    panning = true;
+                    startX = e.clientX - pointX;
+                    startY = e.clientY - pointY;
+                }
+            });
+            
+            imageModal.addEventListener('mousemove', function(e) {
+                e.preventDefault();
+                
+                if (panning && scale > 1) {
+                    pointX = e.clientX - startX;
+                    pointY = e.clientY - startY;
+                    modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+                }
+            });
+            
+            imageModal.addEventListener('mouseup', function(e) {
+                panning = false;
+            });
+            
+            imageModal.addEventListener('mouseleave', function(e) {
+                panning = false;
+            });
+            
+            // Mobile touch events for pinch zoom and panning
+            let evCache = [];
+            let prevDiff = -1;
+            
+            modalImage.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault(); // Prevent page zooming
+                }
+                
+                // Store touch points
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    evCache.push(e.changedTouches[i]);
+                }
+                
+                if (e.touches.length === 1) {
+                    panning = true;
+                    startX = e.touches[0].clientX - pointX;
+                    startY = e.touches[0].clientY - pointY;
+                }
+            });
+            
+            modalImage.addEventListener('touchmove', function(e) {
+                // Handle pinch zoom
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                    
+                    // Calculate distance between touch points
+                    const dist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    
+                    if (prevDiff > 0) {
+                        if (dist > prevDiff) {
+                            // Zoom in
+                            scale *= 1.03;
+                        } else if (dist < prevDiff) {
+                            // Zoom out
+                            scale /= 1.03;
+                        }
+                        
+                        // Limit min zoom
+                        scale = Math.max(1, scale);
+                        
+                        modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+                    }
+                    
+                    prevDiff = dist;
+                } else if (e.touches.length === 1 && panning && scale > 1) {
+                    // Handle panning
+                    pointX = e.touches[0].clientX - startX;
+                    pointY = e.touches[0].clientY - startY;
+                    modalImage.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+                }
+            });
+            
+            modalImage.addEventListener('touchend', function(e) {
+                // Remove ended touches from the cache
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    const idx = evCache.findIndex(cachedTouch => 
+                        cachedTouch.identifier === e.changedTouches[i].identifier
+                    );
+                    if (idx >= 0) {
+                        evCache.splice(idx, 1);
+                    }
+                }
+                
+                if (evCache.length < 2) {
+                    prevDiff = -1;
+                }
+                
+                if (e.touches.length === 0) {
+                    panning = false;
+                }
+            });
+            
+            // Prevent default touchmove behavior to avoid page scrolling while zooming
+            modalImage.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1 || (scale > 1 && e.touches.length === 1)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
 </body>
 </html>

@@ -5,8 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
     <title>Ôn luyện Vật lí 12</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <!-- Preconnect to fonts and other domains -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://miojaflixmncmhsgyabd.supabase.co">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/js/network-animation.js" as="script">
+    <link rel="preload" href="/js/landing.js" as="script">
+    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Inline critical CSS for fast initial render -->
     <style>
+        /* Critical CSS only - what's needed above the fold */
         body {
             margin: 0;
             padding: 0;
@@ -425,7 +435,7 @@
             }
 
             .nav-bar a {
-                padding: 0.5rem 1rem;
+                padding: 0.5rem 0.8rem;
                 font-size: 0.9rem;
                 white-space: nowrap;
             }
@@ -553,8 +563,18 @@
             }
 
             .nav-bar a {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+                gap: 0.3rem;
+            }
+
+            .nav-bar a svg {
+                width: 18px;
+                height: 18px;
             }
 
             .graph-container {
@@ -587,9 +607,23 @@
                 font-size: 1.8rem;
             }
 
+            .nav-bar {
+                padding: 0.5rem 0.3rem;
+            }
+
+            .nav-links {
+                gap: 0.2rem;
+            }
+
             .nav-bar a {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.8rem;
+                padding: 0.3rem 0.4rem;
+                font-size: 0.7rem;
+                width: 60px;
+            }
+
+            .nav-bar a svg {
+                width: 16px;
+                height: 16px;
             }
 
             .code-blocks {
@@ -902,6 +936,10 @@
             }
         }
     </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="/css/landing-secondary.css" media="print" onload="this.media='all'; this.onload=null;">
+    <noscript><link rel="stylesheet" href="/css/landing-secondary.css"></noscript>
 </head>
 <body>
     <canvas id="network-canvas"></canvas>

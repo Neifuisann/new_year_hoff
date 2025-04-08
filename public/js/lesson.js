@@ -133,25 +133,32 @@ async function renderQuestions(lesson) {
             // --- START IMAGE PARSING ---
             let imageUrl = null;
             const imgRegex = /\[img\s+src="([^"]+)"\]/i;
-            const match = q.question.match(imgRegex);
-
+            const originalQuestionText = lesson.questions[questionIndex].question;
+            const match = originalQuestionText.match(imgRegex);
             if (match && match[1]) {
                 imageUrl = match[1];
-                // Remove the placeholder from the question text
-                q.question = q.question.replace(imgRegex, '').trim();
-            } else if (q.image) {
-                // Fallback to existing q.image if no placeholder found
-                imageUrl = q.image;
             }
-
-            // Add question text *after* potentially modifying it
-            questionHtml += `<p>${q.question}</p>`;
             // --- END IMAGE PARSING ---
+
+            // --- NEW: Get the question text and remove the image tag if it exists for saving ---
+            let questionTextForSaving = originalQuestionText; // Start with original
+            if (imageUrl) {
+                // If an image was found, remove the tag for the text we save
+                questionTextForSaving = questionTextForSaving.replace(imgRegex, '').trim();
+            }
+            // --- END NEW ---
+
+            questionHtml += `<p>${questionTextForSaving}</p>`;
 
             if (imageUrl) { // Check if we have an image URL from either source
                 questionHtml += `
                     <div class="question-image-container">
-                        <img src="${imageUrl}" alt="Question Image" style="max-width: 100%; margin: 10px 0;">
+                        <img src="${imageUrl}" 
+                             alt="Question Image" 
+                             style="max-width: 100%; margin: 10px 0;"
+                             loading="lazy"
+                             onload="this.classList.add('loaded')"
+                             class="question-image">
                     </div>
                 `;
             }
@@ -306,6 +313,40 @@ async function initializeLesson() {
         if (lesson.lessonImage) {
             const imageContainer = document.getElementById('lesson-image-container');
             const imageElement = document.getElementById('lesson-image');
+            
+            // Set up responsive image with srcset if it's a modern image URL
+            const isModernImageURL = lesson.lessonImage.includes('.webp') || 
+                                    lesson.lessonImage.includes('supabase.co') || 
+                                    lesson.lessonImage.includes('_storage/');
+                                    
+            if (isModernImageURL) {
+                // Extract the base URL without extension if possible
+                let baseUrl = lesson.lessonImage;
+                let extension = '.jpg';
+                
+                if (baseUrl.includes('.webp')) {
+                    baseUrl = baseUrl.replace('.webp', '');
+                    extension = '.webp';
+                } else if (baseUrl.match(/\.(jpe?g|png|gif)$/i)) {
+                    const match = baseUrl.match(/\.(jpe?g|png|gif)$/i);
+                    if (match) {
+                        extension = match[0];
+                        baseUrl = baseUrl.replace(extension, '');
+                    }
+                }
+                
+                // Preload the image in the background
+                const preloadLink = document.createElement('link');
+                preloadLink.rel = 'preload';
+                preloadLink.as = 'image';
+                preloadLink.href = lesson.lessonImage;
+                document.head.appendChild(preloadLink);
+                
+                // Set the srcset attribute for responsive loading
+                imageElement.srcset = `${lesson.lessonImage} 1x`;
+            }
+            
+            // Always set the src as fallback
             imageElement.src = lesson.lessonImage;
             imageContainer.style.display = 'block';
         }
@@ -318,11 +359,6 @@ async function initializeLesson() {
 
         // --- HIDE LOADER ---
         showLoader(false); // Hide loader AFTER main content is rendered
-
-        // --- DEFERRED TAG FETCHING ---
-        // Fetch tags *after* the main content is loaded and loader is hidden
-        // This runs asynchronously and won't block the UI
-        fetchTagsAndDisplay(lesson); // Call a new function to handle tags
 
         // Initialize auto-rendering for KaTeX and highlighting
         // These can run after the loader is hidden as well
@@ -348,34 +384,6 @@ async function initializeLesson() {
             <p>Error details: ${error.message}</p>
         `;
         showLoader(false); // Ensure loader is hidden on error
-    }
-}
-
-// --- NEW Function for Deferred Tag Fetching and Display ---
-async function fetchTagsAndDisplay(lesson) {
-    try {
-        console.log("Fetching tags in the background...");
-        const tagsResponse = await fetch('/api/tags'); // Fetch all available tags
-        if (tagsResponse.ok) {
-            const allAvailableTags = await tagsResponse.json(); // Not used in this example, but fetched
-
-            // Display the tags associated with *this* specific lesson
-            const titleElement = document.getElementById('lesson-title');
-            if (titleElement && Array.isArray(lesson.tags) && lesson.tags.length > 0) {
-                 // Check if tags are already displayed to prevent duplicates if called multiple times
-                 if (!document.querySelector('.lesson-tags')) {
-                    const tagsHtml = `<div class="lesson-tags" style="margin-top: 5px; font-size: 0.9em; color: #555;">Tags: ${lesson.tags.map(tag => `<span style="background-color: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; display: inline-block;">${tag}</span>`).join('')}</div>`;
-                    titleElement.insertAdjacentHTML('afterend', tagsHtml);
-                    console.log("Lesson tags displayed:", lesson.tags);
-                 }
-             } else {
-                 console.log("No tags associated with this lesson to display.");
-             }
-        } else {
-             console.warn('Failed to fetch tags list:', tagsResponse.status);
-        }
-    } catch (tagError) {
-        console.error('Error fetching or processing tags:', tagError);
     }
 }
 // --- END New Function ---
@@ -443,6 +451,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalPossiblePoints += questionPoints;
 
                     let userAnswer, correctAnswer, isCorrect, optionsText = null;
+                    
+                    // --- NEW: Extract image URL if present ---
+                    let imageUrl = null;
+                    const imgRegex = /\[img\s+src="([^"]+)"\]/i;
+                    // Use the ORIGINAL question text from the lesson data to find the image
+                    const originalQuestionText = lesson.questions[originalIndex].question;
+                    const match = originalQuestionText.match(imgRegex);
+                    if (match && match[1]) {
+                        imageUrl = match[1];
+                    }
+                    // --- END NEW ---
+
+                    // --- NEW: Get the question text and remove the image tag if it exists for saving ---
+                    let questionTextForSaving = originalQuestionText; // Start with original
+                    if (imageUrl) {
+                        // If an image was found, remove the tag for the text we save
+                        questionTextForSaving = questionTextForSaving.replace(imgRegex, '').trim();
+                    }
+                    // --- END NEW ---
 
                     if (q.type === 'truefalse' && Array.isArray(q.options)) {
                         // --- NEW: Handle multi-option true/false ---
@@ -525,7 +552,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     quizResults.questions.push({
                         type: q.type,
-                        question: q.question,
+                        question: questionTextForSaving, // Use the cleaned text for saving
+                        imageUrl: imageUrl, // Add the extracted image URL
                         userAnswer: userAnswer,
                         correctAnswer: correctAnswer,
                         isCorrect: isCorrect,

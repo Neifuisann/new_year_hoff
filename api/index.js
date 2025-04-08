@@ -175,7 +175,34 @@ function setCacheHeaders(res, etag, maxAgeSeconds = 60) { // Default cache: 1 mi
   // Optionally add Last-Modified if you have a relevant timestamp for the data
   // res.setHeader('Last-Modified', new Date(data.lastUpdated).toUTCString());
 }
+
+// Determine if a route should be cached (exclude admin routes)
+function shouldCache(req) {
+  const path = req.path || req.originalUrl || '';
+  // Don't cache admin routes or authenticated routes that need fresh data
+  return !path.includes('/admin/') && 
+         !path.includes('/api/admin/') &&
+         !path.includes('/api/history') &&
+         req.method === 'GET'; // Only cache GET requests
+}
 // --- End Cache Helper Functions ---
+
+// Helper function to increment view count without affecting response
+async function incrementViewCount(lessonId, currentViews) {
+    try {
+        const { error } = await supabase
+            .from('lessons')
+            .update({ views: currentViews + 1 })
+            .eq('id', lessonId);
+            
+        if (error) {
+            throw error;
+        }
+    } catch (error) {
+        console.warn('Error incrementing view count:', error);
+        // Don't throw - this is a background operation
+    }
+}
 
 // Admin credentials
 const adminCredentials = {
@@ -599,14 +626,18 @@ app.get('/api/lessons', async (req, res) => {
             search: search,
             sort: sort
         };
-        // const etag = generateETag(responsePayload);
-        // const clientETag = req.headers['if-none-match'];
-        // if (clientETag && clientETag === `"${etag}"`) {
-        //     console.log('Cache hit for /api/lessons');
-        //     return res.status(304).send();
-        // }
-        // console.log('Cache miss for /api/lessons');
-        // setCacheHeaders(res, etag, 60 * 5); // Cache for 5 minutes
+        
+        // Implement caching only for non-admin routes
+        if (shouldCache(req)) {
+            const etag = generateETag(responsePayload);
+            const clientETag = req.headers['if-none-match'];
+            if (clientETag && clientETag === `"${etag}"`) {
+                console.log('Cache hit for /api/lessons');
+                return res.status(304).send();
+            }
+            console.log('Cache miss for /api/lessons');
+            setCacheHeaders(res, etag, 60 * 5); // Cache for 5 minutes
+        }
 
         // Send response directly
         res.json(responsePayload);
@@ -648,6 +679,29 @@ app.get('/api/lessons/:id', async (req, res) => {
         // setCacheHeaders(res, etag, 60 * 10);
         // --- End Caching Logic Removal ---
 
+        // Re-implement caching only for non-admin routes
+        let wasServedFromCache = false;
+        if (shouldCache(req)) {
+            const etag = generateETag(lesson);
+            const clientETag = req.headers['if-none-match'];
+            if (clientETag && clientETag === `"${etag}"`) {
+                console.log(`Cache hit for /api/lessons/${lessonId}`);
+                // Send 304 without updating views if cache is valid
+                wasServedFromCache = true;
+                
+                // Still increment view count even on cache hit
+                incrementViewCount(lessonId, lesson.views || 0).catch(error => {
+                    console.warn('Failed to update view count on cache hit for lesson', lessonId, error);
+                });
+                
+                return res.status(304).send();
+            }
+            console.log(`Cache miss for /api/lessons/${lessonId}`);
+            setCacheHeaders(res, etag, 60 * 10); // Cache for 10 minutes
+        }
+
+        // Only update view count if not served from cache
+        if (!wasServedFromCache) {
         // Update view count (this logic remains)
         const currentViews = lesson.views || 0;
         const { error: updateError } = await supabase
@@ -658,6 +712,7 @@ app.get('/api/lessons/:id', async (req, res) => {
         if (updateError) {
             // Log warning but don't fail the request just because view count update failed
             console.warn('Failed to update view count for lesson', lessonId, updateError);
+            }
         }
 
         // Send the full lesson data
@@ -1151,6 +1206,18 @@ app.get('/api/quiz', requireStudentAuth, async (req, res) => {
         // setCacheHeaders(res, etag, 60 * 30);
         // --- End Caching Logic Removal ---
 
+        // Re-implement caching for quiz data
+        if (shouldCache(req)) {
+            const etag = generateETag(quizData);
+            const clientETag = req.headers['if-none-match'];
+            if (clientETag && clientETag === `"${etag}"`) {
+                console.log('Cache hit for /api/quiz');
+                return res.status(304).send();
+            }
+            console.log('Cache miss for /api/quiz');
+            setCacheHeaders(res, etag, 60 * 30); // Cache for 30 minutes
+        }
+
         res.json(quizData);
 
     } catch (error) {
@@ -1244,6 +1311,18 @@ app.get('/api/tags', async (req, res) => {
         // console.log('Cache miss for /api/tags');
         // setCacheHeaders(res, etag, 60 * 15); // Cache tags for 15 minutes
         // --- End Caching Logic Removal ---
+
+        // Re-implement caching for tags
+        if (shouldCache(req)) {
+            const etag = generateETag(uniqueSortedTags);
+            const clientETag = req.headers['if-none-match'];
+            if (clientETag && clientETag === `"${etag}"`) {
+                console.log('Cache hit for /api/tags');
+                return res.status(304).send();
+            }
+            console.log('Cache miss for /api/tags');
+            setCacheHeaders(res, etag, 60 * 15); // Cache tags for 15 minutes
+        }
 
         res.json(uniqueSortedTags);
 

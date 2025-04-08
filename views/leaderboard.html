@@ -77,6 +77,8 @@
             overflow-x: auto; /* Enable horizontal scroll on overflow */
             width: 100%;
             margin-top: 20px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            border-radius: 8px; /* Match the visual style */
         }
 
         .leaderboard-table {
@@ -96,6 +98,10 @@
             border-bottom: 2px solid #dee2e6; /* Stronger bottom border */
         }
         .leaderboard-table th.center-align { text-align: center; }
+        .leaderboard-table th.rank-column { width: 40px; } /* Set fixed width for rank column */
+        .leaderboard-table th.score-column { width: 40px; } /* Set fixed width for score column */
+        .leaderboard-table th.change-column { width: 40px; } /* Set fixed width for change column */
+        .leaderboard-table th.name-column { width: 80px; } /* Control width for name column */
 
         .leaderboard-table td {
             padding: 12px 15px;
@@ -105,6 +111,15 @@
             color: #495057;
         }
         .leaderboard-table td.center-align { text-align: center; }
+        
+        /* Style for the user name cell */
+        .leaderboard-table td.name-cell {
+            max-width: 180px;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
 
         .leaderboard-table tr:hover td {
              background-color: #f8f9fa; /* Subtle hover effect */
@@ -163,14 +178,15 @@
         }
 
         .user-profile {
-            display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
         .user-avatar {
             width: 32px;
             height: 32px;
+            min-width: 32px; /* Prevent avatar from shrinking */
             font-size: 0.9rem;
             font-weight: 600;
             background-color: #e9ecef;
@@ -183,6 +199,13 @@
         }
         .user-profile span {
              line-height: 1.2;
+             display: inline-block; /* Allow text to wrap */
+             width: calc(100% - 42px); /* Full width minus avatar and gap */
+             overflow-wrap: break-word;
+        }
+        
+        .user-profile a {
+            max-width: 100%;
         }
 
         .loading, .error, .no-results {
@@ -262,7 +285,30 @@
                 padding: 10px;
                 font-size: 0.9rem;
             }
+            
+            /* Adjust column widths for smaller screens */
+            .leaderboard-table th.rank-column { width: 60px; }
+            .leaderboard-table th.score-column { width: 60px; }
+            .leaderboard-table th.change-column { width: 60px; }
+            .leaderboard-table th.name-column { width: 150px; } /* Narrower on mobile */
+            
+            .leaderboard-table td.name-cell { max-width: 150px; }
+            
             .user-profile { gap: 8px; }
+            .user-profile span { width: calc(100% - 36px); }
+            
+            /* Add a subtle hint that the table is scrollable */
+            .table-responsive-wrapper::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 30px;
+                background: linear-gradient(to right, transparent, rgba(255,255,255,0.8));
+                pointer-events: none;
+                opacity: 0.8;
+            }
         }
 
         @media (max-width: 480px) {
@@ -276,6 +322,15 @@
                 padding: 8px;
                 font-size: 0.85rem;
             }
+            
+            /* Further reduce column widths */
+            .leaderboard-table th.rank-column { width: 50px; }
+            .leaderboard-table th.score-column { width: 50px; }
+            .leaderboard-table th.change-column { width: 50px; }
+            .leaderboard-table th.name-column { width: 120px; } /* Even narrower on smallest screens */
+            
+            .leaderboard-table td.name-cell { max-width: 120px; }
+            
             .rank { font-size: 0.9rem; }
             .user-avatar { width: 28px; height: 28px; font-size: 0.8rem; }
             .pagination button,
@@ -284,6 +339,22 @@
                 font-size: 0.85rem;
             }
             .pagination { gap: 6px; }
+            
+            /* Make table scrollable more obvious on smallest screens */
+            .table-responsive-wrapper {
+                border: 1px solid #e9ecef;
+            }
+            
+            .table-responsive-wrapper::before {
+                content: '← Scroll →';
+                display: block;
+                text-align: center;
+                padding: 5px;
+                background: #f8f9fa;
+                color: #6c757d;
+                font-size: 0.8rem;
+                border-bottom: 1px solid #e9ecef;
+            }
         }
 
     </style>
@@ -358,10 +429,10 @@
                 const thead = document.createElement('thead');
                 thead.innerHTML = `
                     <tr>
-                        <th class="center-align">Hạng</th>
-                        <th>Học sinh</th>
-                        <th class="center-align">Điểm</th>
-                        <th class="center-align">Thay đổi</th> 
+                        <th class="center-align rank-column">Hạng</th>
+                        <th class="name-column">Học sinh</th>
+                        <th class="center-align score-column">Điểm</th>
+                        <th class="center-align change-column">Thay đổi</th> 
                     </tr>
                 `;
                 table.appendChild(thead);
@@ -382,7 +453,7 @@
                             ${rank <= 3 ? `<span class="medal ${['gold', 'silver', 'bronze'][rank-1]}"><i class="fas fa-medal"></i></span>` : ''}
                             ${rank}
                         </td>
-                        <td>
+                        <td class="name-cell">
                             <div class="user-profile">
                                 <div class="user-avatar">${rating.students?.full_name?.[0]?.toUpperCase() || '?'}</div>
                                 <!-- Ensure student_id is available in rating object -->

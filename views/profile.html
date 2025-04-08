@@ -6,6 +6,8 @@
     <title>Hồ sơ học viên</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -67,6 +69,42 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 8px;
         }
+        
+        /* Rating chart styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        
+        /* Rating categories/tiers */
+        .rating-tiers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        
+        .rating-tier {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            gap: 5px;
+        }
+        
+        .tier-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        /* Responsive legend for small screens */
+        .mobile-tier-container {
+            display: none;
+        }
+        
         .rating-history-list {
             list-style: none;
             padding: 0;
@@ -108,6 +146,13 @@
             padding: 30px;
             color: #6c757d;
         }
+        
+        .no-data {
+            padding: 15px;
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+        }
 
         @media (max-width: 600px) {
             .profile-header { flex-direction: column; text-align: center; gap: 15px; }
@@ -115,6 +160,36 @@
             .profile-info h1 { font-size: 1.6rem; }
             .history-item { flex-direction: column; align-items: flex-start; gap: 5px; }
             .history-change { align-self: flex-end; }
+            
+            /* Adjust chart height for mobile */
+            .chart-container {
+                height: 250px;
+            }
+            
+            /* Switch to horizontal scrolling tiers for very small screens */
+            .rating-tiers {
+                display: none;
+            }
+            
+            .mobile-tier-container {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 8px;
+                margin-bottom: 15px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .mobile-tier-container .rating-tiers {
+                display: inline-flex;
+                flex-wrap: nowrap;
+                padding: 0 5px;
+            }
+            
+            .mobile-tier-container .rating-tier {
+                font-size: 0.8rem;
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
@@ -128,6 +203,36 @@
     </div>
 
     <script>
+        // Define rating tiers similar to Codeforces
+        const ratingTiers = [
+            { name: "Newbie", min: 0, max: 1200, color: "#ccc" },
+            { name: "Học viên", min: 1200, max: 1400, color: "#7cb342" },
+            { name: "Chuyên cần", min: 1400, max: 1600, color: "#2196f3" },
+            { name: "Giỏi", min: 1600, max: 1900, color: "#ab47bc" },
+            { name: "Xuất sắc", min: 1900, max: 2200, color: "#ff9800" },
+            { name: "Master", min: 2200, max: 3000, color: "#f44336" }
+        ];
+        
+        // Get rating tier color
+        function getRatingColor(rating) {
+            for (const tier of ratingTiers) {
+                if (rating >= tier.min && rating <= tier.max) {
+                    return tier.color;
+                }
+            }
+            return "#ccc"; // Default
+        }
+        
+        // Get rating tier name
+        function getRatingTier(rating) {
+            for (const tier of ratingTiers) {
+                if (rating >= tier.min && rating <= tier.max) {
+                    return tier.name;
+                }
+            }
+            return "Unrated";
+        }
+        
         async function loadProfile() {
             const profileContainer = document.getElementById('profile-data');
             const studentId = window.location.pathname.split('/').pop(); // Get ID from URL
@@ -155,11 +260,44 @@
                             <h1>${data.student.full_name || 'Vô danh'}</h1>
                             <p class="profile-rating">
                                 <i class="fas fa-star"></i> ${Math.round(data.rating?.rating || 1500)} điểm
+                                <span style="color: ${getRatingColor(data.rating?.rating || 1500)}"> (${getRatingTier(data.rating?.rating || 1500)})</span>
                             </p>
                             <p>Tham gia: ${new Date(data.student.created_at).toLocaleDateString('vi-VN')}</p>
                         </div>
                     </div>
                 `;
+                
+                // --- Add Rating Chart Section ---
+                profileHTML += `
+                    <div class="profile-section">
+                        <h2>Biểu đồ điểm số</h2>
+                        <div class="rating-tiers">
+                            ${ratingTiers.map(tier => 
+                                `<div class="rating-tier">
+                                    <div class="tier-color" style="background-color: ${tier.color}"></div>
+                                    <span>${tier.name} (${tier.min}-${tier.max})</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                        <div class="mobile-tier-container">
+                            <div class="rating-tiers">
+                                ${ratingTiers.map(tier => 
+                                    `<div class="rating-tier">
+                                        <div class="tier-color" style="background-color: ${tier.color}"></div>
+                                        <span>${tier.name}</span>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                `;
+                
+                if (data.ratingHistory && data.ratingHistory.length > 0) {
+                    profileHTML += `<div class="chart-container"><canvas id="ratingChart"></canvas></div>`;
+                } else {
+                    profileHTML += `<div class="no-data">Chưa có dữ liệu điểm số để hiển thị biểu đồ.</div>`;
+                }
+                
+                profileHTML += `</div>`;
 
                 // --- Render Rating History --- 
                 if (data.ratingHistory && data.ratingHistory.length > 0) {
@@ -169,7 +307,15 @@
                             <ul class="rating-history-list">
                     `;
                     data.ratingHistory.forEach(item => {
-                        const change = item.rating_change || 0;
+                        // Calculate rating change if not provided
+                        let change = item.rating_change;
+                        if (change === undefined || change === null) {
+                            // If API doesn't provide rating_change, calculate it
+                            const prevRating = item.previous_rating || 0;
+                            const newRating = item.new_rating || 0;
+                            change = newRating - prevRating;
+                        }
+                        
                         const changeClass = change > 0 ? 'positive' : change < 0 ? 'negative' : '';
                         const changeSymbol = change > 0 ? '+' : '';
                         profileHTML += `
@@ -191,11 +337,214 @@
                 }
                 
                 profileContainer.innerHTML = profileHTML;
+                
+                // --- Create Rating Chart if data exists ---
+                if (data.ratingHistory && data.ratingHistory.length > 0) {
+                    createRatingChart(data.ratingHistory);
+                }
 
             } catch (error) {
                 console.error("Error loading profile:", error);
                 profileContainer.innerHTML = `<div class="error">Không thể tải hồ sơ: ${error.message}</div>`;
             }
+        }
+        
+        function createRatingChart(historyData) {
+            // Ensure history is sorted by timestamp
+            historyData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            // Calculate rating changes if not provided by API
+            historyData.forEach((item, index) => {
+                if (item.rating_change === undefined || item.rating_change === null) {
+                    // If this is the first entry, calculate from starting rating (default 1500)
+                    if (index === 0) {
+                        const startingRating = item.previous_rating || 1500;
+                        item.rating_change = (item.new_rating || 0) - startingRating;
+                    } else {
+                        // Otherwise calculate from previous entry
+                        const prevRating = historyData[index - 1].new_rating || 0;
+                        item.rating_change = (item.new_rating || 0) - prevRating;
+                    }
+                }
+            });
+            
+            // Format data for chart
+            const labels = historyData.map(item => {
+                const date = new Date(item.timestamp);
+                return date.toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' });
+            });
+            
+            const ratings = historyData.map(item => Math.round(item.new_rating || 1500));
+            const pointColors = historyData.map(item => getRatingColor(item.new_rating || 1500));
+            
+            // Add starting point if necessary
+            if (historyData.length > 0) {
+                const firstEntry = historyData[0];
+                // Use previous_rating if available, otherwise calculate from rating_change
+                const startingRating = firstEntry.previous_rating || 
+                                      (Math.round(firstEntry.new_rating) - firstEntry.rating_change) || 
+                                      1500;
+                
+                // Add starting point one day before first entry
+                const firstDate = new Date(firstEntry.timestamp);
+                firstDate.setDate(firstDate.getDate() - 1);
+                
+                labels.unshift(firstDate.toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' }));
+                ratings.unshift(startingRating);
+                pointColors.unshift(getRatingColor(startingRating));
+            }
+            
+            // Find min and max for nice axis scaling
+            let minRating = Math.min(...ratings) - 100;
+            let maxRating = Math.max(...ratings) + 100;
+            
+            // Ensure the chart shows at least tier boundaries
+            minRating = Math.min(minRating, 1200);
+            maxRating = Math.max(maxRating, 1600);
+            
+            // Round to nearest 100
+            minRating = Math.floor(minRating / 100) * 100;
+            maxRating = Math.ceil(maxRating / 100) * 100;
+            
+            // Create background gradient zones for rating tiers
+            const ctx = document.getElementById('ratingChart').getContext('2d');
+            
+            // Create chart
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Điểm số',
+                        data: ratings,
+                        fill: false,
+                        borderColor: '#0d6efd',
+                        tension: 0.1,
+                        pointBackgroundColor: pointColors,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const idx = tooltipItems[0].dataIndex;
+                                    if (idx === 0 && idx < historyData.length) {
+                                        return 'Điểm ban đầu';
+                                    } else {
+                                        const historyIdx = idx - 1 >= 0 ? idx - 1 : 0;
+                                        const item = historyData[historyIdx];
+                                        return item ? (item.lesson_title || `Bài học ID: ${item.lesson_id}`) : '';
+                                    }
+                                },
+                                label: function(context) {
+                                    const rating = context.raw;
+                                    return `Điểm: ${rating} (${getRatingTier(rating)})`;
+                                },
+                                afterLabel: function(context) {
+                                    const idx = context.dataIndex;
+                                    if (idx > 0 && idx - 1 < historyData.length) {
+                                        const change = historyData[idx - 1].rating_change;
+                                        if (change && change !== 0) {
+                                            const sign = change > 0 ? '+' : '';
+                                            return `Thay đổi: ${sign}${change}`;
+                                        }
+                                    }
+                                    return '';
+                                }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: minRating,
+                            max: maxRating,
+                            title: {
+                                display: true,
+                                text: 'Điểm số'
+                            },
+                            grid: {
+                                color: (context) => {
+                                    // Show lines at tier boundaries
+                                    const value = context.tick.value;
+                                    const isTierBoundary = ratingTiers.some(tier => tier.min === value || tier.max === value);
+                                    return isTierBoundary ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.05)';
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    // For smaller screens, only show tier boundaries
+                                    if (window.innerWidth < 600) {
+                                        const isTierBoundary = ratingTiers.some(tier => 
+                                            tier.min === value || tier.max === value
+                                        );
+                                        return isTierBoundary ? value : '';
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                // Limit number of x-axis labels on smaller screens
+                                callback: function(val, index) {
+                                    if (window.innerWidth < 600) {
+                                        // Only show every nth label on mobile
+                                        const numLabels = labels.length;
+                                        const skipFactor = Math.ceil(numLabels / 5); // Show max 5 labels
+                                        return index % skipFactor === 0 ? this.getLabelForValue(val) : '';
+                                    }
+                                    return this.getLabelForValue(val);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Draw tier backgrounds
+            chart.options.plugins.beforeDraw = (chart) => {
+                const ctx = chart.ctx;
+                const chartArea = chart.chartArea;
+                const yAxis = chart.scales.y;
+                
+                ratingTiers.forEach(tier => {
+                    // Convert rating values to y-positions on the chart
+                    const yTop = yAxis.getPixelForValue(Math.min(tier.max, maxRating));
+                    const yBottom = yAxis.getPixelForValue(Math.max(tier.min, minRating));
+                    
+                    // Skip if outside chart area
+                    if (yBottom < chartArea.top || yTop > chartArea.bottom) return;
+                    
+                    // Draw background
+                    ctx.fillStyle = `${tier.color}15`; // 15 is hex for 10% opacity
+                    ctx.fillRect(
+                        chartArea.left, 
+                        yTop,
+                        chartArea.right - chartArea.left,
+                        yBottom - yTop
+                    );
+                });
+            };
+            
+            // Update chart when window resizes
+            window.addEventListener('resize', () => {
+                chart.resize();
+            });
         }
 
         document.addEventListener('DOMContentLoaded', loadProfile);
