@@ -114,41 +114,82 @@ function closeModal() {
     modal.classList.remove('show');
 }
 
-// --- NEW: Check student authentication ---
+// Check student authentication with local storage caching
 async function checkStudentAuthentication() {
     try {
+        // Check local storage for cached auth data first
+        const cachedAuth = localStorage.getItem('studentAuthCache');
+        const cacheTimestamp = localStorage.getItem('studentAuthCacheTime');
+        
+        // Cache is valid for 5 minutes (300000ms)
+        const CACHE_VALIDITY = 300000; 
+        const now = Date.now();
+        
+        // Check if we have a valid cache
+        if (cachedAuth && cacheTimestamp && (now - parseInt(cacheTimestamp) < CACHE_VALIDITY)) {
+            // Use cached auth data
+            console.log('Using cached auth data from localStorage');
+            const authData = JSON.parse(cachedAuth);
+            
+            if (authData.isAuthenticated && authData.student) {
+                currentStudent = authData.student; // Store student info
+                return true; // Authenticated from cache
+            } else {
+                // Cached data says not authenticated, redirect to login
+                redirectToLogin();
+                return false;
+            }
+        }
+        
+        // No valid cache, fetch from server
         const response = await fetch('/api/check-student-auth');
         if (!response.ok) {
-            // If API fails, assume not logged in for safety
             throw new Error('Auth check failed');
         }
+        
         const authData = await response.json();
-
+        
+        // Cache the auth result and timestamp
+        localStorage.setItem('studentAuthCache', JSON.stringify(authData));
+        localStorage.setItem('studentAuthCacheTime', now.toString());
+        
         if (authData.isAuthenticated && authData.student) {
-            currentStudent = authData.student;
+            currentStudent = authData.student; // Store student info
             console.log('Student authenticated:', currentStudent.name);
             return true; // Authenticated
         } else {
             // Not authenticated, redirect to login
-            console.log('Student not authenticated, redirecting...');
-            // Include current page as redirect target
-            const currentUrl = window.location.pathname + window.location.search;
-            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
-            return false; // Not authenticated
+            redirectToLogin();
+            return false;
         }
     } catch (error) {
         console.error('Error checking student authentication:', error);
+        // Clear cache on error
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
         // Redirect to login on error
-        window.location.href = '/student/login'; 
-        return false; // Treat error as not authenticated
+        redirectToLogin();
+        return false;
     }
 }
 
-// --- NEW: Handle logout ---
+// Helper function to redirect to login
+function redirectToLogin() {
+    console.log('Student not authenticated, redirecting...');
+    const currentUrl = window.location.pathname + window.location.search;
+    window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+}
+
+// Handle logout with cache clearing
 async function handleLogout() {
     try {
+        // Clear auth cache immediately for better UX
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
+        
         const response = await fetch('/api/student/logout', { method: 'POST' });
         const result = await response.json();
+        
         if (result.success) {
             console.log('Logout successful');
             window.location.href = '/student/login'; // Redirect to login page after logout
@@ -161,10 +202,9 @@ async function handleLogout() {
     }
 }
 
-// --- MODIFIED: Start Lesson - Remove modal, rely on session ---
+// Modified function: Start Lesson - relies on auth check
 function startLesson(lessonId) {
-    // No modal needed, authentication is checked on page load
-    // Simply navigate to the lesson page
+    // Authentication is checked on page load, so we can directly navigate
     window.location.href = `/lesson/${lessonId}`;
 }
 
@@ -293,47 +333,58 @@ async function checkAdminAuth() {
     }
 }
 
-// Initialize when page loads
+// Modified Event Listener: Handles initial load and auth check
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- NEW: Perform authentication check first ---
+    showLoader(true); // Show loader immediately
+
+    // --- Perform authentication check first --- 
     const isAuthenticated = await checkStudentAuthentication();
     if (!isAuthenticated) {
         // Stop further execution if not authenticated (redirect already happened)
+        showLoader(false); // Hide loader before returning
         return; 
     }
-    // --- END NEW ---
+    // --- END AUTH CHECK --- 
 
-    ensurePaginationContainer(); // Make sure the pagination div exists
-    // Show loader immediately while data loads
-    showLoader(true); 
-    
-    // Load tags then lessons
-    await loadTags();
-    await loadLessons();
-    
-    // Add event listener for search input with debounce
+    // Initialize search and sort controls
     const searchInput = document.getElementById('search-input');
-    let debounceTimeout;
-    searchInput.addEventListener('input', () => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(filterAndRenderLessons, 300);
-    });
+    const sortSelect = document.getElementById('sort-select');
+    const clearSearchButton = document.getElementById('clear-search');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterAndRenderLessons);
+    }
+    if (sortSelect) {
+        sortSelect.addEventListener('change', filterAndRenderLessons);
+    }
+    if (clearSearchButton) {
+        clearSearchButton.addEventListener('click', () => {
+            searchInput.value = '';
+            filterAndRenderLessons();
+        });
+    }
     
-    // Add event listener for sort select
-    document.getElementById('sort-select').addEventListener('change', filterAndRenderLessons);
+    // Ensure pagination container exists
+    ensurePaginationContainer();
+
+    // Load initial data (lessons and tags)
+    await Promise.all([
+        loadLessons(),
+        loadTags()
+    ]);
+    
+    // Hide loader after initial data is loaded
+    showLoader(false);
 
     // Dark mode toggle
-    const darkModeLink = document.querySelector('.dark-mode-link');
-    if (darkModeLink) {
-        darkModeLink.addEventListener('click', (e) => {
-            e.preventDefault();
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            // Store preference
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDarkMode);
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         });
 
-        // Check for saved dark mode preference
+        // Apply saved preference
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
         }

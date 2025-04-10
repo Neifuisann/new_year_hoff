@@ -2,33 +2,79 @@ let currentResult = null;
 let resultData = null;
 let sortedQuestions = [];
 
-// --- Student Authentication Functions ---
+// --- Add client-side auth caching like in gallery.js ---
+
+// Check student authentication with local storage caching
 async function checkStudentAuthentication() {
     try {
+        // Check local storage for cached auth data first
+        const cachedAuth = localStorage.getItem('studentAuthCache');
+        const cacheTimestamp = localStorage.getItem('studentAuthCacheTime');
+        
+        // Cache is valid for 5 minutes (300000ms)
+        const CACHE_VALIDITY = 300000; 
+        const now = Date.now();
+        
+        // Check if we have a valid cache
+        if (cachedAuth && cacheTimestamp && (now - parseInt(cacheTimestamp) < CACHE_VALIDITY)) {
+            // Use cached auth data
+            console.log('Using cached auth data from localStorage');
+            const authData = JSON.parse(cachedAuth);
+            
+            if (authData.isAuthenticated && authData.student) {
+                return true; // Authenticated from cache
+            } else {
+                // Cached data says not authenticated, redirect to login
+                redirectToLogin();
+                return false;
+            }
+        }
+        
+        // No valid cache, fetch from server
         const response = await fetch('/api/check-student-auth');
         if (!response.ok) {
             throw new Error('Auth check failed');
         }
+        
         const authData = await response.json();
-
+        
+        // Cache the auth result and timestamp
+        localStorage.setItem('studentAuthCache', JSON.stringify(authData));
+        localStorage.setItem('studentAuthCacheTime', now.toString());
+        
         if (authData.isAuthenticated && authData.student) {
             console.log('Student authenticated:', authData.student.name);
-            return true;
+            return true; // Authenticated
         } else {
-            console.log('Student not authenticated, redirecting...');
-            const currentUrl = window.location.pathname + window.location.search;
-            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+            // Not authenticated, redirect to login
+            redirectToLogin();
             return false;
         }
     } catch (error) {
         console.error('Error checking student authentication:', error);
-        window.location.href = '/student/login';
+        // Clear cache on error
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
+        // Redirect to login on error
+        redirectToLogin();
         return false;
     }
 }
 
+// Helper function to redirect to login
+function redirectToLogin() {
+    console.log('Student not authenticated, redirecting...');
+    const currentUrl = window.location.pathname + window.location.search;
+    window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+}
+
+// Handle logout with cache clearing
 async function handleLogout() {
     try {
+        // Clear auth cache immediately for better UX
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
+        
         const response = await fetch('/api/student/logout', { method: 'POST' });
         const result = await response.json();
         if (result.success) {
@@ -42,7 +88,7 @@ async function handleLogout() {
         alert('Đã xảy ra lỗi trong quá trình đăng xuất.');
     }
 }
-// --- End Authentication Functions ---
+// --- End Auth Functions ---
 
 // Function to show/hide loader
 function showLoader(show) {
@@ -1522,6 +1568,15 @@ function formatAnswer(answer) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    showLoader(true); // Show loader immediately
-    displayResults(); // This will handle hiding the loader
+    // --- Perform authentication check first --- 
+    // Call displayResults which includes the auth check
+    displayResults();
+    
+    // Add event listeners for sorting buttons
+    document.getElementById('sort-all').addEventListener('click', () => displaySortedResults('all'));
+    document.getElementById('sort-correct').addEventListener('click', () => displaySortedResults('correct'));
+    document.getElementById('sort-incorrect').addEventListener('click', () => displaySortedResults('incorrect'));
+
+    // Initialize image zoom functionality
+    initializeImageZoom();
 });

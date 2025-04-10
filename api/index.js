@@ -19,6 +19,8 @@ const PORT = process.env.PORT || 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+// Import Redis cache middleware and utilities
+const { cacheMiddleware, clearCache, getJson, setJson, deleteKey } = require('../lib/redis');
 
 // --- Global Error Handling ---
 process.on('uncaughtException', (error) => {
@@ -142,6 +144,9 @@ app.use(session({
     },
     proxy: true // Trust the reverse proxy when setting secure cookies (Vercel/Heroku)
 }));
+
+// After all essential middleware but before route handlers, add the Redis cache middleware
+app.use(cacheMiddleware);
 
 // --- Cache Helper Functions ---
 function generateETag(data) {
@@ -435,72 +440,46 @@ app.post('/api/student/login', async (req, res) => {
     
     try {
         // Check if student exists and is approved
-        const { data: student, error: fetchError } = await supabase
+        const { data: student, error } = await supabase
             .from('students')
-            .select('id, full_name, password_hash, is_approved, approved_device_fingerprint')
+            .select('*')
             .eq('phone_number', phone_number)
+            .eq('is_approved', true)
             .maybeSingle();
             
-        if (fetchError) {
-            console.error('Error fetching student:', fetchError);
-            return res.status(500).json({ success: false, message: 'Internal server error' });
-        }
+        if (error) throw error;
         
         if (!student) {
             return res.status(401).json({ 
                 success: false, 
-                message: 'Tài khoản không tồn tại.' 
+                message: 'Tài khoản không tồn tại hoặc chưa được duyệt.'
             });
         }
         
-        if (!student.is_approved) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Tài khoản của bạn đang chờ được giáo viên phê duyệt.' 
+        // Verify password
+        const passwordMatches = await bcrypt.compare(password, student.password_hash);
+        if (!passwordMatches) {
+            return res.status(401).json({
+                success: false,
+                message: 'Sai mật khẩu. Vui lòng thử lại.'
             });
         }
         
-        // Verify password using the correct hash field
-        const passwordMatch = await bcrypt.compare(password, student.password_hash);
-        if (!passwordMatch) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Mật khẩu không chính xác.' 
-            });
-        }
-        
-        // Check device fingerprint if already set
-        if (student.approved_device_fingerprint && 
-            student.approved_device_fingerprint !== device_fingerprint) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Bạn chỉ có thể đăng nhập từ thiết bị đã đăng ký trước đó.' 
-            });
-        }
-        
-        // If first login, store the device fingerprint
-        if (device_fingerprint && !student.approved_device_fingerprint) {
-            const { error: updateError } = await supabase
-                .from('students')
-                .update({ approved_device_fingerprint: device_fingerprint })
-                .eq('id', student.id);
-                
-            if (updateError) {
-                console.error('Error updating device fingerprint:', updateError);
-                // Continue anyway - this is not fatal
-            }
-        }
-        
-        // Set session
+        // Set student info in session
         req.session.studentId = student.id;
         req.session.studentName = student.full_name;
         
+        // Clear any previous auth cache for this session if login successful
+        if (req.session && req.session.id && req.session.studentId) {
+            await deleteKey(`auth:${req.session.id}`);
+        }
+        
         res.json({ 
             success: true, 
-            message: 'Đăng nhập thành công!',
-            student: { 
-                id: student.id, 
-                name: student.full_name 
+            message: 'Đăng nhập thành công',
+            student: {
+                id: student.id,
+                name: student.full_name
             }
         });
     } catch (error) {
@@ -510,17 +489,26 @@ app.post('/api/student/login', async (req, res) => {
 });
 
 // Student logout endpoint
-app.post('/api/student/logout', (req, res) => {
-    try {
-        // Clear student session
-        delete req.session.studentId;
-        delete req.session.studentName;
-        
-        res.json({ success: true, message: 'Đăng xuất thành công' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+app.post('/api/student/logout', async (req, res) => {
+    // Get the session ID before destroying the session
+    const sessionId = req.session.id;
+    
+    // Clear the auth cache for this session
+    if (sessionId) {
+        await deleteKey(`auth:${sessionId}`);
     }
+    
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).json({ success: false, message: 'Logout failed' });
+        }
+        
+        // Clear session cookie
+        res.clearCookie('connect.sid');
+        res.json({ success: true, message: 'Logged out successfully' });
+    });
 });
 
 // Admin logout endpoint
@@ -767,6 +755,10 @@ app.post('/api/lessons', requireAuth, async (req, res) => {
             .single();
 
         if (error) throw error;
+        
+        // Invalidate lessons cache after creating a new lesson
+        await clearCache('/api/lessons');
+        
         res.json({ success: true, lesson: data });
     } catch (error) {
         console.error('Error creating lesson:', error);
@@ -783,6 +775,13 @@ app.delete('/api/lessons/:id', requireAuth, async (req, res) => {
             .eq('id', lessonId);
 
         if (error) throw error;
+        
+        // Invalidate both the lessons list and the specific lesson cache
+        await Promise.all([
+            clearCache('/api/lessons'),
+            clearCache(`/api/lessons/${lessonId}`)
+        ]);
+        
         res.json({ success: true });
     } catch (error) {
         console.error(`Error deleting lesson ${lessonId}:`, error);
@@ -829,6 +828,13 @@ app.put('/api/lessons/:id', requireAuth, async (req, res) => {
             }
             throw error;
         }
+        
+        // Invalidate both the lessons list and the specific lesson cache
+        await Promise.all([
+            clearCache('/api/lessons'),
+            clearCache(`/api/lessons/${lessonId}`)
+        ]);
+        
         res.json({ success: true, lesson: data });
     } catch (error) {
         console.error(`Error updating lesson ${lessonId}:`, error);
@@ -855,6 +861,9 @@ app.post('/api/lessons/reorder', requireAuth, async (req, res) => {
             throw new Error('One or more lessons failed to update order.');
         }
 
+        // Invalidate lessons list cache after reordering
+        await clearCache('/api/lessons');
+        
         res.json({ success: true });
     } catch (error) {
         console.error('Error reordering lessons:', error);
@@ -1127,17 +1136,49 @@ app.post('/api/student-info', (req, res) => {
     res.json({ success: true });
 });
 
-app.get('/api/check-student-auth', (req, res) => {
-    if (req.session.studentId) {
-        res.json({ 
-            isAuthenticated: true, 
-            student: { 
+app.get('/api/check-student-auth', async (req, res) => {
+    // If there's no session, respond immediately with not authenticated
+    if (!req.session || !req.session.id) {
+        return res.json({ isAuthenticated: false });
+    }
+    
+    try {
+        // Generate a cache key based on the session ID
+        const cacheKey = `auth:${req.session.id}`;
+        
+        // Try to get cached authentication result from Redis
+        const cachedAuth = await getJson(cacheKey);
+        
+        // If we have a valid cached result, use it
+        if (cachedAuth !== null) {
+            console.log('Using cached authentication result');
+            // Add a header to indicate this was served from cache
+            res.setHeader('X-Auth-Cache', 'HIT');
+            return res.json(cachedAuth);
+        }
+        
+        // No cache hit, use the session data
+        const authResult = {
+            isAuthenticated: !!req.session.studentId,
+            student: req.session.studentId ? { 
                 id: req.session.studentId, 
                 name: req.session.studentName 
-            } 
-        });
-    } else {
-        res.json({ isAuthenticated: false });
+            } : null
+        };
+        
+        // Cache the result for 5 minutes (adjust as needed)
+        // Only cache if the user is authenticated to avoid caching unauthenticated states
+        if (authResult.isAuthenticated) {
+            await setJson(cacheKey, authResult, 300);
+        }
+        
+        // Add a header to indicate this was not served from cache
+        res.setHeader('X-Auth-Cache', 'MISS');
+        
+        return res.json(authResult);
+    } catch (error) {
+        console.error('Error in auth check:', error);
+        return res.json({ isAuthenticated: false, error: 'Auth check failed' });
     }
 });
 
@@ -1935,7 +1976,19 @@ app.get('/share/lesson/:lessonId', async (req, res) => {
 
 // --- Rating System Endpoints ---
 app.get('/api/ratings', async (req, res) => {
+    const cacheKey = 'leaderboard:top100'; // Define a cache key
+    
     try {
+        // Try to get data from Redis cache first
+        const cachedRatings = await getJson(cacheKey);
+        if (cachedRatings !== null) {
+            console.log('Serving ratings from Redis cache');
+            res.setHeader('X-Cache', 'HIT');
+            return res.json(cachedRatings);
+        }
+        
+        // If not in cache, fetch from Supabase
+        console.log('Fetching ratings from Supabase');
         const { data: ratings, error } = await supabase
             .from('ratings')
             .select(`
@@ -1947,7 +2000,6 @@ app.get('/api/ratings', async (req, res) => {
 
         if (error) {
             console.error('Supabase error fetching ratings:', error);
-            // Return a specific error instead of throwing
             return res.status(500).json({ 
                 error: 'Failed to fetch ratings from database', 
                 details: error.message 
@@ -1956,7 +2008,11 @@ app.get('/api/ratings', async (req, res) => {
 
         // Ensure ratings is always an array
         const ratingsData = Array.isArray(ratings) ? ratings : [];
-
+        
+        // Store the result in Redis cache for 5 minutes (300 seconds)
+        await setJson(cacheKey, ratingsData, 300);
+        
+        res.setHeader('X-Cache', 'MISS');
         res.json(ratingsData); // Send array (could be empty)
 
     } catch (error) { // Catch other unexpected errors
@@ -2073,6 +2129,16 @@ async function updateStudentRating(studentId, lessonId, score, totalPoints, time
             });
 
         if (historyError) throw historyError;
+        
+        // --- ADDED: Invalidate leaderboard cache ---
+        try {
+            await deleteKey('leaderboard:top100');
+            console.log('Invalidated leaderboard cache due to rating update.');
+        } catch (cacheError) {
+            console.error('Error invalidating leaderboard cache:', cacheError);
+            // Don't let cache invalidation failure break the main operation
+        }
+        // --- END Invalidation ---
 
         return { newRating, ratingChange };
     } catch (error) {
@@ -2211,6 +2277,47 @@ app.get('/api/profile/:studentId', async (req, res) => {
     } catch (error) {
         console.error(`Error fetching profile data for student ${requestedStudentId}:`, error);
         res.status(500).json({ error: 'Failed to fetch profile data', details: error.message });
+    }
+});
+
+// Sample API endpoint demonstrating direct Redis caching
+app.get('/api/cached-data', async (req, res) => {
+    try {
+        const cacheKey = 'cached:sample-data';
+        
+        // Try to get data from Redis cache first
+        const cachedData = await getJson(cacheKey);
+        
+        if (cachedData) {
+            // Return cached data with cache hit indicator
+            return res.json({
+                data: cachedData,
+                source: 'cache'
+            });
+        }
+        
+        // If not in cache, fetch fresh data
+        // This is where you'd typically query a database or external API
+        const freshData = {
+            items: [
+                { id: 1, name: 'Item 1' },
+                { id: 2, name: 'Item 2' },
+                { id: 3, name: 'Item 3' }
+            ],
+            timestamp: new Date().toISOString()
+        };
+        
+        // Store in Redis cache with 5-minute expiry
+        await setJson(cacheKey, freshData, 300);
+        
+        // Return fresh data
+        return res.json({
+            data: freshData,
+            source: 'fresh'
+        });
+    } catch (error) {
+        console.error('Error fetching cached data:', error);
+        res.status(500).json({ error: 'Failed to fetch data' });
     }
 });
 

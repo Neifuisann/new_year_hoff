@@ -102,6 +102,23 @@
                 const result = await response.json();
 
                 if (result.success) {
+                    // Clear any existing auth cache
+                    localStorage.removeItem('studentAuthCache');
+                    localStorage.removeItem('studentAuthCacheTime');
+                    
+                    // Create fresh auth cache with login result
+                    const authCache = {
+                        isAuthenticated: true,
+                        student: result.student || { 
+                            id: result.id, 
+                            name: result.name 
+                        }
+                    };
+                    
+                    // Store in localStorage
+                    localStorage.setItem('studentAuthCache', JSON.stringify(authCache));
+                    localStorage.setItem('studentAuthCacheTime', Date.now().toString());
+                    
                     // Check for redirect query parameter
                     const urlParams = new URLSearchParams(window.location.search);
                     const redirectUrl = urlParams.get('redirect');

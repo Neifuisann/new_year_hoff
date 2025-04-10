@@ -230,39 +230,80 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadImages();
 });
 
-// --- NEW: Check student authentication ---
+// --- UPDATED: Check student authentication with local storage caching ---
 async function checkStudentAuthentication() {
     try {
+        // Check local storage for cached auth data first
+        const cachedAuth = localStorage.getItem('studentAuthCache');
+        const cacheTimestamp = localStorage.getItem('studentAuthCacheTime');
+        
+        // Cache is valid for 5 minutes (300000ms)
+        const CACHE_VALIDITY = 300000; 
+        const now = Date.now();
+        
+        // Check if we have a valid cache
+        if (cachedAuth && cacheTimestamp && (now - parseInt(cacheTimestamp) < CACHE_VALIDITY)) {
+            // Use cached auth data
+            console.log('Using cached auth data from localStorage');
+            const authData = JSON.parse(cachedAuth);
+            
+            if (authData.isAuthenticated && authData.student) {
+                return true; // Authenticated from cache
+            } else {
+                // Cached data says not authenticated, redirect to login
+                redirectToLogin();
+                return false;
+            }
+        }
+        
+        // No valid cache, fetch from server
         const response = await fetch('/api/check-student-auth');
         if (!response.ok) {
-            // If API fails, assume not logged in for safety
             throw new Error('Auth check failed');
         }
+        
         const authData = await response.json();
-
+        
+        // Cache the auth result and timestamp
+        localStorage.setItem('studentAuthCache', JSON.stringify(authData));
+        localStorage.setItem('studentAuthCacheTime', now.toString());
+        
         if (authData.isAuthenticated && authData.student) {
             console.log('Student authenticated:', authData.student.name);
             return true; // Authenticated
         } else {
             // Not authenticated, redirect to login
-            console.log('Student not authenticated, redirecting...');
-            const currentUrl = window.location.pathname + window.location.search;
-            window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
-            return false; // Not authenticated
+            redirectToLogin();
+            return false;
         }
     } catch (error) {
         console.error('Error checking student authentication:', error);
+        // Clear cache on error
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
         // Redirect to login on error
-        window.location.href = '/student/login'; 
-        return false; // Treat error as not authenticated
+        redirectToLogin();
+        return false;
     }
 }
 
-// --- NEW: Handle logout ---
+// Helper function to redirect to login
+function redirectToLogin() {
+    console.log('Student not authenticated, redirecting...');
+    const currentUrl = window.location.pathname + window.location.search;
+    window.location.href = '/student/login?redirect=' + encodeURIComponent(currentUrl);
+}
+
+// --- UPDATED: Handle logout with cache clearing ---
 async function handleLogout() {
     try {
+        // Clear auth cache immediately for better UX
+        localStorage.removeItem('studentAuthCache');
+        localStorage.removeItem('studentAuthCacheTime');
+        
         const response = await fetch('/api/student/logout', { method: 'POST' });
         const result = await response.json();
+        
         if (result.success) {
             console.log('Logout successful');
             window.location.href = '/student/login'; // Redirect to login page after logout
