@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let debounceTimeout;
     searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(filterAndRenderLessons, 300);
+        debounceTimeout = setTimeout(filterAndRenderLessons, 2000);
     });
     
     // Add event listener for sort select

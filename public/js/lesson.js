@@ -167,7 +167,7 @@ async function renderQuestions(lesson) {
                 case 'abcd':
                     // Create shuffled options with their original indices
                     const optionsWithIndices = q.options.map((option, idx) => ({
-                        text: option.text || option, // Handle both object and string format
+                        text: typeof option === 'string' ? option : (option.text || ''), // Handle both object and string format
                         originalIndex: idx,
                         letter: String.fromCharCode(65 + idx) // A, B, C, D
                     }));
@@ -196,34 +196,34 @@ async function renderQuestions(lesson) {
                     `).join('');
                     break;
 
-                    case 'truefalse':
-                        if (Array.isArray(q.options)) {
-                            // Multiple true/false options
-                            questionHtml += `<div class="truefalse-options">`;
-                            q.options.forEach((option, idx) => {
-                                const optionText = option.text || option; // Handle both formats
-                                questionHtml += `
-                                    <div class="truefalse-option-box">
-                                        <div class="option-text">${String.fromCharCode(65 + idx)}) ${optionText}</div>
-                                        <div class="truefalse-buttons">
-                                            <label class="option-button">
-                                                <input type="radio" 
-                                                       name="q${questionIndex}_${idx}" 
-                                                       value="true">
-                                                <span>Đúng</span>
-                                            </label>
-                                            <label class="option-button">
-                                                <input type="radio" 
-                                                       name="q${questionIndex}_${idx}" 
-                                                       value="false">
-                                                <span>Sai</span>
-                                            </label>
-                                        </div>
+                case 'truefalse':
+                    if (Array.isArray(q.options)) {
+                        // Multiple true/false options
+                        questionHtml += `<div class="truefalse-options">`;
+                        q.options.forEach((option, idx) => {
+                            const optionText = typeof option === 'string' ? option : (option.text || ''); // Handle both formats
+                            questionHtml += `
+                                <div class="truefalse-option-box">
+                                    <div class="option-text">${String.fromCharCode(65 + idx)}) ${optionText}</div>
+                                    <div class="truefalse-buttons">
+                                        <label class="option-button">
+                                            <input type="radio" 
+                                                   name="q${questionIndex}_${idx}" 
+                                                   value="true">
+                                            <span>Đúng</span>
+                                        </label>
+                                        <label class="option-button">
+                                            <input type="radio" 
+                                                   name="q${questionIndex}_${idx}" 
+                                                   value="false">
+                                            <span>Sai</span>
+                                        </label>
                                     </div>
-                                `;
-                            });
-                            questionHtml += `</div>`;
-                        } else {
+                                </div>
+                            `;
+                        });
+                        questionHtml += `</div>`;
+                    } else {
                         // Single true/false question
                         questionHtml += `
                             <div class="form-group">

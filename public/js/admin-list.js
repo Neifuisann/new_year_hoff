@@ -4,6 +4,10 @@ let currentPage = 1;
 const lessonsPerPage = 15; // More per page for admin?
 let totalLessons = 0;
 let isLoading = false;
+let allTags = []; // To store tags fetched from API
+let currentSearch = ''; // For search functionality
+let currentSort = 'az'; // Default sort is A-Z
+let maxTitleWidth = 300; // Adjustable max width for lesson titles in pixels
 
 // Function to show/hide loader
 function showLoader(show) {
@@ -11,6 +15,47 @@ function showLoader(show) {
     if (loader) {
         loader.classList.toggle('hidden', !show);
     }
+}
+
+// Fetch all unique tags
+async function loadTags() {
+    try {
+        const response = await fetch('/api/tags');
+        if (!response.ok) throw new Error('Failed to fetch tags');
+        allTags = await response.json();
+        renderTagsList(); // Render tags once fetched
+    } catch (error) {
+        console.error('Error loading tags:', error);
+    }
+}
+
+// Render tags list 
+function renderTagsList() {
+    const tagsContainer = document.querySelector('.tags-container');
+    if (!tagsContainer) return;
+    
+    tagsContainer.innerHTML = ''; // Clear previous tags
+    
+    // Add heading
+    const heading = document.createElement('h3');
+    heading.textContent = 'Tags phổ biến';
+    tagsContainer.appendChild(heading);
+    
+    const tagsList = document.createElement('div');
+    tagsList.className = 'tags-list';
+    
+    allTags.forEach(tag => {
+        const tagButton = document.createElement('button');
+        tagButton.className = 'tag-filter';
+        tagButton.textContent = tag;
+        tagButton.onclick = () => {
+            document.getElementById('search-input').value = tag; 
+            filterAndRenderLessons(); // Trigger search with this tag
+        };
+        tagsList.appendChild(tagButton);
+    });
+    
+    tagsContainer.appendChild(tagsList);
 }
 
 // Helper function to copy text to clipboard
@@ -30,17 +75,29 @@ function copyShareLink(lessonId) {
     copyToClipboard(shareUrl);
 }
 
+// Filter and render lessons based on search and sort
+function filterAndRenderLessons() {
+    currentSearch = document.getElementById('search-input')?.value.toLowerCase() || '';
+    currentSort = document.getElementById('sort-select')?.value || 'az';
+    currentPage = 1; // Reset to first page for new search/sort
+    loadLessonsForAdmin(); // Fetch data from backend with new filters
+}
+
 async function loadLessonsForAdmin() {
     if (isLoading) return;
     isLoading = true;
     showLoader(true);
     try {
-        // Add pagination parameters (add sort/search later if needed)
+        // Add pagination parameters and search/sort parameters
         const params = new URLSearchParams({
             page: currentPage,
-            limit: lessonsPerPage
-            // sort: currentSort // If sorting is added
+            limit: lessonsPerPage,
+            sort: currentSort
         });
+        
+        if (currentSearch) {
+            params.append('search', currentSearch);
+        }
         
         const response = await fetch(`/api/lessons?${params.toString()}`);
         if (!response.ok) {
@@ -66,42 +123,36 @@ async function loadLessonsForAdmin() {
             sortableContainer.innerHTML = ''; 
         }
         
-        displayedLessons.forEach((lesson, index) => {
-            const div = document.createElement('div');
-            div.className = 'lesson-item';
-            div.draggable = true;
-            div.dataset.id = lesson.id;
-            // Use a unique identifier for drag-drop if IDs aren't stable across pages
-            // Or consider disabling drag-drop if pagination is active
-            div.dataset.index = index; // Index within the *current* page
-            
-            // Keep the existing innerHTML structure
-            div.innerHTML = `
-                <span class="drag-handle">☰</span>
-                <span class="lesson-title">${lesson.title}</span>
-                <div class="lesson-info">
-                    
-                </div>
-                <div class="lesson-actions">
-                    <input type="color" 
-                           value="${lesson.color || '#a4aeff'}" 
-                           onchange="updateLessonColor(${lesson.id}, this.value)"
-                           style="margin-right: 10px; vertical-align: middle;">
-                    <a href="/admin/edit/${lesson.id}" class="button" >Chỉnh sửa</a>
-                    <a href="/admin/statistics/${lesson.id}" class="button">Xem danh sách</a>
-                    <button onclick="copyShareLink(${lesson.id})" class="button share-button" title="Copy Share Link">Chia sẻ</button>
-                    <button onclick="deleteLesson(${lesson.id})" class="delete-button">Xoá</button>
-                </div>
-            `;
-            
-            // Add event listeners (drag/drop might be unreliable with pagination)
-            div.addEventListener('dragstart', handleDragStart);
-            div.addEventListener('dragover', handleDragOver);
-            div.addEventListener('drop', handleDrop);
-            div.addEventListener('dragend', handleDragEnd);
-            
-            sortableContainer.appendChild(div);
-        });
+        if (displayedLessons.length === 0) {
+            sortableContainer.innerHTML = '<p>Không tìm thấy bài học nào phù hợp.</p>';
+        } else {
+            displayedLessons.forEach((lesson, index) => {
+                const div = document.createElement('div');
+                div.className = 'lesson-item';
+                div.dataset.id = lesson.id;
+                
+                // Keep the existing innerHTML structure but remove drag handle
+                div.innerHTML = `
+                    <span class="lesson-title" style="max-width: ${maxTitleWidth}px; text-overflow: ellipsis; white-space: nowrap;">${lesson.title}</span>
+                    <div class="lesson-actions">
+                        ${lesson.tags && lesson.tags.length > 0 ? 
+                            `<div class="lesson-tags">
+                                ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>` : ''}
+                        <input type="color" 
+                               value="${lesson.color || '#a4aeff'}" 
+                               onchange="updateLessonColor(${lesson.id}, this.value)"
+                               style="margin-right: 10px; vertical-align: middle;">
+                        <a href="/admin/edit/${lesson.id}" class="button" >Chỉnh sửa</a>
+                        <a href="/admin/statistics/${lesson.id}" class="button">Xem danh sách</a>
+                        <button onclick="copyShareLink(${lesson.id})" class="button share-button" title="Copy Share Link">Chia sẻ</button>
+                        <button onclick="deleteLesson(${lesson.id})" class="delete-button">Xoá</button>
+                    </div>
+                `;
+                
+                sortableContainer.appendChild(div);
+            });
+        }
         
         // Add or update pagination controls
         updateAdminPaginationControls();
@@ -118,108 +169,33 @@ async function loadLessonsForAdmin() {
     }
 }
 
+// Remove drag and drop related functions (but we'll keep the function names without implementation)
+// This helps maintain compatibility with any code that might call these functions
+
 function handleDragStart(e) {
-    e.target.classList.add('dragging');
-    e.dataTransfer.setData('text/plain', e.target.dataset.index);
-    
-    // Minimize content during drag
-    const content = e.target.querySelector('.lesson-info, .lesson-actions');
-    if (content) content.style.display = 'none';
-    
-    // Create boundary for the dragged element
-    dragBoundary = createDragBoundary(e.target);
-    
-    // Start auto-scroll
-    const container = document.getElementById('sortable-lessons');
-    autoScroll.start(container);
+    // Function removed - no drag and drop
 }
 
 function handleDragOver(e) {
-    e.preventDefault();
-    const container = document.getElementById('sortable-lessons');
-    autoScroll.update(e, container);
-    
-    const draggingElement = document.querySelector('.dragging');
-    if (dragBoundary) {
-        // Update boundary position to follow the cursor
-        const rect = draggingElement.getBoundingClientRect();
-        dragBoundary.style.top = `${rect.top}px`;
-        dragBoundary.style.left = `${rect.left}px`;
-    }
-    
-    const afterElement = getDragAfterElement(container, e.clientY);
-    if (afterElement) {
-        container.insertBefore(draggingElement, afterElement);
-    } else {
-        container.appendChild(draggingElement);
-    }
+    // Function removed - no drag and drop
 }
 
 function handleDrop(e) {
-    e.preventDefault();
-    saveNewOrder();
+    // Function removed - no drag and drop
 }
 
 function handleDragEnd(e) {
-    e.target.classList.remove('dragging');
-    
-    // Restore minimized content
-    const content = e.target.querySelector('.lesson-info, .lesson-actions');
-    if (content) content.style.display = 'block';
-    
-    if (dragBoundary) {
-        dragBoundary.remove();
-        dragBoundary = null;
-    }
-    autoScroll.stop();
+    // Function removed - no drag and drop
 }
 
 function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.lesson-item:not(.dragging)')];
-    
-    return draggableElements.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        
-        if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
-        }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
+    // Function removed - no drag and drop
+    return null;
 }
 
 async function saveNewOrder() {
-    // !! WARNING: This function is problematic with pagination !!
-    // It currently assumes all items are present in the DOM.
-    // It will only save the order of the items on the CURRENT page.
-    // Consider disabling reordering or implementing a different reordering strategy.
-    console.warn("saveNewOrder will only reorder items on the current page due to pagination.");
-
-    const itemsOnPage = Array.from(document.querySelectorAll('#sortable-lessons .lesson-item'));
-    const newOrderIds = itemsOnPage.map(item => item.dataset.id);
-    
-    // Option 1: Send only the IDs of the current page for partial reordering (backend needs adjustment)
-    // Option 2: Fetch ALL lesson IDs from backend first, merge the current page order, then send full list (complex)
-    // Option 3: Disable reordering when paginated.
-    
-    // For now, let's log what would be sent (likely incorrect for full reordering)
-    console.log("Attempting to save order for current page:", newOrderIds);
-
-    // If you proceed with sending just the page order, the backend /api/lessons/reorder
-    // needs to be significantly smarter to handle partial updates.
-    /* 
-    try {
-        const response = await fetch('/api/lessons/reorder', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderedIds: newOrderIds, page: currentPage, limit: lessonsPerPage }) // Example payload
-        });
-        if (!response.ok) throw new Error('Failed to save new order');
-        // Maybe just reload current page after partial save?
-        // loadLessonsForAdmin(); 
-    } catch (error) { ... } 
-    */
+    // Function removed - no drag and drop
+    console.log("Drag and drop reordering has been disabled");
 }
 
 async function deleteLesson(id) {
@@ -304,10 +280,22 @@ function updateAdminPaginationControls() {
     };
     paginationContainer.appendChild(prevButton);
 
-    const pageInfo = document.createElement('span');
-    pageInfo.textContent = ` Page ${currentPage} of ${totalPages} `;
-    pageInfo.style.margin = '0 10px'; 
-    paginationContainer.appendChild(pageInfo);
+    // Add page numbers
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, startPage + 4);
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.className = i === currentPage ? 'active-page' : '';
+        pageButton.onclick = () => {
+            if (i !== currentPage) {
+                currentPage = i;
+                loadLessonsForAdmin();
+            }
+        };
+        paginationContainer.appendChild(pageButton);
+    }
 
     const nextButton = document.createElement('button');
     nextButton.textContent = 'Tiếp';
@@ -326,20 +314,76 @@ function ensureAdminPaginationContainer() {
     if (!container) {
         container = document.createElement('div');
         container.id = 'admin-pagination-controls';
-        container.style.textAlign = 'center';
-        container.style.marginTop = '20px';
+        container.className = 'pagination-controls';
+        container.style.textAlign = 'center'; // Center the pagination controls
+        container.style.margin = '20px 0'; // Add some margin for spacing
         // Insert after the lesson-list div
         const lessonListDiv = document.getElementById('lesson-list');
         lessonListDiv?.parentNode?.insertBefore(container, lessonListDiv.nextSibling);
     }
 }
-// --- END PAGINATION FUNCTIONS ---
+
+// Create search and sort elements
+function createSearchAndSortElements() {
+    const lessonListDiv = document.getElementById('lesson-list');
+    if (!lessonListDiv) return;
+    
+    // Check if search container already exists
+    if (document.querySelector('.admin-search-sort-container')) return;
+    
+    // Create container
+    const searchSortContainer = document.createElement('div');
+    searchSortContainer.className = 'admin-search-sort-container';
+    
+    // Create search box
+    const searchBox = document.createElement('div');
+    searchBox.className = 'search-box';
+    searchBox.innerHTML = `
+        <input type="text" id="search-input" placeholder="Tìm kiếm bài học hoặc tag...">
+        <div class="tags-container"></div>
+    `;
+    
+    // Create sort box
+    const sortBox = document.createElement('div');
+    sortBox.className = 'sort-box';
+    sortBox.innerHTML = `
+        <select id="sort-select">
+            <option value="az">Tên A-Z</option>
+            <option value="za">Tên Z-A</option>
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+            <option value="popular">Phổ biến</option>
+        </select>
+    `;
+    
+    // Add to container
+    searchSortContainer.appendChild(searchBox);
+    searchSortContainer.appendChild(sortBox);
+    
+    // Insert before lesson list
+    lessonListDiv.parentNode.insertBefore(searchSortContainer, lessonListDiv);
+    
+    // Add event listeners
+    const searchInput = document.getElementById('search-input');
+    let debounceTimeout;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(filterAndRenderLessons, 2000);
+    });
+    
+    document.getElementById('sort-select').addEventListener('change', filterAndRenderLessons);
+}
 
 // Initialize the admin panel when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    createSearchAndSortElements(); // Add search and sort elements
     ensureAdminPaginationContainer(); // Add pagination controls container
     showLoader(true); // Show loader immediately
-    loadLessonsForAdmin(); // This will handle hiding the loader
+    
+    // Load tags and then lessons
+    loadTags().then(() => {
+        loadLessonsForAdmin(); // This will handle hiding the loader
+    });
 
     // Initialize event listener for the review lesson form
     const form = document.getElementById('review-lesson-form');

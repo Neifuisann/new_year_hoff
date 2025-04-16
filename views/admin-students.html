@@ -352,7 +352,12 @@
         const searchInput = document.getElementById('student-filter-input');
         const clearButton = document.getElementById('clear-filter-btn');
         
-        searchInput.addEventListener('input', filterStudents);
+        // Add debounce to search input
+        let debounceTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(filterStudents, 2000); // 2 second debounce
+        });
         
         clearButton.addEventListener('click', () => {
             searchInput.value = '';

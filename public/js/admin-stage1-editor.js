@@ -97,9 +97,10 @@ function generateInitialText(questions) {
         if (q.type === 'abcd') {
             (q.options || []).forEach((opt, optIndex) => {
                 const letter = String.fromCharCode(65 + optIndex);
+                const optText = typeof opt === 'string' ? opt : (opt.text || '');
                 const isCorrect = String(q.correct || '').toLowerCase() === letter.toLowerCase();
                 const prefix = isCorrect ? '*' : '';
-                text += `${prefix}${letter}. ${opt.text || ''}\n`;
+                text += `${prefix}${letter}. ${optText}\n`;
             });
         } else if (q.type === 'number') {
             text += `Answer: ${q.correct || ''}\n`;
@@ -107,15 +108,17 @@ function generateInitialText(questions) {
             if (Array.isArray(q.correct)) {
                 (q.options || []).forEach((opt, optIndex) => {
                     const letter = String.fromCharCode(97 + optIndex);
+                    const optText = typeof opt === 'string' ? opt : (opt.text || '');
                     const isCorrect = q.correct[optIndex] === true;
                     const prefix = isCorrect ? '*' : '';
-                    text += `${prefix}${letter}) ${opt.text || ''}\n`;
+                    text += `${prefix}${letter}) ${optText}\n`;
                 });
             } else {
                  console.warn(`Question ${index+1} is true/false but 'correct' is not an array. Outputting basic options.`);
                  (q.options || []).forEach((opt, optIndex) => {
                     const letter = String.fromCharCode(97 + optIndex);
-                    text += `${letter}) ${opt.text || ''}\n`;
+                    const optText = typeof opt === 'string' ? opt : (opt.text || '');
+                    text += `${letter}) ${optText}\n`;
                  });
             }
         }
@@ -356,7 +359,15 @@ function parseQuizText(text) {
 
     questions.forEach((q, index) => {
         q.id = `q_${index + 1}`;
-        q.options = q.options.map(opt => (typeof opt === 'string' ? { text: opt, line: -1 } : opt));
+        q.options = q.options.map(opt => {
+            if (typeof opt === 'string') {
+                return { text: opt, line: -1 };
+            } else if (typeof opt === 'object' && opt !== null) {
+                return { text: opt.text || '', line: opt.line || -1 };
+            } else {
+                return { text: '', line: -1 };
+            }
+        });
         
         if (q.type === null && q.options.length === 0 && q.correct === null) {
              console.warn(`Question ${index + 1} could not be parsed (no type, options, or answer detected). Marking as invalid.`);
@@ -432,7 +443,8 @@ function updatePreview(parsedQuestions) {
             q.options.forEach((opt, optIndex) => {
                 const letter = String.fromCharCode(65 + optIndex);
                 const isCorrect = String(q.correct).toUpperCase() === letter.toUpperCase();
-                const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
+                const optionText = opt.text || '';
+                const optionTextHtml = optionText.replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
 
                 contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markAnswerCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to mark as correct">\n                                    <span class="option-letter">${letter}.</span> \n                                    <span class="option-text">${optionTextHtml}</span>\n                                </li>`;
             });
@@ -445,7 +457,8 @@ function updatePreview(parsedQuestions) {
                  q.options.forEach((opt, optIndex) => {
                      const letter = String.fromCharCode(97 + optIndex);
                      const isCorrect = q.correct[optIndex] === true;
-                     const optionTextHtml = (opt.text || '').replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
+                     const optionText = opt.text || '';
+                     const optionTextHtml = optionText.replace(/\[img\s+src="([^\"]*)"\]/gi, '<img src="$1" alt="Option Image" class="preview-image">').replace(/\n/g, '<br>');
 
                      contentHTML += `<li class="${isCorrect ? 'correct' : ''}" onclick="event.stopPropagation(); markTrueFalseCorrect(${questionIndex}, ${optIndex});" style="cursor: pointer;" title="Click to toggle correctness">\n                                        <span class="option-letter">${letter})</span> \n                                        <span class="option-text">${optionTextHtml}</span>\n                                     </li>`;
                  });
