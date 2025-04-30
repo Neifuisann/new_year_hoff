@@ -411,135 +411,61 @@
             box-shadow: 0 0 10px currentColor;
         }
 
-/* --- Options List Styling --- */
-.options-list {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0 10px 0; /* Adjust margin as needed */
-}
+        /* Styles for Multiple Choice Options */
+        .multiple-choice-options {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.option-item {
-    padding: 8px 12px;
-    margin-bottom: 6px;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
-    position: relative; /* For icon positioning */
-    display: flex;
-    align-items: center;
-    transition: background-color 0.2s, border-color 0.2s;
-}
+        .option-item {
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background-color: #ffffff; /* Default white background */
+            color: #333; /* Default text color */
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.option-letter {
-    font-weight: bold;
-    margin-right: 8px;
-    min-width: 20px; /* Ensure alignment */
-}
+        .mc-icon {
+            font-size: 1.1em;
+            min-width: 18px; /* Ensure space for icon */
+            text-align: center;
+        }
 
-.option-text {
-    flex-grow: 1;
-    margin-right: 25px; /* Space for icons */
-}
+        /* Style for the CORRECT option */
+        .option-item.correct-option {
+            background-color: #e8f5e9; /* Light green background */
+            border-color: #4CAF50;   /* Green border */
+            color: #1b5e20;         /* Darker green text */
+            font-weight: bold;
+        }
+        .option-item.correct-option .mc-icon {
+            color: #4CAF50; /* Green check */
+        }
 
-.option-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.1em;
-}
+        /* Style for the USER'S INCORRECT selection */
+        .option-item.incorrect-selected {
+            background-color: #ffebee; /* Light red background */
+            border-color: #f44336;   /* Red border */
+            color: #c62828;         /* Darker red text */
+        }
+        .option-item.incorrect-selected .mc-icon {
+             color: #f44336; /* Red X */
+        }
 
-.option-item.correct-option {
-    background-color: #e6f7e7; /* Light green background */
-    border-color: #a5d6a7;
-    color: #1b5e20; /* Darker green text */
-}
+        /* Style for when the user selected the correct answer */
+        /* Optional: Add a subtle indicator if needed, but green background might be enough */
+        .option-item.user-selected.correct-option {
+             /* box-shadow: inset 0 0 0 2px #4CAF50; */ /* Example: subtle green inset */
+        }
 
-.option-item.correct-option .option-letter {
-    color: #2e7d32; /* Slightly darker green for letter */
-}
-
-.option-item .correct-icon {
-    color: #4CAF50; /* Green check */
-}
-
-.option-item.user-selected {
-    /* Optional: Add a subtle border or background to any selected item */
-    /* border: 1px solid #a0a0a0; */
-}
-
-.option-item.incorrect-selection {
-    background-color: #ffebee; /* Light red background */
-    border-color: #ef9a9a;
-    color: #b71c1c; /* Darker red text */
-}
-
-.option-item.incorrect-selection .option-letter {
-    color: #c62828; /* Slightly darker red for letter */
-}
-
-.option-item .incorrect-icon {
-    color: #f44336; /* Red cross */
-}
-
-/* Adjust multi-TF styling if needed to match */
-.multi-tf-item {
-    padding: 8px 12px;
-    margin-bottom: 6px;
-    border-radius: 6px;
-    border: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap; /* Allow wrapping */
-}
-
-.multi-tf-indicator {
-    margin-right: 10px;
-    font-size: 1.1em;
-}
-.multi-tf-indicator.correct { color: #4CAF50; }
-.multi-tf-indicator.incorrect { color: #f44336; }
-
-.multi-tf-option {
-    flex-grow: 1;
-    margin-right: 10px; /* Space before answers */
-}
-
-.multi-tf-answers {
-    font-size: 0.9em;
-    color: #555;
-    margin-top: 4px; /* Add space if wraps */
-    width: 100%; /* Take full width if wrapped */
-    padding-left: 25px; /* Indent answers */
-}
-/* --- End Options List Styling --- */
-
-/* --- Ensure text is selectable --- */
-.question-card, .options-list, .multi-tf-item {
-   user-select: text; /* Allow text selection */
-   -webkit-user-select: text;
-   -moz-user-select: text;
-   -ms-user-select: text;
-}
-
-/* Adjust explain button position if necessary */
-.question-top {
-   position: relative; /* Context for button */
-   padding-bottom: 40px; /* Space for button */
-}
-.explain-btn {
-   position: absolute;
-   bottom: 5px;
-   right: 0;
-   /* Keep existing styles, maybe adjust margins if needed */
-   margin-top: 10px; /* Add some top margin */
-}
-
-/* Adjust content padding to prevent overlap */
-.question-content {
-    padding-bottom: 10px; /* Add padding if explain button overlaps */
-}
+        /* REMOVED the .user-selected generic style */
+        /* REMOVED the CSS rule hiding .answer-section */
     </style>
 </head>
 <body>

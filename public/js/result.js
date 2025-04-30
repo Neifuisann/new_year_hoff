@@ -644,27 +644,23 @@ function displaySortedResults(sortType) {
 
     // Helper function to format answers with line breaks
     const formatAnswer = (answer, type) => {
-        if (answer === null || answer === undefined) return 'Chưa trả lời'; // Handle null/undefined answers
-        if (typeof answer === 'object' && !Array.isArray(answer)) {
+        if (!answer) return 'No answer';
+        
+        if (typeof answer === 'object') {
             // If it's an object with text property, use that
             return answer.text || JSON.stringify(answer);
         }
-        if (Array.isArray(answer)) { // Handle arrays (e.g., multiselect, multi-TF)
-             return answer.map(a => a === true ? 'True' : a === false ? 'False' : (a === null || a === undefined ? 'N/A' : a)).join(', ');
+        
+        if (type === 'truefalse') {
+            return answer.split('\n').map(line => line.trim()).join('<br>');
         }
-        if (type === 'truefalse' && typeof answer === 'boolean') { // Handle single boolean true/false
-            return answer ? 'True' : 'False';
-        }
-        // Fallback for strings or numbers
-        return String(answer);
+        
+        return answer;
     };
 
     // Generate HTML for filtered questions
     const resultHTML = filteredQuestions.map((question, index) => {
-        // --- Get correct index for question number ---
-        const questionNumber = currentResult.questions.findIndex(q => q === question) + 1; // Use original index
-
-        // --- Image handling ---
+        // --- NEW: Use saved image URL ---
         let imageHtml = '';
         if (question.imageUrl) { // Check if imageUrl exists in the result data
             imageHtml = `
@@ -677,62 +673,22 @@ function displaySortedResults(sortType) {
                 </div>
             `;
         }
-        // --- End Image handling ---
+        // --- END NEW ---
 
-        // --- Check for multi-option true/false ---
-        const isMultiTrueFalse = question.type === 'truefalse' && Array.isArray(question.optionsText) && Array.isArray(question.correctAnswer); // Check correctAnswer as well
-
-        // --- Generate Options List HTML (for MC, MS, etc.) ---
-        let optionsListHTML = '';
-        if (['multiplechoice', 'multiselect'].includes(question.type) && Array.isArray(question.optionsText)) {
-            optionsListHTML = '<ul class="options-list">';
-            // Ensure correctAnswers and userAnswers are always arrays for consistent checking
-            const correctAnswers = Array.isArray(question.correctAnswer) ? question.correctAnswer.map(String) : [String(question.correctAnswer)];
-            const userAnswers = Array.isArray(question.userAnswer) ? question.userAnswer.map(String) : (question.userAnswer !== null && question.userAnswer !== undefined ? [String(question.userAnswer)] : []); // Handle unanswered
-
-            question.optionsText.forEach((optionText, i) => {
-                const optionLetter = String.fromCharCode(65 + i);
-                const optionValue = String(optionText); // Ensure comparison is string vs string
-                const isCorrectOption = correctAnswers.includes(optionValue);
-                const isUserSelected = userAnswers.includes(optionValue);
-                let className = 'option-item';
-
-                if (isCorrectOption) {
-                    className += ' correct-option';
-                }
-                if (isUserSelected) {
-                    className += ' user-selected';
-                    if (!isCorrectOption) {
-                        className += ' incorrect-selection';
-                    }
-                }
-
-                optionsListHTML += `
-                    <li class="${className}">
-                        <span class="option-letter">${optionLetter}.</span>
-                        <span class="option-text">${optionText}</span>
-                        ${isCorrectOption ? '<i class="fas fa-check option-icon correct-icon"></i>' : ''}
-                        ${isUserSelected && !isCorrectOption ? '<i class="fas fa-times option-icon incorrect-icon"></i>' : ''}
-                    </li>
-                `;
-            });
-            optionsListHTML += '</ul>';
-        }
-        // --- End Options List ---
-
+        const isMultiTrueFalse = question.type === 'truefalse' && Array.isArray(question.optionsText);
+        const isMultipleChoice = question.type === 'abcd' && Array.isArray(question.optionsText);
 
         let answerSectionHTML = '';
         if (isMultiTrueFalse) {
             // --- Render individual options for multi-TF ---
             answerSectionHTML = '<div class="answer-section multi-tf">';
             question.optionsText.forEach((optionText, i) => {
-                 // Ensure user answer array exists and has the element
-                const userAns = Array.isArray(question.userAnswer) && question.userAnswer.length > i ? question.userAnswer[i] : undefined;
-                const correctAns = question.correctAnswer[i]; // Already checked if array
+                const userAns = question.userAnswer[i];
+                const correctAns = question.correctAnswer[i];
                 const isSubCorrect = userAns === correctAns;
 
                 const userAnsText = userAns === true ? 'True' : (userAns === false ? 'False' : 'Chưa chọn');
-                const correctAnsText = correctAns === true ? 'True' : 'False';
+                const correctAnsText = correctAns === true ? 'Đúng' : 'Sai';
 
                 answerSectionHTML += `
                     <div class="multi-tf-item">
@@ -749,12 +705,43 @@ function displaySortedResults(sortType) {
             });
             answerSectionHTML += '</div>';
             // --- End multi-TF rendering ---
-        } else if (optionsListHTML) {
-             // --- For MC/MS, show the options list ---
-             answerSectionHTML = optionsListHTML;
-        }
-         else {
-            // --- Standard rendering for other question types (e.g., fill-in-the-blank, single true/false) ---
+        } else if (isMultipleChoice) {
+             // --- Render all options for multiple choice ---
+             answerSectionHTML = '<div class="answer-section multiple-choice-options">';
+             question.optionsText.forEach((optionText, i) => {
+                 const isCorrectOption = optionText === question.correctAnswer;
+                 const isUserSelected = optionText === question.userAnswer;
+                 let optionClass = 'option-item';
+                 let icon = '';
+
+                 if (isCorrectOption) {
+                     optionClass += ' correct-option';
+                     icon = '<i class="fas fa-check mc-icon"></i>';
+                 }
+                 if (isUserSelected) {
+                     optionClass += ' user-selected';
+                     if (!isCorrectOption) {
+                         optionClass += ' incorrect-selected';
+                         icon = '<i class="fas fa-times mc-icon"></i>';
+                     } else {
+                        // User selected the correct option, check icon is already added
+                     }
+                 } else if (!isCorrectOption) {
+                    // Regular incorrect option, no icon unless it's the correct one
+                 }
+
+
+                 answerSectionHTML += `
+                    <div class="${optionClass}">
+                        ${icon}
+                        <span class="option-text">${String.fromCharCode(65 + i)}) ${optionText}</span>
+                    </div>
+                 `;
+             });
+             answerSectionHTML += '</div>';
+             // --- End multiple choice rendering ---
+        } else {
+            // --- Standard rendering for other question types (e.g., fill-in-the-blank) ---
             answerSectionHTML = `
                 <div class="answer-section">
                     <div class="answer-box user-answer ${question.isCorrect ? 'correct' : 'incorrect'}">
@@ -777,15 +764,24 @@ function displaySortedResults(sortType) {
              // --- End standard rendering ---
         }
 
+        // Determine the overall result indicator icon
+        let resultIndicatorIcon = '';
+        if (!isMultipleChoice) { // Keep existing logic for non-MCQ
+             resultIndicatorIcon = isMultiTrueFalse ? '' : `<i class="fas fa-${question.isCorrect ? 'check' : 'times'}"></i>`;
+             resultIndicatorIcon += isMultiTrueFalse && question.isCorrect ? '<i class="fas fa-check"></i>' : '';
+             resultIndicatorIcon += isMultiTrueFalse && !question.isCorrect ? '<i class="fas fa-times"></i>' : '';
+        } else { // For MCQ, show check if correct, times if incorrect
+            resultIndicatorIcon = `<i class="fas fa-${question.isCorrect ? 'check' : 'times'}"></i>`;
+        }
+
+
         return `
             <div class="question-card ${question.isCorrect ? 'correct' : 'incorrect'}">
                 <div class="question-header">
                     <div class="question-info">
-                        <span class="question-number">Câu ${questionNumber}</span>
+                        <span class="question-number">Câu ${index + 1}</span>
                         <span class="result-indicator">
-                             ${isMultiTrueFalse ? '' : `<i class="fas fa-${question.isCorrect ? 'check' : 'times'}"></i>`}
-                             ${isMultiTrueFalse && question.isCorrect ? '<i class="fas fa-check"></i>' : ''}
-                             ${isMultiTrueFalse && !question.isCorrect ? '<i class="fas fa-times"></i>' : ''}
+                            ${resultIndicatorIcon}
                         </span>
                     </div>
                 </div>
@@ -794,19 +790,17 @@ function displaySortedResults(sortType) {
                     <div class="question-top">
                         <p class="question-text">${question.question}</p>
                         ${imageHtml}
-                         {/* Ensure data attributes are properly encoded and handle potential null/undefined */}
-                         <button class="explain-btn"
-                            data-question="${encodeURIComponent(question.question || '')}"
-                            data-user-answer="${encodeURIComponent(isMultiTrueFalse ? JSON.stringify(question.userAnswer) : formatAnswer(question.userAnswer, question.type))}"
-                            data-correct-answer="${encodeURIComponent(isMultiTrueFalse ? JSON.stringify(question.correctAnswer) : formatAnswer(question.correctAnswer, question.type))}"
-                            ${question.optionsText ? `data-options-text="${encodeURIComponent(JSON.stringify(question.optionsText))}"` : ''}
-                            ${question.type ? `data-question-type="${encodeURIComponent(question.type)}"` : ''} >
+                        <button class="explain-btn"
+                            data-question="${encodeURIComponent(question.question)}"
+                            data-user-answer="${encodeURIComponent(isMultiTrueFalse || isMultipleChoice ? JSON.stringify(question.userAnswer) : formatAnswer(question.userAnswer, question.type))}"
+                            data-correct-answer="${encodeURIComponent(isMultiTrueFalse || isMultipleChoice ? JSON.stringify(question.correctAnswer) : formatAnswer(question.correctAnswer, question.type))}"
+                            ${(isMultiTrueFalse || isMultipleChoice) ? 'data-options-text="' + encodeURIComponent(JSON.stringify(question.optionsText)) + '"' : ''} >
                             <i class="fas fa-lightbulb"></i>
                             <span>Xem giải thích (AI)</span>
                         </button>
                     </div>
 
-                    ${answerSectionHTML} {/* Insert the generated options or answer boxes */}
+                    ${answerSectionHTML}
                 </div>
 
                 <div class="explanation-box" style="display: none;">
@@ -1047,9 +1041,8 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
     const explanationBox = questionCard.querySelector('.explanation-box');
     const explanationContent = explanationBox.querySelector('.explanation-content');
     
-    // --- Get optional options text and question type ---
+    // --- Get optional options text ---
     const optionsText = button.dataset.optionsText ? decodeURIComponent(button.dataset.optionsText) : null;
-    const questionType = button.dataset.questionType ? decodeURIComponent(button.dataset.questionType) : null;
     // ---
 
     if (explanationContent.dataset.loaded === 'true') {
@@ -1073,33 +1066,20 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
         // --- Prepare user/correct answer text for prompt ---
         let userAnswerText = decodedUserAnswer;
         let correctAnswerText = decodedCorrectAnswer;
-        let optionsPromptText = '';
-
-        if (optionsText) { // If optionsText exists
+        if (optionsText) { // If multi-TF, format the array answers
             try {
+                const userAnswers = JSON.parse(decodedUserAnswer);
+                const correctAnswers = JSON.parse(decodedCorrectAnswer);
                 const parsedOptions = JSON.parse(optionsText);
-                 optionsPromptText = 'Lựa chọn:\n' + parsedOptions.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n') + '\n';
-
-                if (questionType === 'truefalse' && isMultiTrueFalse) { // Check isMultiTrueFalse flag from outer scope or re-evaluate
-                     // Re-evaluate based on data passed or infer from answer format
-                    const isMultiTFFormat = (answer) => {
-                        try { return Array.isArray(JSON.parse(answer)); } catch { return false; }
-                    };
-                    if (isMultiTFFormat(decodedUserAnswer) && isMultiTFFormat(decodedCorrectAnswer)) {
-                         const userAnswers = JSON.parse(decodedUserAnswer);
-                         const correctAnswers = JSON.parse(decodedCorrectAnswer);
-                         userAnswerText = parsedOptions.map((opt, i) =>
-                             `${String.fromCharCode(65 + i)}: ${userAnswers[i] === true ? 'True' : (userAnswers[i] === false ? 'False' : 'N/A')}`
-                         ).join('\n');
-                         correctAnswerText = parsedOptions.map((opt, i) =>
-                             `${String.fromCharCode(65 + i)}: ${correctAnswers[i] ? 'True' : 'False'}`
-                         ).join('\n');
-                    }
-                }
+                userAnswerText = parsedOptions.map((opt, i) => 
+                    `${String.fromCharCode(65 + i)}: ${userAnswers[i] === true ? 'True' : (userAnswers[i] === false ? 'False' : 'N/A')}`
+                ).join('\n');
+                correctAnswerText = parsedOptions.map((opt, i) => 
+                    `${String.fromCharCode(65 + i)}: ${correctAnswers[i] ? 'True' : 'False'}`
+                ).join('\n');
             } catch (e) {
-                console.error('Error processing options/answers for prompt:', e);
+                console.error('Error parsing multi-TF answers for prompt:', e);
                 // Fallback to raw strings if parsing fails
-                 if(optionsText) optionsPromptText = `Lựa chọn (raw): ${optionsText}\n`;
             }
         }
         // ---
@@ -1116,9 +1096,9 @@ async function getExplanation(button, question, userAnswer, correctAnswer) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Hãy giải thích câu hỏi này từng bước bằng tiếng Việt. Phân tích tại sao đáp án đúng lại đúng và tại sao các lựa chọn khác (nếu có) lại sai. Nếu là câu hỏi đúng sai cho nhiều mệnh đề, hãy giải thích từng mệnh đề. Hãy luôn trả lời bằng các thông tin chính xác và nếu cần thiết hãy đưa ra ghi chú. Giữ định dạng markdown gốc.
+                        text: `Hãy giải thích câu hỏi này từng bước bằng tiếng Việt. Hãy luôn trả lời bằng các thông tin chính xác và nếu cần thiết hãy đưa ra ghi chú:
 Câu hỏi: ${decodedQuestion}
-${optionsPromptText}Đáp án của bạn: ${userAnswerText}
+${optionsText ? 'Lựa chọn:\n' + JSON.parse(optionsText).map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n') + '\n' : ''}Đáp án của bạn: ${userAnswerText}
 Đáp án đúng: ${correctAnswerText}`
                     }]
                 }],

@@ -182,6 +182,14 @@ async function renderQuestions(lesson) {
                         })
                     );
 
+                    // --- ADDED: Get all option texts for abcd --- 
+                    if (Array.isArray(q.options)) {
+                        optionsText = q.options.map(opt => opt.text || opt);
+                    } else {
+                        optionsText = []; // Default to empty array if options are missing
+                    }
+                    // --- END ADDED ---
+
                     questionHtml += shuffledOptions.map((option, idx) => `
                         <div class="option-row">
                             <input type="radio" 
@@ -494,7 +502,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (q.type === 'abcd') {
                         const selectedRadio = document.querySelector(`input[name="q${originalIndex}"]:checked`);
                         const selectedValue = selectedRadio ? selectedRadio.value : null;
-                        
+
+                        // --- ADDED: Get all option texts for abcd --- 
+                        if (Array.isArray(q.options)) {
+                            optionsText = q.options.map(opt => opt.text || opt);
+                        } else {
+                            optionsText = []; // Default to empty array if options are missing
+                        }
+                        // --- END ADDED ---
+
                         if (selectedValue) {
                             const mapping = window.questionMappings[originalIndex];
                             // Ensure mapping exists before trying to find

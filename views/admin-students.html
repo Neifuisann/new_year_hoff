@@ -208,12 +208,18 @@
             let actionButton = '';
             if (student.approved_device_fingerprint) {
                 deviceStatus = 'Đã liên kết'; // More specific than 'Đã đăng nhập'
-                actionButton = `
+                actionButton += `
                     <button class="button small secondary unbind-btn" onclick="unbindDevice('${student.id}')" title="Gỡ liên kết thiết bị này">
                         <i class="fas fa-unlink"></i> Gỡ liên kết
                     </button>
                 `;
             }
+            // Add the Delete button
+            actionButton += `
+                <button class="button small danger delete-btn" onclick="deleteStudent('${student.id}')" title="Xóa học sinh này vĩnh viễn">
+                    <i class="fas fa-trash-alt"></i> Xóa
+                </button>
+            `;
             
             row.innerHTML = `
                 <td>${index + 1}</td>
@@ -341,6 +347,50 @@
         } catch (error) {
             console.error('Error unbinding device:', error);
             alert(`Lỗi khi gỡ liên kết thiết bị: ${error.message}`);
+        } finally {
+            showLoader(false);
+        }
+    }
+    // --- END NEW FUNCTION ---
+
+    // --- NEW FUNCTION: Delete Student ---
+    async function deleteStudent(studentId) {
+        if (!confirm(`BẠN CÓ CHẮC CHẮN MUỐN XÓA HỌC SINH NÀY KHÔNG?\n\nHành động này không thể hoàn tác và sẽ xóa tất cả dữ liệu liên quan (lịch sử làm bài, xếp hạng,...).`)) {
+            return;
+        }
+
+        showLoader(true);
+        try {
+            const response = await fetch(`/api/admin/delete-student/${studentId}`, {
+                method: 'DELETE',
+                credentials: 'include', // Important for sending admin session cookie
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Add CSRF token header if your app uses them
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert('Phiên đăng nhập quản trị viên đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/admin/login';
+                    return;
+                }
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(`Failed to delete student: ${errorData.message || response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Đã xóa học sinh và dữ liệu liên quan thành công.');
+                loadData(); // Reload data to reflect the change
+            } else {
+                alert('Lỗi khi xóa học sinh: ' + (result.message || 'Không rõ lỗi.'));
+            }
+        } catch (error) {
+            console.error('Error deleting student:', error);
+            alert(`Lỗi khi xóa học sinh: ${error.message}`);
         } finally {
             showLoader(false);
         }

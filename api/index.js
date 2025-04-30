@@ -1482,6 +1482,94 @@ app.post('/api/admin/unbind-device/:studentId', requireAuth, async (req, res) =>
     }
 });
 
+// --- NEW Endpoint: Delete Student and Associated Data ---
+app.delete('/api/admin/delete-student/:studentId', requireAuth, async (req, res) => {
+    const studentId = req.params.studentId;
+    console.warn(`ADMIN ACTION: Attempting to permanently delete student ${studentId} and all related data.`);
+
+    // Use the Supabase Admin client for operations that might need to bypass RLS
+    const adminClient = supabaseAdmin; // Assuming supabaseAdmin is initialized with service key
+
+    try {
+        // Start a transaction if your database supports it, otherwise run sequentially
+        // Note: Supabase JS client doesn't directly support multi-statement transactions.
+        // For atomicity, consider creating a PostgreSQL function (RPC).
+        // Running sequentially is simpler but less robust if one step fails.
+
+        // 1. Delete related data first (order might matter based on foreign key constraints)
+        console.log(`Deleting rating history for student ${studentId}...`);
+        const { error: historyError } = await adminClient
+            .from('rating_history')
+            .delete()
+            .eq('student_id', studentId);
+        if (historyError) {
+            console.error('Error deleting rating history:', historyError);
+            // Decide if you want to proceed or stop
+            // throw new Error(`Failed to delete rating history: ${historyError.message}`);
+        }
+
+        console.log(`Deleting ratings for student ${studentId}...`);
+        const { error: ratingError } = await adminClient
+            .from('ratings')
+            .delete()
+            .eq('student_id', studentId);
+        if (ratingError) {
+            console.error('Error deleting ratings:', ratingError);
+            // throw new Error(`Failed to delete ratings: ${ratingError.message}`);
+        }
+
+        console.log(`Deleting quiz results for student ${studentId}...`);
+        const { error: quizResultsError } = await adminClient
+            .from('quiz_results')
+            .delete()
+            .eq('student_id', studentId);
+        if (quizResultsError) {
+            console.error('Error deleting quiz results:', quizResultsError);
+            // throw new Error(`Failed to delete quiz results: ${quizResultsError.message}`);
+        }
+
+        console.log(`Deleting lesson results for student ${studentId}...`);
+        const { error: resultsError } = await adminClient
+            .from('results')
+            .delete()
+            .eq('student_id', studentId);
+        if (resultsError) {
+            console.error('Error deleting lesson results:', resultsError);
+            // throw new Error(`Failed to delete lesson results: ${resultsError.message}`);
+        }
+        
+        // Potentially delete from other related tables if necessary
+        // console.log(`Deleting temp content for student ${studentId}...`);
+        // await adminClient.from('temp_lesson_content').delete().eq('user_id', studentId); 
+        // Uncomment and adjust if 'temp_lesson_content' uses student ID
+
+        // 2. Finally, delete the student record
+        console.log(`Deleting student record ${studentId}...`);
+        const { error: studentDeleteError } = await adminClient
+            .from('students')
+            .delete()
+            .eq('id', studentId);
+
+        if (studentDeleteError) {
+            // If the student record itself fails to delete, this is a critical error
+            console.error('Critical error deleting student record:', studentDeleteError);
+            throw new Error(`Failed to delete student record: ${studentDeleteError.message}`);
+        }
+
+        console.log(`Successfully deleted student ${studentId} and associated data.`);
+        res.json({ success: true, message: 'Student and all associated data deleted successfully.' });
+
+    } catch (error) {
+        console.error(`Error processing delete request for student ${studentId}:`, error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to delete student', 
+            details: error.message 
+        });
+    }
+});
+// --- END NEW Endpoint ---
+
 // This is the correct endpoint to apply caching to
 app.get('/api/history', requireAuth, async (req, res) => {
     try {
@@ -1857,7 +1945,7 @@ app.get('/share/lesson/:lessonId', async (req, res) => {
                 .order('timestamp', { ascending: false })
                 .limit(3); // Limit to latest 3 attempts
 
-            if (historyError) {
+        if (historyError) {
                 console.error(`Error fetching user history:`, historyError.message);
                 // Don't fail the page load, just show no history
             } else if (historyData && historyData.length > 0) {
