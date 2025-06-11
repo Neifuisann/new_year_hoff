@@ -62,6 +62,20 @@ cp .env.example .env
 
 Then, update the `.env` file with your local configuration details.
 
+### Redis Caching
+
+This project uses Redis to cache GET responses for faster page loads.
+Configure the following variables in your `.env` file:
+
+```
+REDIS_HOST=<your redis host>
+REDIS_PORT=<your redis port>
+REDIS_USERNAME=<redis username>
+REDIS_PASSWORD=<redis password>
+```
+
+Optionally you can set `REDIS_URL` if you prefer a full connection string.
+
 ## Running the Project
 
 After setting up the dependencies and configuration, start the application using the appropriate command:
