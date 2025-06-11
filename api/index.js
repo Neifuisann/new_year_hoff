@@ -5,7 +5,8 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
 const multer = require('multer');
-const { createClient } = require('@supabase/supabase-js');
+// Supabase client moved to utils
+const { supabase, supabaseAdmin } = require('../utils/supabaseClient');
 const { inject } = require('@vercel/analytics');
 const sharp = require('sharp');
 const upload = multer({ 
@@ -18,7 +19,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const crypto = require('crypto');
+const authRoutes = require('../routes/authRoutes');
+const { generateETag, setCacheHeaders, shouldCache } = require('../utils/cache');
+const { incrementViewCount } = require('../utils/lessonUtils');
 
 // --- Global Error Handling ---
 process.on('uncaughtException', (error) => {
@@ -37,20 +40,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // Initialize Vercel Analytics
 inject();
 
-// Initialize Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://miojaflixmncmhsgyabd.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1pb2phZmxpeG1uY21oc2d5YWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM2NTU0NTUsImV4cCI6MjA1OTIzMTQ1NX0.e3nU5sBvHsFHZP48jg1vjYsP-N2S4AgYuQgt8opHE_g';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
-if (!supabaseServiceKey) {
-  console.warn('WARNING: SUPABASE_SERVICE_KEY environment variable not set. Storage uploads might fail if RLS requires authenticated users or service role.');
-  // Depending on your RLS, you might need the service key for direct uploads.
-  // If RLS allows authenticated users to upload, you might not need it here, but it's safer.
-}
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Create a second client with the service role key for admin operations that need to bypass RLS
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey || supabaseAnonKey);
+// Supabase initialization handled in utils/supabaseClient.js
 
 const IMAGE_BUCKET = 'lesson-images';
 const MAX_IMAGE_DIMENSION = 480;
@@ -143,73 +133,7 @@ app.use(session({
     proxy: true // Trust the reverse proxy when setting secure cookies (Vercel/Heroku)
 }));
 
-// --- Cache Helper Functions ---
-function generateETag(data) {
-  if (!data) {
-    return null; // Or a default ETag for empty data
-  }
-  // Use JSON.stringify for consistent serialization of JS objects/arrays
-  // Sort keys for objects to ensure consistent hashing regardless of key order
-  const dataString = JSON.stringify(data, (key, value) => {
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      return Object.keys(value)
-        .sort()
-        .reduce((sorted, key) => {
-          sorted[key] = value[key];
-          return sorted;
-        }, {});
-    }
-    return value;
-  });
-  // Create a SHA1 hash - strong enough for ETag, reasonably fast
-  return crypto.createHash('sha1').update(dataString).digest('hex');
-}
 
-function setCacheHeaders(res, etag, maxAgeSeconds = 60) { // Default cache: 1 minute
-  if (etag) {
-    // ETags should be quoted as per HTTP spec
-    res.setHeader('ETag', `"${etag}"`); 
-  }
-  // Cache-Control: public (allow proxies), max-age (duration), must-revalidate (check ETag before using stale cache)
-  res.setHeader('Cache-Control', `public, max-age=${maxAgeSeconds}, must-revalidate`);
-  // Optionally add Last-Modified if you have a relevant timestamp for the data
-  // res.setHeader('Last-Modified', new Date(data.lastUpdated).toUTCString());
-}
-
-// Determine if a route should be cached (exclude admin routes)
-function shouldCache(req) {
-  const path = req.path || req.originalUrl || '';
-  // Don't cache admin routes or authenticated routes that need fresh data
-  return !path.includes('/admin/') && 
-         !path.includes('/api/admin/') &&
-         !path.includes('/api/history') &&
-         req.method === 'GET'; // Only cache GET requests
-}
-// --- End Cache Helper Functions ---
-
-// Helper function to increment view count without affecting response
-async function incrementViewCount(lessonId, currentViews) {
-    try {
-        const { error } = await supabase
-            .from('lessons')
-            .update({ views: currentViews + 1 })
-            .eq('id', lessonId);
-            
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        console.warn('Error incrementing view count:', error);
-        // Don't throw - this is a background operation
-    }
-}
-
-// Admin credentials
-const adminCredentials = {
-    username: 'admin',
-    // This should be properly hashed in production
-    password: '$2b$10$R4tMQGVYYReQayD82yx.6.E/4bE.0Ue.vmmWT6t1ggXrJFA3wUCqu' // Use bcrypt to generate this
-};
 
 // Middleware to protect admin routes
 const requireAuth = (req, res, next) => {
@@ -275,6 +199,8 @@ app.use('/api/explain', requireStudentAuth);
 
 // Apply the middleware to relevant routes
 app.use('/lesson/', requireStudentInfo);
+// Authentication and account-related API routes
+app.use('/api', authRoutes);
 
 // Routes
 app.get('/', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'landing.html')));
@@ -308,239 +234,6 @@ app.get('/leaderboard', (req, res) => res.sendFile(path.join(process.cwd(), 'vie
 // Decide if authentication is needed here
 app.get('/profile/:studentId', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'profile.html'))); 
 
-// API Endpoints
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    
-    console.log('Admin login attempt:', { username });
-    
-    try {
-        if (!username || !password) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Missing username or password' 
-            });
-        }
-        
-        const credentialsMatch = username === adminCredentials.username &&
-            await bcrypt.compare(password, adminCredentials.password);
-            
-        if (credentialsMatch) {
-            // Set authentication in session
-        req.session.isAuthenticated = true;
-            
-            // Clear any student-related session data
-            delete req.session.studentId;
-            delete req.session.studentName;
-            
-            // Save session explicitly to ensure it's stored
-            req.session.save(err => {
-                if (err) {
-                    console.error('Session save error:', err);
-                    return res.status(500).json({ 
-                        success: false, 
-                        message: 'Session error' 
-                    });
-                }
-                
-                console.log('Admin login successful');
-                return res.json({ 
-                    success: true,
-                    message: 'Login successful'
-                });
-            });
-    } else {
-            console.log('Admin login failed: invalid credentials');
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Invalid credentials'
-            });
-        }
-    } catch (error) {
-        console.error('Admin login error:', error);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Internal server error'
-        });
-    }
-});
-
-// Student registration endpoint
-app.post('/api/register', async (req, res) => {
-    const { full_name, date_of_birth, phone_number, password } = req.body;
-    
-    if (!full_name || !phone_number || !password) {
-        return res.status(400).json({ success: false, message: 'Missing required fields' });
-    }
-    
-    try {
-        // Check if phone number is already registered
-        const { data: existingUser, error: checkError } = await supabase
-            .from('students')
-            .select('id')
-            .eq('phone_number', phone_number)
-            .maybeSingle();
-            
-        if (checkError) {
-            console.error('Error checking for existing user:', checkError);
-            return res.status(500).json({ success: false, message: 'Internal server error' });
-        }
-        
-        if (existingUser) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Số điện thoại này đã được đăng ký. Vui lòng sử dụng số điện thoại khác.' 
-            });
-        }
-        
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        // Create new student record
-        const { data: newStudent, error: insertError } = await supabase
-            .from('students')
-            .insert({
-                full_name,
-                phone_number,
-                date_of_birth,
-                password_hash: hashedPassword,
-                is_approved: false,
-                created_at: new Date().toISOString()
-            })
-            .select('id')
-            .single();
-        
-        if (insertError) {
-            console.error('Error inserting new student:', insertError);
-            return res.status(500).json({ success: false, message: 'Failed to create account' });
-        }
-        
-        res.json({ 
-            success: true, 
-            message: 'Registration successful! Please wait for admin approval.'
-        });
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-// Student login endpoint
-app.post('/api/student/login', async (req, res) => {
-    const { phone_number, password, device_fingerprint } = req.body;
-    
-    if (!phone_number || !password) {
-        return res.status(400).json({ success: false, message: 'Missing phone number or password' });
-    }
-    
-    try {
-        // Check if student exists and is approved
-        const { data: student, error: fetchError } = await supabase
-            .from('students')
-            .select('id, full_name, password_hash, is_approved, approved_device_fingerprint')
-            .eq('phone_number', phone_number)
-            .maybeSingle();
-            
-        if (fetchError) {
-            console.error('Error fetching student:', fetchError);
-            return res.status(500).json({ success: false, message: 'Internal server error' });
-        }
-        
-        if (!student) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Tài khoản không tồn tại.' 
-            });
-        }
-        
-        if (!student.is_approved) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Tài khoản của bạn đang chờ được giáo viên phê duyệt.' 
-            });
-        }
-        
-        // Verify password using the correct hash field
-        const passwordMatch = await bcrypt.compare(password, student.password_hash);
-        if (!passwordMatch) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Mật khẩu không chính xác.' 
-            });
-        }
-        
-        // Check device fingerprint if already set
-        if (student.approved_device_fingerprint && 
-            student.approved_device_fingerprint !== device_fingerprint) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Bạn chỉ có thể đăng nhập từ thiết bị đã đăng ký trước đó.' 
-            });
-        }
-        
-        // If first login, store the device fingerprint
-        if (device_fingerprint && !student.approved_device_fingerprint) {
-            const { error: updateError } = await supabase
-                .from('students')
-                .update({ approved_device_fingerprint: device_fingerprint })
-                .eq('id', student.id);
-                
-            if (updateError) {
-                console.error('Error updating device fingerprint:', updateError);
-                // Continue anyway - this is not fatal
-            }
-        }
-        
-        // Set session
-        req.session.studentId = student.id;
-        req.session.studentName = student.full_name;
-        
-        res.json({ 
-            success: true, 
-            message: 'Đăng nhập thành công!',
-            student: { 
-                id: student.id, 
-                name: student.full_name 
-            }
-        });
-    } catch (error) {
-        console.error('Student login error:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-// Student logout endpoint
-app.post('/api/student/logout', (req, res) => {
-    try {
-        // Clear student session
-        delete req.session.studentId;
-        delete req.session.studentName;
-        
-        res.json({ success: true, message: 'Đăng xuất thành công' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-// Admin logout endpoint
-app.post('/api/admin/logout', (req, res) => {
-    try {
-        req.session.destroy(err => {
-            if (err) {
-                console.error('Admin logout error - session destroy failed:', err);
-                return res.status(500).json({ success: false, message: 'Logout failed' });
-            }
-            // Clear the cookie on the client side
-            res.clearCookie('connect.sid'); // Use your session cookie name if different
-            console.log('Admin logout successful');
-            return res.json({ success: true, message: 'Admin logout successful' });
-        });
-    } catch (error) {
-        console.error('Admin logout error:', error);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
 
 app.get('/api/lessons', async (req, res) => {
     try {
