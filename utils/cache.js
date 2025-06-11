@@ -26,6 +26,7 @@ function shouldCache(req) {
   return !path.includes('/admin/') &&
     !path.includes('/api/admin/') &&
     !path.includes('/api/history') &&
+    !path.includes('/statistics') &&
     req.method === 'GET';
 }
 

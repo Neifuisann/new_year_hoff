@@ -22,6 +22,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('../routes/authRoutes');
 const { generateETag, setCacheHeaders, shouldCache } = require('../utils/cache');
 const { incrementViewCount } = require('../utils/lessonUtils');
+const cacheMiddleware = require('../utils/cacheMiddleware');
 
 // --- Global Error Handling ---
 process.on('uncaughtException', (error) => {
@@ -133,6 +134,9 @@ app.use(session({
     proxy: true // Trust the reverse proxy when setting secure cookies (Vercel/Heroku)
 }));
 
+// Cache GET responses using Redis
+app.use(cacheMiddleware(300));
+
 
 
 // Middleware to protect admin routes
@@ -235,7 +239,7 @@ app.get('/leaderboard', (req, res) => res.sendFile(path.join(process.cwd(), 'vie
 app.get('/profile/:studentId', (req, res) => res.sendFile(path.join(process.cwd(), 'views', 'profile.html'))); 
 
 
-app.get('/api/lessons', async (req, res) => {
+app.get('/api/lessons', cacheMiddleware(300), async (req, res) => {
     try {
         // --- Pagination, Sorting, Searching Parameters ---
         const page = parseInt(req.query.page) || 1;
@@ -344,7 +348,7 @@ app.get('/api/lessons', async (req, res) => {
     }
 });
 
-app.get('/api/lessons/:id', async (req, res) => {
+app.get('/api/lessons/:id', cacheMiddleware(600), async (req, res) => {
     const lessonId = req.params.id;
     try {
         const { data: lesson, error: fetchError } = await supabase
