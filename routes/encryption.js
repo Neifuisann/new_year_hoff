@@ -21,8 +21,10 @@ router.post('/init',
   noCacheMiddleware,
   async (req, res) => {
     try {
-      // Generate or get encryption context for the session
-      const context = sessionService.generateEncryptionContext(req);
+      // Reuse the active session key so another page or restored browser tab
+      // cannot invalidate clients that already initialized encryption.
+      const context = sessionService.getEncryptionContext(req) ||
+        sessionService.generateEncryptionContext(req);
       
       if (!context) {
         return res.status(500).json({
@@ -34,10 +36,16 @@ router.post('/init',
 
       // Return the encryption key (base64 encoded) to the client
       // Note: This is secure because it's sent over HTTPS and tied to the session
+      // Session stores deserialize Buffers as { type: 'Buffer', data: [...] }.
+      // Normalize the key before exposing its base64 representation.
+      const encryptionKey = Buffer.isBuffer(context.key)
+        ? context.key
+        : Buffer.from(context.key);
+
       res.json({
         success: true,
         message: 'Encryption initialized successfully',
-        encryptionKey: context.key.toString('base64'),
+        encryptionKey: encryptionKey.toString('base64'),
         algorithm: 'AES-CBC',
         version: '1.0'
       });
