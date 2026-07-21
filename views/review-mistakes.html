@@ -327,6 +327,66 @@
             margin-bottom: var(--space-lg);
             opacity: 0.5;
         }
+
+        .personalized-quiz-promo {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: var(--space-xl);
+            padding: 1.15rem 1.25rem;
+            color: white;
+            border: 1px solid rgba(167, 153, 255, 0.24);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #26214d, #5748c8);
+            box-shadow: 0 15px 35px rgba(49, 39, 122, 0.2);
+        }
+
+        .promo-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.13);
+            font-size: 1rem;
+        }
+
+        .promo-copy strong,
+        .promo-copy small {
+            display: block;
+        }
+
+        .promo-copy strong {
+            font-size: 0.92rem;
+        }
+
+        .promo-copy small {
+            margin-top: 0.28rem;
+            color: rgba(244, 242, 255, 0.7);
+            font-size: 0.72rem;
+            line-height: 1.55;
+        }
+
+        .personalized-quiz-promo a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.75rem 1rem;
+            color: #5142c2;
+            border-radius: 11px;
+            background: white;
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .personalized-quiz-promo a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 22px rgba(17, 13, 57, 0.18);
+        }
         
         /* Mobile Responsive */
         @media (max-width: 768px) {
@@ -350,6 +410,15 @@
             .bulk-actions {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .personalized-quiz-promo {
+                grid-template-columns: auto minmax(0, 1fr);
+            }
+
+            .personalized-quiz-promo a {
+                grid-column: 1 / -1;
+                justify-content: center;
             }
         }
     </style>
@@ -402,7 +471,16 @@
             </h1>
             <p class="review-subtitle">Xem lại những câu hỏi bạn đã trả lời sai để cải thiện kết quả học tập</p>
         </div>
-        
+
+        <section class="personalized-quiz-promo" aria-label="Tạo đề cá nhân hoá">
+            <span class="promo-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+            <span class="promo-copy">
+                <strong>Muốn luyện lại theo cách của bạn?</strong>
+                <small>Chọn đúng những lỗi sai bạn muốn sửa và tạo một đề luyện tập riêng ngay lập tức.</small>
+            </span>
+            <a href="/personalized-quiz">Tạo đề cá nhân hoá <i class="fas fa-arrow-right"></i></a>
+        </section>
+
         <!-- Stats Overview -->
         <div class="stats-overview" id="stats-overview">
             <!-- Stats will be loaded here -->

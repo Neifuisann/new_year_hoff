@@ -242,6 +242,12 @@
             color: var(--accent-primary);
         }
 
+        .question-source {
+            margin-top: 0.35rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
         .question-actions {
             display: flex;
             gap: var(--space-sm);
@@ -279,9 +285,12 @@
         }
 
         .question-image {
+            display: block;
             width: 100%;
             max-width: 500px;
-            margin: var(--space-md) 0;
+            max-height: 420px;
+            object-fit: contain;
+            margin: calc(var(--space-md) * -0.3) 0 var(--space-xl);
             border-radius: 8px;
             cursor: pointer;
         }
@@ -293,15 +302,19 @@
         }
 
         .option-item {
+            width: 100%;
             background: var(--bg-tertiary);
             border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: var(--space-md) var(--space-lg);
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: var(--space-md);
+            text-align: left;
+            font: inherit;
         }
 
         .option-item:hover {
@@ -353,6 +366,84 @@
             text-align: center;
             font-weight: 600;
             font-size: 1.125rem;
+        }
+
+        .truefalse-statements {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .truefalse-statement {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .statement-copy {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            line-height: 1.65;
+        }
+
+        .statement-copy > span {
+            flex: 0 0 30px;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: var(--accent-primary);
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .statement-copy p {
+            margin: 0;
+        }
+
+        .statement-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xs);
+        }
+
+        .truefalse-choice {
+            min-width: 68px;
+            padding: 0.65rem 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 9px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .truefalse-choice:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .truefalse-choice.selected {
+            color: white;
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .question-format-error {
+            padding: var(--space-lg);
+            color: var(--accent-danger);
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
         }
 
         /* Number Input */
@@ -529,6 +620,18 @@
             .question-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
+
+            .truefalse-statement {
+                grid-template-columns: 1fr;
+            }
+
+            .statement-choices {
+                width: 100%;
+            }
+
+            .truefalse-choice {
+                min-width: 0;
+            }
         }
     </style>
 </head>
@@ -543,7 +646,7 @@
         <!-- Sidebar -->
         <div class="practice-sidebar" id="practice-sidebar">
             <div class="sidebar-header">
-                <h2 class="practice-title">Luyện tập lỗi sai</h2>
+                <h2 class="practice-title" id="practice-title">Luyện tập lỗi sai</h2>
                 <div class="practice-info">
                     <div class="practice-timer">
                         <i class="fas fa-clock"></i>

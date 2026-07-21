@@ -128,6 +128,13 @@ router.get('/review-mistakes',
   serveHTML('review-mistakes.html')
 );
 
+router.get(['/personalized-quiz', '/student/personalized-quiz'],
+  requireStudentAuthForHTML,
+  addSessionInfo,
+  noCacheMiddleware,
+  serveHTML('student-personalized-quiz.html')
+);
+
 router.get('/practice',
   requireStudentAuthForHTML,
   addSessionInfo,
@@ -323,6 +330,13 @@ router.get('/admin/students',
   addSessionInfo,
   noCacheMiddleware,
   serveHTML('admin-students.html')
+);
+
+router.get('/admin/adaptive-quiz',
+  requireAdminAuthForHTML,
+  addSessionInfo,
+  noCacheMiddleware,
+  serveHTML('admin-adaptive-quiz.html')
 );
 
 router.get('/admin/results',

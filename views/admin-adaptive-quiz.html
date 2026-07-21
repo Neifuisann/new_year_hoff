@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f7fb">
+    <title>Tạo đề từ lỗi sai gần đây - Ôn luyện Vật lý</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="/css/admin-adaptive-quiz.css?v=1">
+</head>
+<body>
+    <div class="page-glow page-glow-one" aria-hidden="true"></div>
+    <div class="page-glow page-glow-two" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <a class="brand" href="/admin" aria-label="Quay lại trang quản trị">
+            <span class="brand-mark"><i class="fas fa-atom"></i></span>
+            <span>
+                <strong>Ôn luyện Vật lý</strong>
+                <small>Trung tâm điều khiển</small>
+            </span>
+        </a>
+        <div class="topbar-actions">
+            <span class="live-pill"><span class="live-dot"></span>Dữ liệu học tập thật</span>
+            <a class="back-link" href="/admin"><i class="fas fa-arrow-left"></i> Quay lại</a>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <section class="hero-card">
+            <div class="hero-copy">
+                <span class="eyebrow"><i class="fas fa-star"></i> Tính năng mới</span>
+                <h1>Biến lỗi sai thành đề luyện tập <span>đúng trọng tâm</span></h1>
+                <p>Hệ thống đọc các lần làm bài gần đây, tìm lỗi lặp lại và tự xếp hạng những câu học sinh cần ôn nhất.</p>
+            </div>
+            <div class="process-flow" aria-label="Quy trình tạo đề">
+                <div class="process-step">
+                    <span>01</span>
+                    <i class="fas fa-clock-rotate-left"></i>
+                    <strong>Đọc lỗi sai</strong>
+                    <small>Theo mốc thời gian</small>
+                </div>
+                <i class="fas fa-arrow-right process-arrow" aria-hidden="true"></i>
+                <div class="process-step active">
+                    <span>02</span>
+                    <i class="fas fa-chart-line"></i>
+                    <strong>Xếp ưu tiên</strong>
+                    <small>Lặp lại + gần đây</small>
+                </div>
+                <i class="fas fa-arrow-right process-arrow" aria-hidden="true"></i>
+                <div class="process-step">
+                    <span>03</span>
+                    <i class="fas fa-file-alt"></i>
+                    <strong>Tạo đề 10 điểm</strong>
+                    <small>Sẵn sàng chỉnh sửa</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Tổng quan lỗi sai">
+            <article class="stat-card stat-purple">
+                <span class="stat-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                <div><strong id="stat-mistakes">—</strong><small>Lỗi sai ghi nhận</small></div>
+                <span class="stat-context" id="stat-window">14 ngày</span>
+            </article>
+            <article class="stat-card stat-blue">
+                <span class="stat-icon"><i class="fas fa-layer-group"></i></span>
+                <div><strong id="stat-questions">—</strong><small>Câu hỏi cần củng cố</small></div>
+                <span class="stat-context">đã khử trùng lặp</span>
+            </article>
+            <article class="stat-card stat-orange">
+                <span class="stat-icon"><i class="fas fa-users"></i></span>
+                <div><strong id="stat-students">—</strong><small>Học sinh liên quan</small></div>
+                <span class="stat-context" id="stat-attempts">— lượt làm</span>
+            </article>
+            <article class="stat-card stat-green">
+                <span class="stat-icon"><i class="fas fa-tasks"></i></span>
+                <div><strong id="stat-selected">—</strong><small>Câu được chọn vào đề</small></div>
+                <span class="stat-context">thang điểm 10</span>
+            </article>
+        </section>
+
+        <section class="workspace-grid">
+            <aside class="setup-panel panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="step-label">Thiết lập nhanh</span>
+                        <h2>Cấu hình đề luyện tập</h2>
+                    </div>
+                    <span class="panel-number">01</span>
+                </div>
+
+                <form id="adaptive-quiz-form">
+                    <div class="field-group">
+                        <label for="student-filter">Đối tượng luyện tập</label>
+                        <div class="select-wrap">
+                            <i class="fas fa-user-graduate"></i>
+                            <select id="student-filter" name="studentId">
+                                <option value="all">Tất cả học sinh gần đây</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-chevron"></i>
+                        </div>
+                        <p class="field-hint" id="student-hint">Tổng hợp những lỗi phổ biến của cả nhóm.</p>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Khoảng thời gian phân tích</label>
+                        <div class="segment-control" id="days-control" role="group" aria-label="Khoảng thời gian">
+                            <button type="button" data-days="7">7 ngày</button>
+                            <button type="button" class="active" data-days="14">14 ngày</button>
+                            <button type="button" data-days="30">30 ngày</button>
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="subject-filter">Môn / nhóm nội dung</label>
+                            <div class="select-wrap compact">
+                                <select id="subject-filter" name="subject">
+                                    <option value="all">Tất cả nội dung</option>
+                                </select>
+                                <i class="fas fa-chevron-down select-chevron"></i>
+                            </div>
+                        </div>
+                        <div class="field-group count-field">
+                            <label for="question-count">Số câu <output id="question-count-output">12</output></label>
+                            <input type="range" id="question-count" name="count" min="5" max="30" value="12" step="1">
+                            <div class="range-labels"><span>5</span><span>30</span></div>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="quiz-title">Tên đề</label>
+                        <input id="quiz-title" name="title" type="text" maxlength="120" autocomplete="off">
+                    </div>
+
+                    <div class="generation-note">
+                        <i class="fas fa-shield-alt"></i>
+                        <p><strong>Bạn vẫn kiểm soát nội dung.</strong> Đề được tạo vào kho bài học và có thể chỉnh sửa trước khi giao.</p>
+                    </div>
+
+                    <button class="primary-action" id="create-quiz-button" type="submit">
+                        <span class="button-icon"><i class="fas fa-magic"></i></span>
+                        <span><strong>Tạo đề luyện tập</strong><small id="create-button-detail">12 câu • khoảng 18 phút</small></span>
+                        <i class="fas fa-arrow-right button-arrow"></i>
+                    </button>
+                </form>
+            </aside>
+
+            <section class="preview-panel panel">
+                <div class="panel-heading preview-heading">
+                    <div>
+                        <span class="step-label">Xem trước theo dữ liệu</span>
+                        <h2>Các câu được ưu tiên</h2>
+                    </div>
+                    <div class="preview-actions">
+                        <span class="priority-pill"><i class="fas fa-bolt"></i> Ưu tiên thông minh</span>
+                        <button type="button" class="icon-button" id="refresh-analysis" title="Phân tích lại" aria-label="Phân tích lại">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="insight-strip" id="insight-strip" aria-live="polite">
+                    <span class="insight-icon"><i class="fas fa-lightbulb"></i></span>
+                    <p>Đang đọc lịch sử làm bài gần đây…</p>
+                </div>
+
+                <div class="source-section">
+                    <div class="section-title-row">
+                        <h3>Nguồn lỗi sai nổi bật</h3>
+                        <span id="source-count">—</span>
+                    </div>
+                    <div class="source-bars" id="source-breakdown">
+                        <div class="source-skeleton"></div>
+                        <div class="source-skeleton short"></div>
+                    </div>
+                </div>
+
+                <div class="question-list-header">
+                    <h3>Danh sách đề xuất</h3>
+                    <span id="question-list-count">Đang tải…</span>
+                </div>
+                <div class="question-list" id="question-list" aria-live="polite">
+                    <article class="question-skeleton"></article>
+                    <article class="question-skeleton"></article>
+                    <article class="question-skeleton"></article>
+                </div>
+
+                <div class="preview-footer">
+                    <div><i class="fas fa-circle-check"></i><span><strong id="footer-question-count">— câu</strong><small>Tự động chia thang điểm</small></span></div>
+                    <div><i class="fas fa-stopwatch"></i><span><strong id="footer-duration">— phút</strong><small>Thời gian đề xuất</small></span></div>
+                    <div><i class="fas fa-shuffle"></i><span><strong>Xáo câu & đáp án</strong><small>Đã bật sẵn</small></span></div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+
+    <div class="modal-backdrop" id="success-modal" hidden>
+        <section class="success-modal" role="dialog" aria-modal="true" aria-labelledby="success-title">
+            <div class="success-icon"><i class="fas fa-check"></i></div>
+            <span class="success-kicker">Tạo đề thành công</span>
+            <h2 id="success-title">Đề luyện tập đã sẵn sàng</h2>
+            <p id="success-description">Đề mới đã được thêm vào kho bài học.</p>
+            <div class="success-summary">
+                <div><strong id="success-questions">—</strong><span>Câu hỏi</span></div>
+                <div><strong>10</strong><span>Điểm</span></div>
+                <div><strong id="success-duration">—</strong><span>Phút</span></div>
+            </div>
+            <div class="modal-actions">
+                <a class="modal-primary" id="success-preview-link" href="#"><i class="fas fa-play"></i> Xem đề vừa tạo</a>
+                <a class="modal-secondary" id="success-edit-link" href="#"><i class="fas fa-pen"></i> Chỉnh sửa đề</a>
+            </div>
+            <button type="button" class="modal-close" id="close-success-modal">Đóng</button>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="/js/admin-adaptive-quiz.js?v=1"></script>
+</body>
+</html>

@@ -77,6 +77,10 @@ router.post('/unbind-device/:studentId', adminController.unbindDevice); // Alter
 // Student profile
 router.get('/students/:studentId/profile', adminController.getStudentProfile);
 
+// Adaptive quiz generation from recent student mistakes
+router.get('/adaptive-quiz/insights', adminController.getAdaptiveQuizInsights);
+router.post('/adaptive-quiz/create', adminController.createAdaptiveQuiz);
+
 // Dashboard statistics
 router.get('/dashboard-stats', adminController.getDashboardStats);
 

@@ -418,6 +418,24 @@
                     // Review Mistakes button if there are mistakes
                     if (progressData && progressData.mistakesCount > 0) {
                         profileHTML += `
+                            <a href="/personalized-quiz" class="action-btn" style="
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                                padding: 0.75rem 1.5rem;
+                                background: linear-gradient(135deg, #6d5ef5, #5142c9);
+                                color: white;
+                                border-radius: 12px;
+                                text-decoration: none;
+                                font-weight: 600;
+                                transition: transform 0.2s, box-shadow 0.2s;
+                            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109, 94, 245, 0.4)';"
+                               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                <i class="fas fa-wand-magic-sparkles"></i>
+                                Tạo đề cá nhân hoá
+                            </a>
+                        `;
+                        profileHTML += `
                             <a href="/review-mistakes" class="action-btn" style="
                                 display: inline-flex;
                                 align-items: center;

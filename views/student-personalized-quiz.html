@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f7fc">
+    <title>Đề cá nhân hoá của bạn - Ôn luyện Vật lý</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="/css/student-personalized-quiz.css?v=1">
+</head>
+<body>
+    <div class="ambient-glow glow-one" aria-hidden="true"></div>
+    <div class="ambient-glow glow-two" aria-hidden="true"></div>
+
+    <header class="student-topbar">
+        <a class="brand" href="/lessons" aria-label="Về danh sách bài học">
+            <span class="brand-mark"><i class="fas fa-atom"></i></span>
+            <span class="brand-copy">
+                <strong>Ôn luyện Vật lý</strong>
+                <small>Góc học tập của bạn</small>
+            </span>
+        </a>
+        <nav class="topbar-links" aria-label="Điều hướng học sinh">
+            <a class="active" href="/personalized-quiz"><i class="fas fa-wand-magic-sparkles"></i> Đề cá nhân hoá</a>
+            <a href="/review-mistakes"><i class="fas fa-clock-rotate-left"></i> Xem lỗi sai</a>
+            <a href="/profile"><i class="fas fa-circle-user"></i> Hồ sơ</a>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        <section class="hero-card">
+            <div class="hero-copy">
+                <span class="feature-pill"><i class="fas fa-sparkles"></i> Dành riêng cho bạn</span>
+                <h1>Tự tạo đề từ chính <span>những lỗi sai</span> bạn muốn sửa</h1>
+                <p>Chọn đúng các câu còn yếu, hệ thống sẽ khôi phục đề gốc và đưa bạn vào một lượt luyện tập riêng ngay lập tức.</p>
+                <div class="hero-benefits">
+                    <span><i class="fas fa-lock"></i> Chỉ mình bạn thấy</span>
+                    <span><i class="fas fa-bolt"></i> Làm ngay, không cần chờ giao đề</span>
+                </div>
+            </div>
+            <div class="hero-visual" aria-label="Quy trình cá nhân hoá">
+                <div class="visual-ring ring-one"></div>
+                <div class="visual-ring ring-two"></div>
+                <div class="visual-core">
+                    <i class="fas fa-bullseye"></i>
+                    <strong>Đúng trọng tâm</strong>
+                    <small>Từ dữ liệu của bạn</small>
+                </div>
+                <div class="orbit-card orbit-pick"><i class="fas fa-check-square"></i><span>Chọn lỗi</span></div>
+                <div class="orbit-card orbit-build"><i class="fas fa-layer-group"></i><span>Gom thành đề</span></div>
+                <div class="orbit-card orbit-go"><i class="fas fa-play"></i><span>Làm ngay</span></div>
+            </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Tổng quan lỗi sai cá nhân">
+            <article class="stat-card stat-violet">
+                <span class="stat-icon"><i class="fas fa-triangle-exclamation"></i></span>
+                <div><strong id="stat-mistakes">—</strong><small>Lỗi sai gần đây</small></div>
+                <span class="stat-context" id="stat-window">14 ngày</span>
+            </article>
+            <article class="stat-card stat-blue">
+                <span class="stat-icon"><i class="fas fa-shapes"></i></span>
+                <div><strong id="stat-unique">—</strong><small>Nội dung cần củng cố</small></div>
+                <span class="stat-context">đã gộp câu trùng</span>
+            </article>
+            <article class="stat-card stat-orange">
+                <span class="stat-icon"><i class="fas fa-circle-check"></i></span>
+                <div><strong id="stat-selected">0</strong><small>Câu bạn đã chọn</small></div>
+                <span class="stat-context">tối đa 30 câu</span>
+            </article>
+            <article class="stat-card stat-green">
+                <span class="stat-icon"><i class="fas fa-stopwatch"></i></span>
+                <div><strong id="stat-duration">0</strong><small>Phút dự kiến</small></div>
+                <span class="stat-context">khoảng 90 giây/câu</span>
+            </article>
+        </section>
+
+        <section class="builder-layout">
+            <aside class="builder-panel panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="step-label">Bước 1</span>
+                        <h2>Thiết lập đề của bạn</h2>
+                    </div>
+                    <span class="heading-icon"><i class="fas fa-sliders"></i></span>
+                </div>
+
+                <div class="control-group">
+                    <label>Khoảng thời gian</label>
+                    <div class="segment-control" id="days-control" role="group" aria-label="Khoảng thời gian lỗi sai">
+                        <button type="button" data-days="7">7 ngày</button>
+                        <button type="button" class="active" data-days="14">14 ngày</button>
+                        <button type="button" data-days="30">30 ngày</button>
+                        <button type="button" data-days="all">Tất cả</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="subject-filter">Môn / nhóm nội dung</label>
+                    <div class="input-shell">
+                        <i class="fas fa-book-open"></i>
+                        <select id="subject-filter">
+                            <option value="all">Tất cả nội dung</option>
+                        </select>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="mistake-search">Tìm trong lỗi sai</label>
+                    <div class="input-shell">
+                        <i class="fas fa-search"></i>
+                        <input id="mistake-search" type="search" placeholder="Tên bài hoặc nội dung câu hỏi…" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="control-group target-control">
+                    <div class="label-row">
+                        <label for="target-count">Số câu gợi ý</label>
+                        <output id="target-count-output">10 câu</output>
+                    </div>
+                    <input id="target-count" type="range" min="3" max="20" step="1" value="10">
+                    <div class="range-labels"><span>3 câu</span><span>20 câu</span></div>
+                </div>
+
+                <div class="quick-actions">
+                    <button type="button" class="recommend-button" id="recommend-button">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        Chọn câu cần ôn nhất
+                    </button>
+                    <button type="button" class="clear-button" id="clear-selection">Bỏ chọn</button>
+                </div>
+
+                <div class="privacy-note">
+                    <i class="fas fa-shield-heart"></i>
+                    <p><strong>Đề luyện tập riêng tư.</strong> Lựa chọn này không tạo bài công khai và không ảnh hưởng kho đề chung.</p>
+                </div>
+
+                <div class="start-card">
+                    <div class="start-summary">
+                        <span><strong id="selected-summary">0 câu</strong><small>đã sẵn sàng</small></span>
+                        <span><strong id="duration-summary">0 phút</strong><small>thời gian dự kiến</small></span>
+                    </div>
+                    <button type="button" id="start-quiz-button" disabled>
+                        <span class="start-icon"><i class="fas fa-play"></i></span>
+                        <span><strong>Bắt đầu làm đề</strong><small id="start-button-detail">Hãy chọn ít nhất 1 lỗi sai</small></span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </aside>
+
+            <section class="mistake-panel panel">
+                <div class="panel-heading list-heading">
+                    <div>
+                        <span class="step-label">Bước 2</span>
+                        <h2>Chọn lỗi sai muốn luyện lại</h2>
+                    </div>
+                    <a href="/review-mistakes">Xem lời giải cũ <i class="fas fa-arrow-up-right-from-square"></i></a>
+                </div>
+
+                <div class="smart-note" id="smart-note" aria-live="polite">
+                    <span><i class="fas fa-lightbulb"></i></span>
+                    <p>Đang đọc lịch sử làm bài của bạn…</p>
+                </div>
+
+                <div class="list-toolbar">
+                    <div>
+                        <strong id="visible-count">Đang tải…</strong>
+                        <small>Chạm vào một thẻ để thêm hoặc bỏ khỏi đề.</small>
+                    </div>
+                    <button type="button" id="select-visible"><i class="far fa-square-check"></i> Chọn đang hiển thị</button>
+                </div>
+
+                <div class="mistake-list" id="mistake-list" aria-live="polite" aria-busy="true">
+                    <article class="mistake-skeleton"></article>
+                    <article class="mistake-skeleton"></article>
+                    <article class="mistake-skeleton"></article>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <div class="mobile-start-bar" id="mobile-start-bar">
+        <span><strong id="mobile-selected">0 câu</strong><small id="mobile-duration">0 phút</small></span>
+        <button type="button" id="mobile-start-button" disabled>Bắt đầu <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <script src="/js/student-personalized-quiz.js?v=1"></script>
+</body>
+</html>

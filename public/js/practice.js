@@ -5,6 +5,36 @@ let userAnswers = {};
 let flaggedQuestions = new Set();
 let startTime = Date.now();
 let timerInterval = null;
+let practiceMeta = {
+    title: 'Luyện tập lỗi sai',
+    returnUrl: '/review-mistakes'
+};
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatQuestionText(value) {
+    return escapeHtml(value).replace(/\n/g, '<br>');
+}
+
+function safeImageUrl(value) {
+    const url = String(value || '').trim();
+    return /^(https?:\/\/|\/)/i.test(url) ? escapeHtml(url) : '';
+}
+
+async function getCsrfToken() {
+    const response = await fetch('/api/csrf-token');
+    if (!response.ok) throw new Error('Failed to get CSRF token');
+    const data = await response.json();
+    if (!data.csrfToken) throw new Error('CSRF token missing');
+    return data.csrfToken;
+}
 
 // Timer function
 function startTimer() {
@@ -82,17 +112,36 @@ async function loadPracticeQuestions() {
             return;
         }
         
-        const { mistakeIds } = JSON.parse(practiceData);
-        
+        const parsedPracticeData = JSON.parse(practiceData);
+        const mistakeIds = Array.isArray(parsedPracticeData.mistakeIds)
+            ? parsedPracticeData.mistakeIds
+            : [];
+        if (mistakeIds.length === 0) {
+            throw new Error('No mistake IDs selected');
+        }
+
+        practiceMeta = {
+            title: String(parsedPracticeData.title || 'Luyện tập lỗi sai').slice(0, 80),
+            returnUrl: String(parsedPracticeData.returnUrl || '').startsWith('/')
+                ? parsedPracticeData.returnUrl
+                : '/review-mistakes'
+        };
+        const titleElement = document.getElementById('practice-title');
+        if (titleElement) titleElement.textContent = practiceMeta.title;
+
+        const csrfToken = await getCsrfToken();
+
         // Fetch practice questions
         const response = await fetch('/api/progress/practice/questions', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-csrf-token': csrfToken
             },
             body: JSON.stringify({
                 mistakeIds: mistakeIds,
-                count: mistakeIds.length
+                count: mistakeIds.length,
+                csrfToken
             })
         });
         
@@ -101,7 +150,7 @@ async function loadPracticeQuestions() {
         }
         
         const data = await response.json();
-        if (data.success && data.questions) {
+        if (data.success && Array.isArray(data.questions) && data.questions.length > 0) {
             practiceQuestions = data.questions;
             
             // Shuffle questions for variety
@@ -109,7 +158,7 @@ async function loadPracticeQuestions() {
             
             // Shuffle options for each question
             practiceQuestions.forEach(question => {
-                if (question.type === 'multiple_choice' && question.options) {
+                if (question.type === 'multiple_choice' && Array.isArray(question.options)) {
                     question.shuffledOptions = shuffleArray([...question.options]);
                 }
             });
@@ -126,12 +175,12 @@ async function loadPracticeQuestions() {
     } catch (error) {
         console.error('Error loading practice questions:', error);
         alert('Không thể tải câu hỏi luyện tập. Vui lòng thử lại.');
-        window.location.href = '/review-mistakes';
+        window.location.href = practiceMeta.returnUrl;
     }
 }
 
 // Render all questions
-function renderQuestions() {
+function renderLegacyQuestions() {
     const contentContainer = document.getElementById('practice-content');
     
     contentContainer.innerHTML = practiceQuestions.map((question, index) => {
@@ -228,6 +277,120 @@ function renderQuestions() {
     }
 }
 
+function renderQuestions() {
+    const contentContainer = document.getElementById('practice-content');
+
+    contentContainer.innerHTML = practiceQuestions.map((question, index) => {
+        let optionsHTML = '';
+
+        if (question.type === 'multiple_choice') {
+            const options = question.shuffledOptions || question.options || [];
+            optionsHTML = `
+                <div class="options-list">
+                    ${options.map((option, optionIndex) => `
+                        <button type="button" class="option-item"
+                            data-question="${index}"
+                            data-option="${optionIndex}"
+                            onclick="selectOption(${index}, ${optionIndex})">
+                            <span class="option-radio"></span>
+                            <span class="option-label">${formatQuestionText(
+                                typeof option === 'object' ? option.text : option
+                            )}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        } else if (question.type === 'true_false') {
+            const statements = Array.isArray(question.options) ? question.options : [];
+            optionsHTML = `
+                <div class="truefalse-statements">
+                    ${statements.map((statement, statementIndex) => `
+                        <div class="truefalse-statement">
+                            <div class="statement-copy">
+                                <span>${String.fromCharCode(65 + statementIndex)}</span>
+                                <p>${formatQuestionText(
+                                    typeof statement === 'object' ? statement.text : statement
+                                )}</p>
+                            </div>
+                            <div class="statement-choices" role="group" aria-label="Chọn đúng hoặc sai">
+                                <button type="button" class="truefalse-choice"
+                                    data-question="${index}" data-statement="${statementIndex}" data-value="true"
+                                    onclick="selectTrueFalse(${index}, ${statementIndex}, true)">Đúng</button>
+                                <button type="button" class="truefalse-choice"
+                                    data-question="${index}" data-statement="${statementIndex}" data-value="false"
+                                    onclick="selectTrueFalse(${index}, ${statementIndex}, false)">Sai</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } else if (question.type === 'number') {
+            optionsHTML = `
+                <div class="number-input-container">
+                    <input type="number"
+                        class="number-input"
+                        id="number-input-${index}"
+                        placeholder="Nhập đáp án số"
+                        onchange="saveNumberAnswer(${index})"
+                        value="${escapeHtml(userAnswers[index] || '')}">
+                    <div class="number-hint">Nhập câu trả lời dạng số</div>
+                </div>
+            `;
+        } else {
+            optionsHTML = '<div class="question-format-error">Không thể hiển thị định dạng câu hỏi này.</div>';
+        }
+
+        const imageUrl = safeImageUrl(question.imageUrl);
+        const imageHTML = imageUrl
+            ? `<img class="question-image" src="${imageUrl}" alt="Hình minh họa cho câu hỏi" loading="lazy">`
+            : '';
+
+        return `
+            <div class="question-card" id="question-${index}">
+                <div class="question-header">
+                    <div>
+                        <div class="question-number">Câu ${index + 1}/${practiceQuestions.length}</div>
+                        <div class="question-source">${escapeHtml(question.lessonTitle || 'Bài học')}</div>
+                    </div>
+                    <div class="question-actions">
+                        <button type="button" class="flag-btn ${flaggedQuestions.has(index) ? 'active' : ''}"
+                            onclick="toggleFlag(${index})">
+                            <i class="fas fa-flag"></i>
+                            ${flaggedQuestions.has(index) ? 'Đã đánh dấu' : 'Đánh dấu'}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="question-text">${formatQuestionText(question.question)}</div>
+                ${imageHTML}
+                ${optionsHTML}
+
+                <div class="question-navigation">
+                    <button type="button" class="nav-btn" onclick="navigateQuestion(-1)" ${index === 0 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i> Câu trước
+                    </button>
+                    <button type="button" class="nav-btn" onclick="navigateQuestion(1)"
+                        ${index === practiceQuestions.length - 1 ? 'disabled' : ''}>
+                        Câu sau <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (window.renderMathInElement) {
+        renderMathInElement(contentContainer, {
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+        });
+    }
+}
+
 // Render question navigation grid
 function renderQuestionNavigation() {
     const gridContainer = document.getElementById('question-grid');
@@ -274,7 +437,13 @@ function navigateQuestion(direction) {
 }
 
 // Select option
-function selectOption(questionIndex, optionIndex, optionValue) {
+function selectOption(questionIndex, optionIndex) {
+    const question = practiceQuestions[questionIndex];
+    const options = question?.shuffledOptions || question?.options || [];
+    const selectedValue = options[optionIndex];
+    const optionValue = typeof selectedValue === 'object' ? selectedValue.text : selectedValue;
+    if (optionValue === undefined) return;
+
     // Clear previous selection
     document.querySelectorAll(`[data-question="${questionIndex}"]`).forEach(item => {
         item.classList.remove('selected');
@@ -294,13 +463,52 @@ function selectOption(questionIndex, optionIndex, optionValue) {
     updateStats();
 }
 
+function selectTrueFalse(questionIndex, statementIndex, value) {
+    const question = practiceQuestions[questionIndex];
+    if (!question || !Array.isArray(question.options) || statementIndex >= question.options.length) {
+        return;
+    }
+
+    if (!Array.isArray(userAnswers[questionIndex])) {
+        userAnswers[questionIndex] = Array(question.options.length).fill(null);
+    }
+    userAnswers[questionIndex][statementIndex] = Boolean(value);
+
+    document.querySelectorAll(
+        `[data-question="${questionIndex}"][data-statement="${statementIndex}"]`
+    ).forEach((button) => {
+        button.classList.toggle('selected', button.dataset.value === String(Boolean(value)));
+    });
+
+    updateNavigationItem(questionIndex);
+    updateStats();
+}
+
 // Save number answer
 function saveNumberAnswer(questionIndex) {
     const input = document.getElementById(`number-input-${questionIndex}`);
-    userAnswers[questionIndex] = input.value;
+    if (input.value.trim()) {
+        userAnswers[questionIndex] = input.value;
+    } else {
+        delete userAnswers[questionIndex];
+    }
     
     updateNavigationItem(questionIndex);
     updateStats();
+}
+
+function isQuestionAnswered(questionIndex) {
+    const question = practiceQuestions[questionIndex];
+    const answer = userAnswers[questionIndex];
+    if (!question || answer === undefined || answer === null) return false;
+
+    if (question.type === 'true_false') {
+        return Array.isArray(answer) &&
+            answer.length === question.options.length &&
+            answer.every((value) => typeof value === 'boolean');
+    }
+
+    return String(answer).trim().length > 0;
 }
 
 // Toggle flag
@@ -355,7 +563,7 @@ function updateNavigationItem(questionIndex) {
     
     navItem.classList.remove('answered', 'flagged');
     
-    if (userAnswers[questionIndex] !== undefined) {
+    if (isQuestionAnswered(questionIndex)) {
         navItem.classList.add('answered');
     }
     
@@ -366,14 +574,21 @@ function updateNavigationItem(questionIndex) {
 
 // Update stats
 function updateStats() {
-    const answeredCount = Object.keys(userAnswers).length;
+    const answeredCount = practiceQuestions.reduce(
+        (total, _, index) => total + (isQuestionAnswered(index) ? 1 : 0),
+        0
+    );
     document.getElementById('answered-count').textContent = answeredCount;
 }
 
 // Show confirmation modal
 function showConfirmationModal() {
     const modal = document.getElementById('confirmation-modal');
-    const unansweredCount = practiceQuestions.length - Object.keys(userAnswers).length;
+    const answeredCount = practiceQuestions.reduce(
+        (total, _, index) => total + (isQuestionAnswered(index) ? 1 : 0),
+        0
+    );
+    const unansweredCount = practiceQuestions.length - answeredCount;
     
     if (unansweredCount > 0) {
         document.getElementById('unanswered-warning').style.display = 'block';
@@ -390,6 +605,34 @@ function closeConfirmationModal() {
     document.getElementById('confirmation-modal').classList.remove('show');
 }
 
+function normalizeScalarAnswer(value) {
+    return String(value ?? '').trim().toLocaleLowerCase('vi');
+}
+
+function isPracticeAnswerCorrect(question, userAnswer) {
+    if (question.type === 'true_false') {
+        const correctAnswer = question.correctAnswer;
+        return Array.isArray(userAnswer) &&
+            Array.isArray(correctAnswer) &&
+            userAnswer.length === correctAnswer.length &&
+            userAnswer.every((value, index) => value === correctAnswer[index]);
+    }
+
+    if (question.type === 'number') {
+        const submittedNumber = Number(userAnswer);
+        const correctNumber = Number(question.correctAnswer);
+        if (Number.isFinite(submittedNumber) && Number.isFinite(correctNumber)) {
+            const parsedTolerance = Number(question.tolerance);
+            const tolerance = Number.isFinite(parsedTolerance) && parsedTolerance > 0
+                ? parsedTolerance
+                : 0;
+            return Math.abs(submittedNumber - correctNumber) <= tolerance;
+        }
+    }
+
+    return normalizeScalarAnswer(userAnswer) === normalizeScalarAnswer(question.correctAnswer);
+}
+
 // Submit practice
 async function submitPractice() {
     try {
@@ -401,9 +644,8 @@ async function submitPractice() {
         // Calculate results
         let score = 0;
         const results = practiceQuestions.map((question, index) => {
-            const userAnswer = userAnswers[index] || '';
-            const isCorrect = userAnswer.toString().toLowerCase() === 
-                             question.correctAnswer.toString().toLowerCase();
+            const userAnswer = userAnswers[index] ?? '';
+            const isCorrect = isPracticeAnswerCorrect(question, userAnswer);
             
             if (isCorrect) score++;
             
@@ -460,7 +702,7 @@ async function submitPractice() {
             alert(`Hoàn thành luyện tập!\n\nĐiểm: ${score}/${practiceQuestions.length}\nThời gian: ${formatTime(timeSpent)}`);
             
             // Redirect to review mistakes page
-            window.location.href = '/review-mistakes';
+            window.location.href = practiceMeta.returnUrl;
         } else {
             throw new Error('Failed to submit practice results');
         }
